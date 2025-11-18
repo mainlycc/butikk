@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
+import { ColumnDef, SortingState, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -15,6 +16,7 @@ import ContactDialog from "@/components/contact-dialog"
 import { AdminPanel } from "@/components/admin-panel"
 import { SyncButton } from "@/components/sync-button"
 import { syncGoogleSheetsToSupabase } from "@/app/actions/sync-google-sheets"
+import { DataTable } from "@/components/data-table"
 import {
   Pagination,
   PaginationContent,
@@ -62,6 +64,7 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
   const syncIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const isSyncingRef = useRef(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [sorting, setSorting] = useState<SortingState>([])
   const itemsPerPage = 50
 
   // Automatyczna synchronizacja w tle co 5 minut
@@ -141,16 +144,10 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
     })
   }, [candidates, searchTerms])
 
-  // Resetuj stronę gdy zmienia się filtrowanie
+  // Resetuj stronę gdy zmienia się filtrowanie lub sortowanie
   useEffect(() => {
     setCurrentPage(1)
-  }, [searchTerms, candidates])
-
-  // Oblicz paginowane dane
-  const totalPages = Math.ceil(filteredCandidates.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const paginatedCandidates = filteredCandidates.slice(startIndex, endIndex)
+  }, [searchTerms, candidates, sorting])
 
   const handleLogout = async () => {
     const supabase = getSupabaseBrowserClient()
@@ -188,6 +185,101 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
   const getSelectedCandidatesData = () => {
     return filteredCandidates.filter((c) => selectedCandidates.has(c.id))
   }
+
+  const columns = useMemo<ColumnDef<Candidate>[]>(
+    () => [
+      {
+        id: "select",
+        header: () => (
+          <Checkbox
+            checked={
+              selectedCandidates.size === filteredCandidates.length && filteredCandidates.length > 0
+            }
+            onCheckedChange={toggleAll}
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={selectedCandidates.has(row.original.id)}
+            onCheckedChange={() => toggleCandidate(row.original.id)}
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      },
+      {
+        accessorKey: "first_name",
+        header: "Imię i Nazwisko",
+        cell: ({ row }) => (
+          <div className="font-medium">
+            {row.original.first_name} {row.original.last_name || ""}
+          </div>
+        ),
+        enableSorting: false,
+      },
+      {
+        accessorKey: "role",
+        header: "Rola",
+        cell: ({ row }) => (
+          <Badge variant="secondary">{row.original.role || "-"}</Badge>
+        ),
+        enableSorting: false,
+      },
+      {
+        accessorKey: "seniority",
+        header: "Seniority",
+        cell: ({ row }) => (
+          <Badge>{row.original.seniority || "-"}</Badge>
+        ),
+      },
+      {
+        accessorKey: "rate",
+        header: "Stawka",
+        cell: ({ row }) => <div className="text-sm">{row.original.rate || "-"}</div>,
+      },
+      {
+        accessorKey: "technologies",
+        header: "Technologie",
+        cell: ({ row }) => (
+          <div className="text-sm max-w-xs truncate">{row.original.technologies || "-"}</div>
+        ),
+        enableSorting: false,
+      },
+      {
+        accessorKey: "guardian",
+        header: "Opiekun",
+        cell: ({ row }) => (
+          <div className="text-sm text-muted-foreground">{row.original.guardian || "-"}</div>
+        ),
+      },
+      {
+        accessorKey: "availability",
+        header: "Dostępność",
+        cell: ({ row }) => <div className="text-sm">{row.original.availability || "-"}</div>,
+      },
+    ],
+    [selectedCandidates, filteredCandidates.length, toggleCandidate, toggleAll]
+  )
+
+  // Użyj useReactTable do sortowania wszystkich danych przed paginacją
+  const table = useReactTable({
+    data: filteredCandidates,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: {
+      sorting,
+    },
+    manualPagination: true,
+  })
+
+  // Oblicz paginowane dane z posortowanych danych
+  const sortedCandidates = table.getRowModel().rows.map((row) => row.original)
+  const totalPages = Math.ceil(sortedCandidates.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedCandidates = sortedCandidates.slice(startIndex, endIndex)
 
   return (
     <>
@@ -294,25 +386,36 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
           </Card>
 
           {/* Action Buttons */}
-          {selectedCandidates.size > 0 && (
-            <Card className="border-2 border-primary/50 bg-primary/5">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between gap-4">
+          <Card className="border-2 border-primary/50 bg-primary/5">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between gap-4">
+                {selectedCandidates.size > 0 ? (
                   <p className="text-base font-medium">Wybrano {selectedCandidates.size} kandydatów</p>
-                  <div className="flex gap-3">
-                    <Button onClick={() => setShowSlideshow(true)} variant="outline" size="lg">
-                      <FileText className="w-4 h-4 mr-2" />
-                      Pokaz slajdów CV
-                    </Button>
-                    <Button onClick={() => setShowContactDialog(true)} size="lg">
-                      <Mail className="w-4 h-4 mr-2" />
-                      Wyślij zapytanie o kontakt
-                    </Button>
-                  </div>
+                ) : (
+                  <p className="text-base font-medium text-muted-foreground">Zaznacz kandydatów</p>
+                )}
+                <div className="flex gap-3">
+                  <Button 
+                    onClick={() => setShowSlideshow(true)} 
+                    variant="outline" 
+                    size="lg"
+                    disabled={selectedCandidates.size === 0}
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    Pokaz slajdów CV
+                  </Button>
+                  <Button 
+                    onClick={() => setShowContactDialog(true)} 
+                    size="lg"
+                    disabled={selectedCandidates.size === 0}
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    Wyślij zapytanie o kontakt
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Candidates Table */}
           <Card className="border-2">
@@ -324,58 +427,13 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
                   <p className="text-sm">Spróbuj zmienić kryteria wyszukiwania</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-muted/50 border-b-2">
-                      <tr>
-                        <th className="p-4 text-left">
-                          <Checkbox
-                            checked={
-                              selectedCandidates.size === filteredCandidates.length && filteredCandidates.length > 0
-                            }
-                            onCheckedChange={toggleAll}
-                          />
-                        </th>
-                        <th className="p-4 text-left font-semibold">Imię i Nazwisko</th>
-                        <th className="p-4 text-left font-semibold">Rola</th>
-                        <th className="p-4 text-left font-semibold">Seniority</th>
-                        <th className="p-4 text-left font-semibold">Stawka</th>
-                        <th className="p-4 text-left font-semibold">Technologie</th>
-                        <th className="p-4 text-left font-semibold">Opiekun</th>
-                        <th className="p-4 text-left font-semibold">Dostępność</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {paginatedCandidates.map((candidate) => (
-                        <tr
-                          key={candidate.id}
-                          className={`border-b hover:bg-muted/30 transition-colors ${
-                            selectedCandidates.has(candidate.id) ? "bg-primary/5" : ""
-                          }`}
-                        >
-                          <td className="p-4">
-                            <Checkbox
-                              checked={selectedCandidates.has(candidate.id)}
-                              onCheckedChange={() => toggleCandidate(candidate.id)}
-                            />
-                          </td>
-                          <td className="p-4 font-medium">
-                            {candidate.first_name} {candidate.last_name || ""}
-                          </td>
-                          <td className="p-4">
-                            <Badge variant="secondary">{candidate.role}</Badge>
-                          </td>
-                          <td className="p-4">
-                            <Badge>{candidate.seniority}</Badge>
-                          </td>
-                          <td className="p-4 text-sm">{candidate.rate || "-"}</td>
-                          <td className="p-4 text-sm max-w-xs truncate">{candidate.technologies || "-"}</td>
-                          <td className="p-4 text-sm text-muted-foreground">{candidate.guardian || "-"}</td>
-                          <td className="p-4 text-sm">{candidate.availability || "-"}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="p-4">
+                  <DataTable 
+                    columns={columns} 
+                    data={paginatedCandidates}
+                    sorting={sorting}
+                    onSortingChange={setSorting}
+                  />
                 </div>
               )}
             </CardContent>
