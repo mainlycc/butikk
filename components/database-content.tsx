@@ -480,7 +480,11 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
 
       {/* CV Slideshow Modal */}
       {showSlideshow && (
-        <CVSlideshow candidates={getSelectedCandidatesData()} onClose={() => setShowSlideshow(false)} />
+        <CVSlideshow 
+          candidates={getSelectedCandidatesData()} 
+          userEmail={userEmail}
+          onClose={() => setShowSlideshow(false)} 
+        />
       )}
 
       {/* Contact Dialog */}

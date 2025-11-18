@@ -11,6 +11,7 @@ interface Candidate {
   technologies: string | null
   cv: string | null
   guardian: string | null
+  guardian_email?: string | null
   previous_contact: string | null
   project_description: string | null
 }
@@ -31,7 +32,8 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
 
     const groupedByCaretaker = candidates.reduce(
       (acc, candidate) => {
-        const email = candidate.guardian || ""
+        const email = candidate.guardian_email || ""
+        if (!email) return acc
         if (!acc[email]) {
           acc[email] = []
         }
@@ -54,7 +56,7 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
 
   const groupedByCaretaker = candidates.reduce(
     (acc, candidate) => {
-      const email = candidate.guardian || ""
+      const email = candidate.guardian_email || ""
       if (!email) return acc
       if (!acc[email]) {
         acc[email] = []
@@ -64,6 +66,10 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
     },
     {} as Record<string, Candidate[]>,
   )
+
+  if (Object.keys(groupedByCaretaker).length === 0) {
+    throw new Error("Żaden z wybranych kandydatów nie ma przypisanego adresu email opiekuna")
+  }
 
   const results = await Promise.all(
     Object.entries(groupedByCaretaker).map(async ([caretakerEmail, candidateList]) => {
@@ -88,7 +94,7 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
 
       try {
         await resend!.emails.send({
-          from: "Butik Kandydatów <onboarding@resend.dev>",
+          from: "Butik Kandydatów <noreply@mail.mainly.pl>",
           to: caretakerEmail,
           subject: `Prośba o kontakt - ${candidateList.length} kandydatów`,
           html,

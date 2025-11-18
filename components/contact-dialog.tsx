@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Mail, Loader2, CheckCircle2, User } from "lucide-react"
+import { Mail, Loader2, CheckCircle2 } from "lucide-react"
 import { toast } from "sonner"
 
 interface Candidate {
@@ -27,6 +27,7 @@ interface Candidate {
   technologies: string | null
   cv: string | null
   guardian: string | null
+  guardian_email?: string | null
   previous_contact: string | null
   project_description: string | null
   languages?: string | null
@@ -69,14 +70,18 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
     }
   }
 
-  // Grupujemy kandydatów według opiekuna
-  const caretakers = candidates.reduce(
+  // Grupujemy kandydatów według email opiekuna
+  // Filtrujemy kandydatów bez email opiekuna
+  const candidatesWithEmail = candidates.filter((c) => c.guardian_email)
+  
+  const caretakers = candidatesWithEmail.reduce(
     (acc, candidate) => {
-      const key = candidate.guardian || "unknown"
-      if (!acc[key]) {
-        acc[key] = []
+      const email = candidate.guardian_email || ""
+      if (!email) return acc
+      if (!acc[email]) {
+        acc[email] = []
       }
-      acc[key].push(candidate)
+      acc[email].push(candidate)
       return acc
     },
     {} as Record<string, Candidate[]>,
@@ -103,6 +108,11 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Liczba kandydatów</p>
                   <p className="text-2xl font-bold">{candidates.length}</p>
+                  {candidates.length !== candidatesWithEmail.length && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {candidates.length - candidatesWithEmail.length} bez email opiekuna
+                    </p>
+                  )}
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Liczba opiekunów</p>
@@ -116,32 +126,50 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
           <div className="space-y-3">
             <h3 className="font-semibold text-lg">Wybrani kandydaci:</h3>
             <div className="space-y-4 max-h-64 overflow-y-auto pr-2">
-              {Object.entries(caretakers).map(([caretaker, candidateList]) => (
-                <Card key={caretaker} className="border">
+              {Object.keys(caretakers).length === 0 ? (
+                <Card className="border border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
                   <CardContent className="pt-4">
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                        <User className="w-4 h-4 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold truncate">{caretaker}</p>
-                        <p className="text-sm text-muted-foreground">{candidateList.length} kandydatów</p>
-                      </div>
-                    </div>
-                    <div className="space-y-2 pl-11">
-                      {candidateList.map((candidate) => (
-                        <div key={candidate.id} className="flex items-center gap-2 text-sm">
-                          <span className="font-medium">{candidate.first_name} {candidate.last_name || ""}</span>
-                          <span className="text-muted-foreground">•</span>
-                          <Badge variant="secondary">{candidate.role}</Badge>
-                          <Badge>{candidate.seniority}</Badge>
-                          {candidate.rate && <span className="text-muted-foreground text-xs">({candidate.rate})</span>}
-                        </div>
-                      ))}
-                    </div>
+                    <p className="text-sm text-yellow-700 dark:text-yellow-300">
+                      Żaden z wybranych kandydatów nie ma przypisanego adresu email opiekuna. 
+                      Nie można wysłać wiadomości.
+                    </p>
                   </CardContent>
                 </Card>
-              ))}
+              ) : (
+                Object.entries(caretakers).map(([caretakerEmail, candidateList]) => {
+                  const firstCandidate = candidateList[0]
+                  const caretakerName = firstCandidate.guardian || "Brak nazwy"
+                  return (
+                    <Card key={caretakerEmail} className="border">
+                      <CardContent className="pt-4">
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Mail className="w-4 h-4 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold truncate">{caretakerEmail}</p>
+                            {caretakerName && caretakerName !== "Brak nazwy" && (
+                              <p className="text-sm text-muted-foreground truncate">{caretakerName}</p>
+                            )}
+                            <p className="text-xs text-muted-foreground mt-1">{candidateList.length} kandydatów</p>
+                          </div>
+                        </div>
+                        <div className="space-y-2 pl-11">
+                          {candidateList.map((candidate) => (
+                            <div key={candidate.id} className="flex items-center gap-2 text-sm">
+                              <span className="font-medium">{candidate.first_name} {candidate.last_name || ""}</span>
+                              <span className="text-muted-foreground">•</span>
+                              <Badge variant="secondary">{candidate.role}</Badge>
+                              <Badge>{candidate.seniority}</Badge>
+                              {candidate.rate && <span className="text-muted-foreground text-xs">({candidate.rate})</span>}
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })
+              )}
             </div>
           </div>
 
@@ -184,7 +212,7 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
           <Button variant="outline" onClick={onClose} disabled={isSending}>
             Anuluj
           </Button>
-          <Button onClick={handleSend} disabled={isSending || isSent} size="lg">
+          <Button onClick={handleSend} disabled={isSending || isSent || Object.keys(caretakers).length === 0} size="lg">
             {isSending ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />

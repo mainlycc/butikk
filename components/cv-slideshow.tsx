@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ChevronLeft, ChevronRight, X, User, Briefcase, Mail, Calendar } from "lucide-react"
+import ContactDialog from "@/components/contact-dialog"
 
 interface Candidate {
   id: string
@@ -16,6 +17,7 @@ interface Candidate {
   technologies: string | null
   cv: string | null
   guardian: string | null
+  guardian_email?: string | null
   previous_contact: string | null
   project_description: string | null
   languages?: string | null
@@ -25,13 +27,23 @@ interface Candidate {
 
 interface CVSlideshowProps {
   candidates: Candidate[]
+  userEmail: string
   onClose: () => void
 }
 
-export default function CVSlideshow({ candidates, onClose }: CVSlideshowProps) {
+export default function CVSlideshow({ candidates, userEmail, onClose }: CVSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [showContactDialog, setShowContactDialog] = useState(false)
 
   const currentCandidate = candidates[currentIndex]
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % candidates.length)
+  }, [candidates.length])
+
+  const handlePrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + candidates.length) % candidates.length)
+  }, [candidates.length])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -46,15 +58,7 @@ export default function CVSlideshow({ candidates, onClose }: CVSlideshowProps) {
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [currentIndex, candidates.length])
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % candidates.length)
-  }
-
-  const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + candidates.length) % candidates.length)
-  }
+  }, [handleNext, handlePrevious, onClose])
 
   return (
     <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm">
@@ -100,6 +104,27 @@ export default function CVSlideshow({ candidates, onClose }: CVSlideshowProps) {
                         )}
                       </div>
                     </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-3 min-w-0">
+                    <div className="flex items-center gap-3 text-muted-foreground text-right">
+                      <Mail className="w-5 h-5 flex-shrink-0" />
+                      <div className="text-right">
+                        <p className="text-sm">Opiekun kandydata:</p>
+                        <p className="font-medium text-foreground">{currentCandidate.guardian || "Brak opiekuna"}</p>
+                        {currentCandidate.guardian_email && (
+                          <p className="text-xs text-muted-foreground mt-1">{currentCandidate.guardian_email}</p>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => setShowContactDialog(true)}
+                      size="lg"
+                      className="gap-2"
+                      disabled={!currentCandidate.guardian_email}
+                    >
+                      <Mail className="w-4 h-4" />
+                      Wyślij zapytanie o kontakt
+                    </Button>
                   </div>
                 </div>
               </CardHeader>
@@ -158,17 +183,6 @@ export default function CVSlideshow({ candidates, onClose }: CVSlideshowProps) {
                     </div>
                   )}
                 </div>
-
-                {/* Caretaker Info */}
-                <div className="pt-6 border-t">
-                  <div className="flex items-center gap-3 text-muted-foreground">
-                    <Mail className="w-5 h-5" />
-                    <div>
-                      <p className="text-sm">Opiekun kandydata:</p>
-                      <p className="font-medium text-foreground">{currentCandidate.guardian}</p>
-                    </div>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -220,6 +234,15 @@ export default function CVSlideshow({ candidates, onClose }: CVSlideshowProps) {
           </div>
         </div>
       </div>
+
+      {/* Contact Dialog */}
+      {showContactDialog && (
+        <ContactDialog
+          candidates={[currentCandidate]}
+          recruiterEmail={userEmail}
+          onClose={() => setShowContactDialog(false)}
+        />
+      )}
     </div>
   )
 }
