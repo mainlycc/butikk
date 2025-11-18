@@ -1,7 +1,6 @@
 -- Add guardian_email column to candidates table if it doesn't exist
 DO $$
 BEGIN
-    -- Add guardian_email column if it doesn't exist
     IF NOT EXISTS (
         SELECT 1 
         FROM information_schema.columns 

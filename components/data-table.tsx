@@ -4,6 +4,7 @@ import * as React from "react"
 import {
   ColumnDef,
   SortingState,
+  OnChangeFn,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -27,7 +28,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   sorting?: SortingState
-  onSortingChange?: (sorting: SortingState) => void
+  onSortingChange?: OnChangeFn<SortingState>
 }
 
 export function DataTable<TData, TValue>({
@@ -39,13 +40,13 @@ export function DataTable<TData, TValue>({
   const [internalSorting, setInternalSorting] = React.useState<SortingState>([])
   
   const sorting = externalSorting ?? internalSorting
-  const setSorting = externalOnSortingChange ?? setInternalSorting
+  const handleSortingChange = externalOnSortingChange ?? setInternalSorting
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
+    onSortingChange: handleSortingChange,
     getSortedRowModel: getSortedRowModel(),
     state: {
       sorting,
