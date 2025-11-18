@@ -149,7 +149,7 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
     const rolaIndex = findColumnIndex(header, "Rola")
     const seniorityIndex = findColumnIndex(header, "Seniority")
     const stawkaIndex = findColumnIndex(header, "Stawka") // Mapujemy na rate
-    const technologieIndex = findColumnIndex(header, "Technologie") // Mapujemy na skills
+    const technologieIndex = findColumnIndex(header, "Technologie") // Mapujemy na technologies
     const cvIndex = findColumnIndex(header, "CV")
     const opiekunIndex = findColumnIndex(header, "Opiekun kandydata")
     const dostepnoscIndex = findColumnIndex(header, "Dostępność") // Mapujemy na availability
@@ -235,7 +235,7 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
         guardian: opiekunIndex >= 0 ? getValue(opiekunIndex) || null : null,
         guardian_email: guardianEmailIndex >= 0 ? getValue(guardianEmailIndex) || null : null,
         cv: cvIndex >= 0 ? getValue(cvIndex) || null : null,
-        skills: technologieIndex >= 0 ? getValue(technologieIndex) || null : null,
+        technologies: technologieIndex >= 0 ? getValue(technologieIndex) || null : null,
         languages: languagesIndex >= 0 ? getValue(languagesIndex) || null : null,
         availability: dostepnoscIndex >= 0 ? getValue(dostepnoscIndex) || null : null,
         last_synced_at: new Date().toISOString(),
@@ -248,7 +248,7 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
           firstName: candidate.first_name,
           lastName: candidate.last_name,
           rate: candidate.rate,
-          skills: candidate.skills,
+          technologies: candidate.technologies,
           availability: candidate.availability,
           rawRowValues: {
             imie: row[imieIndex],
