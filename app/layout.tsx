@@ -66,7 +66,7 @@ export default async function RootLayout({
 
   return (
     <html lang="pl">
-      <body className={`${geist.className} ${geistMono.variable} antialiased`}>
+      <body className={`${geist.className} antialiased`}>
         <AppShell user={userProfile}>{children}</AppShell>
         <Toaster />
         <Analytics />
