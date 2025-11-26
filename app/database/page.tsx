@@ -38,9 +38,17 @@ export default async function DatabasePage() {
     .order("sheet_row_number", { ascending: true })
 
   return (
-    <Suspense fallback={<DatabaseSkeleton />}>
-      <DatabaseContent initialCandidates={candidates || []} userEmail={user.email || ""} isAdmin={isAdmin} />
-    </Suspense>
+    <div className="min-h-screen p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <Suspense fallback={<DatabaseSkeleton />}>
+          <DatabaseContent
+            initialCandidates={candidates || []}
+            userEmail={user.email || ""}
+            isAdmin={isAdmin}
+          />
+        </Suspense>
+      </div>
+    </div>
   )
 }
 
