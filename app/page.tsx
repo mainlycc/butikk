@@ -22,7 +22,7 @@ export default async function HomePage() {
       "Zaloguj się swoim adresem email i hasłem",
       "Użyj wyszukiwarki, aby filtrować kandydatów według słów kluczowych (oddziel przecinkami)",
       "Zaznacz interesujących kandydatów i przeglądaj ich CV w formie slajdów",
-      "Wyślij zapytanie kontaktowe do opiekunów wybranych kandydatów",
+      "Wyślij zapytanie bezpośrednio do wybranych kandydatów",
     ],
   }
 

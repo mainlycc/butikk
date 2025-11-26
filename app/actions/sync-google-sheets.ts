@@ -1,6 +1,7 @@
 "use server"
 
 import { getSupabaseServerClient } from "@/lib/server"
+import { downloadAndUploadPDF, generatePDFFileName } from "@/lib/storage"
 
 // ID arkusza Google Sheets
 const CANDIDATES_SHEET_ID = process.env.NEXT_PUBLIC_CANDIDATES_SHEET_ID || "1XCpfMqh2-iZJnXHx42zsc8utynW8WNe89Fy2jslUnKY"
@@ -151,7 +152,10 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
     const stawkaIndex = findColumnIndex(header, "Stawka") // Mapujemy na rate
     const technologieIndex = findColumnIndex(header, "Technologie") // Mapujemy na technologies
     const cvIndex = findColumnIndex(header, "CV")
+    const cvPdfIndex = findColumnIndex(header, "Cv pdf")
     const opiekunIndex = findColumnIndex(header, "Opiekun kandydata")
+    const lokalizacjaIndex = findColumnIndex(header, "Lokalizacja")
+    const emailKandydataIndex = findColumnIndex(header, "Email kandydata")
     const dostepnoscIndex = findColumnIndex(header, "Dostępność") // Mapujemy na availability
     // Opcjonalne kolumny - mogą nie być w Google Sheets
     const guardianEmailIndex = findColumnIndex(header, "Email opiekuna")
@@ -174,7 +178,10 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
       "Stawka": { index: stawkaIndex, found: stawkaIndex >= 0, headerValue: header[stawkaIndex] },
       "Technologie": { index: technologieIndex, found: technologieIndex >= 0, headerValue: header[technologieIndex] },
       "CV": { index: cvIndex, found: cvIndex >= 0, headerValue: header[cvIndex] },
+      "Cv pdf": { index: cvPdfIndex, found: cvPdfIndex >= 0, headerValue: header[cvPdfIndex] },
       "Opiekun kandydata": { index: opiekunIndex, found: opiekunIndex >= 0, headerValue: header[opiekunIndex] },
+      "Lokalizacja": { index: lokalizacjaIndex, found: lokalizacjaIndex >= 0, headerValue: header[lokalizacjaIndex] },
+      "Email kandydata": { index: emailKandydataIndex, found: emailKandydataIndex >= 0, headerValue: header[emailKandydataIndex] },
       "Dostępność": { index: dostepnoscIndex, found: dostepnoscIndex >= 0, headerValue: header[dostepnoscIndex] },
       "Email opiekuna": { index: guardianEmailIndex, found: guardianEmailIndex >= 0, headerValue: header[guardianEmailIndex] },
       "Języki": { index: languagesIndex, found: languagesIndex >= 0, headerValue: header[languagesIndex] },
@@ -224,6 +231,47 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
       const firstName = nameParts[0] || ""
       const lastName = nameParts.slice(1).join(" ") || null
 
+      // Obsługa kolumny "Cv pdf"
+      let cvPdfUrl: string | null = null
+      const cvPdfLink = cvPdfIndex >= 0 ? getValue(cvPdfIndex) : ""
+      
+      if (cvPdfLink) {
+        // Pobierz PDF i uploaduj do Storage
+        const fileName = generatePDFFileName(
+          isNaN(sheetRowNumber) ? i + 2 : sheetRowNumber,
+          firstName,
+          lastName
+        )
+        
+        try {
+          const uploadedUrl = await downloadAndUploadPDF(cvPdfLink, fileName)
+          if (uploadedUrl) {
+            cvPdfUrl = uploadedUrl
+            console.log(`Successfully uploaded PDF for candidate ${firstName} ${lastName || ""}`)
+          } else {
+            console.warn(`Failed to upload PDF for candidate ${firstName} ${lastName || ""}, keeping original link as fallback`)
+            // Jako fallback zapisz oryginalny link
+            cvPdfUrl = cvPdfLink
+          }
+        } catch (error) {
+          console.error(`Error processing PDF for candidate ${firstName} ${lastName || ""}:`, error)
+          // Jako fallback zapisz oryginalny link
+          cvPdfUrl = cvPdfLink
+        }
+      } else {
+        // Jeśli w Google Sheets nie ma linku, sprawdź czy w bazie jest istniejący URL
+        // (zachowaj istniejący PDF jeśli link został usunięty z Google Sheets)
+        const existingCandidate = await supabase
+          .from("candidates")
+          .select("cv_pdf_url")
+          .eq("sheet_row_number", isNaN(sheetRowNumber) ? i + 2 : sheetRowNumber)
+          .single()
+        
+        if (existingCandidate.data?.cv_pdf_url) {
+          cvPdfUrl = existingCandidate.data.cv_pdf_url
+        }
+      }
+
       const candidate = {
         sheet_row_number: isNaN(sheetRowNumber) ? i + 2 : sheetRowNumber,
         nr: nrIndex >= 0 ? getValue(nrIndex) || null : null,
@@ -234,7 +282,10 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
         rate: stawkaIndex >= 0 ? getValue(stawkaIndex) || null : null,
         guardian: opiekunIndex >= 0 ? getValue(opiekunIndex) || null : null,
         guardian_email: guardianEmailIndex >= 0 ? getValue(guardianEmailIndex) || null : null,
+        location: lokalizacjaIndex >= 0 ? getValue(lokalizacjaIndex) || null : null,
+        candidate_email: emailKandydataIndex >= 0 ? getValue(emailKandydataIndex) || null : null,
         cv: cvIndex >= 0 ? getValue(cvIndex) || null : null,
+        cv_pdf_url: cvPdfUrl,
         technologies: technologieIndex >= 0 ? getValue(technologieIndex) || null : null,
         languages: languagesIndex >= 0 ? getValue(languagesIndex) || null : null,
         availability: dostepnoscIndex >= 0 ? getValue(dostepnoscIndex) || null : null,

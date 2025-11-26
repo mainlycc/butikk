@@ -1,11 +1,25 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { createPortal } from "react-dom"
+import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ChevronLeft, ChevronRight, X, User, Briefcase, Mail, Calendar } from "lucide-react"
+import { ChevronLeft, ChevronRight, X, User, Briefcase, Mail, Calendar, MapPin } from "lucide-react"
 import ContactDialog from "@/components/contact-dialog"
+
+// Dynamic import z wyłączonym SSR, aby uniknąć problemu z DOMMatrix
+const PDFViewer = dynamic(() => import("@/components/pdf-viewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex-1 flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center py-8">
+        <p className="text-sm text-muted-foreground">Ładowanie PDF...</p>
+      </div>
+    </div>
+  ),
+})
 
 interface Candidate {
   id: string
@@ -16,6 +30,9 @@ interface Candidate {
   rate: string | null
   technologies: string | null
   cv: string | null
+  cv_pdf_url?: string | null
+   location?: string | null
+   candidate_email?: string | null
   guardian: string | null
   guardian_email?: string | null
   previous_contact: string | null
@@ -34,8 +51,34 @@ interface CVSlideshowProps {
 export default function CVSlideshow({ candidates, userEmail, onClose }: CVSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showContactDialog, setShowContactDialog] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   const currentCandidate = candidates[currentIndex]
+
+  useEffect(() => {
+    setMounted(true)
+    // Blokuj scroll na body gdy slideshow jest otwarty
+    document.body.style.overflow = "hidden"
+    // Ukryj sidebar gdy slideshow jest otwarty
+    const sidebarWrapper = document.querySelector('[data-slot="sidebar-wrapper"]')
+    const sidebarContainer = document.querySelector('[data-slot="sidebar-container"]')
+    if (sidebarWrapper) {
+      sidebarWrapper.classList.add('slideshow-open')
+    }
+    if (sidebarContainer) {
+      sidebarContainer.classList.add('slideshow-open')
+    }
+    
+    return () => {
+      document.body.style.overflow = "unset"
+      if (sidebarWrapper) {
+        sidebarWrapper.classList.remove('slideshow-open')
+      }
+      if (sidebarContainer) {
+        sidebarContainer.classList.remove('slideshow-open')
+      }
+    }
+  }, [])
 
   const handleNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % candidates.length)
@@ -60,8 +103,10 @@ export default function CVSlideshow({ candidates, userEmail, onClose }: CVSlides
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [handleNext, handlePrevious, onClose])
 
-  return (
-    <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm">
+  if (!mounted) return null
+
+  const slideshowContent = (
+    <div className="fixed inset-0 z-[9999] bg-background/95 backdrop-blur-sm">
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="border-b bg-card shadow-sm">
@@ -81,110 +126,108 @@ export default function CVSlideshow({ candidates, userEmail, onClose }: CVSlides
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="max-w-5xl mx-auto px-6 py-8">
-            <Card className="border-2 shadow-xl">
+        <div className="flex-1 overflow-y-auto flex flex-col">
+          <div className="max-w-7xl mx-auto w-full flex flex-col px-6 py-4">
+            {/* Header z informacjami o kandydacie */}
+            <Card className="border-2 shadow-xl mb-4">
               <CardHeader className="border-b bg-gradient-to-r from-primary/5 to-accent/5">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="flex items-start gap-4">
                     <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
                       <User className="w-8 h-8 text-primary-foreground" />
                     </div>
-                    <div>
-                      <CardTitle className="text-3xl mb-2">
+                    <div className="space-y-1">
+                      <CardTitle className="text-2xl">
                         {currentCandidate.first_name} {currentCandidate.last_name || ""}
                       </CardTitle>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <Badge variant="secondary" className="text-base px-3 py-1">
+                        <Badge variant="secondary" className="text-sm px-2 py-1">
                           {currentCandidate.role}
                         </Badge>
-                        <Badge className="text-base px-3 py-1">{currentCandidate.seniority}</Badge>
+                        <Badge className="text-sm px-2 py-1">{currentCandidate.seniority}</Badge>
                         {currentCandidate.rate && (
                           <span className="text-muted-foreground text-sm">• {currentCandidate.rate}</span>
                         )}
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end gap-3 min-w-0">
-                    <div className="flex items-center gap-3 text-muted-foreground text-right">
-                      <Mail className="w-5 h-5 flex-shrink-0" />
-                      <div className="text-right">
-                        <p className="text-sm">Opiekun kandydata:</p>
-                        <p className="font-medium text-foreground">{currentCandidate.guardian || "Brak opiekuna"}</p>
-                        {currentCandidate.guardian_email && (
-                          <p className="text-xs text-muted-foreground mt-1">{currentCandidate.guardian_email}</p>
-                        )}
-                      </div>
-                    </div>
+                  <div className="flex flex-col items-end gap-2 min-w-0">
                     <Button
                       onClick={() => setShowContactDialog(true)}
                       size="lg"
-                      className="gap-2"
-                      disabled={!currentCandidate.guardian_email}
+                      className="gap-2 px-6"
+                      disabled={!currentCandidate.candidate_email}
                     >
                       <Mail className="w-4 h-4" />
-                      Wyślij zapytanie o kontakt
+                      Wyślij zapytanie
                     </Button>
                   </div>
                 </div>
               </CardHeader>
 
-              <CardContent className="pt-8 space-y-8">
-                {/* CV Content */}
-                <div className="space-y-6">
+              <CardContent className="pt-6 pb-6 flex justify-center">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-base max-w-5xl w-full mx-auto">
                   {/* Technologie/Skills */}
                   {(currentCandidate.technologies || currentCandidate.skills) && (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Briefcase className="w-5 h-5 text-primary" />
-                        <h3 className="text-xl font-semibold">Technologie</h3>
+                    <div className="md:col-span-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Briefcase className="w-4 h-4 text-primary" />
+                        <h4 className="font-semibold text-base md:text-lg">Technologie</h4>
                       </div>
-                      <div className="pl-7">
-                        <p className="text-base leading-relaxed whitespace-pre-wrap">{currentCandidate.technologies || currentCandidate.skills}</p>
-                      </div>
+                      <p className="text-sm md:text-base text-muted-foreground whitespace-pre-wrap">
+                        {currentCandidate.technologies || currentCandidate.skills}
+                      </p>
                     </div>
                   )}
 
                   {/* Języki */}
                   {currentCandidate.languages && (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Briefcase className="w-5 h-5 text-primary" />
-                        <h3 className="text-xl font-semibold">Języki</h3>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Briefcase className="w-4 h-4 text-primary" />
+                        <h4 className="font-semibold text-base md:text-lg">Języki</h4>
                       </div>
-                      <div className="pl-7">
-                        <p className="text-base leading-relaxed">{currentCandidate.languages}</p>
-                      </div>
+                      <p className="text-sm md:text-base text-muted-foreground">{currentCandidate.languages}</p>
                     </div>
                   )}
 
                   {/* Dostępność */}
                   {currentCandidate.availability && (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-5 h-5 text-primary" />
-                        <h3 className="text-xl font-semibold">Dostępność</h3>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Calendar className="w-4 h-4 text-primary" />
+                        <h4 className="font-semibold text-base md:text-lg">Dostępność</h4>
                       </div>
-                      <div className="pl-7">
-                        <p className="text-base leading-relaxed">{currentCandidate.availability}</p>
-                      </div>
+                      <p className="text-sm md:text-base text-muted-foreground">
+                        {currentCandidate.availability}
+                      </p>
                     </div>
                   )}
 
-                  {/* Full CV Text */}
-                  {currentCandidate.cv && (
-                    <div className="space-y-3 pt-6 border-t">
-                      <h3 className="text-xl font-semibold">Pełne CV</h3>
-                      <div className="bg-muted/30 rounded-lg p-6">
-                        <p className="text-base leading-relaxed whitespace-pre-wrap font-mono text-sm">
-                          {currentCandidate.cv}
-                        </p>
+                  {/* Lokalizacja */}
+                  {currentCandidate.location && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <MapPin className="w-4 h-4 text-primary" />
+                        <h4 className="font-semibold text-base md:text-lg">Lokalizacja</h4>
                       </div>
+                      <p className="text-sm md:text-base text-muted-foreground font-medium text-foreground">
+                        {currentCandidate.location}
+                      </p>
                     </div>
                   )}
                 </div>
               </CardContent>
             </Card>
+
+            {/* PDF Viewer */}
+            <div className="flex flex-col">
+              <PDFViewer
+                pdfUrl={currentCandidate.cv_pdf_url || "/default-cv.pdf"}
+                candidateName={`${currentCandidate.first_name} ${currentCandidate.last_name || ""}`}
+                fallbackText={currentCandidate.cv}
+              />
+            </div>
           </div>
         </div>
 
@@ -245,4 +288,6 @@ export default function CVSlideshow({ candidates, userEmail, onClose }: CVSlides
       )}
     </div>
   )
+
+  return createPortal(slideshowContent, document.body)
 }

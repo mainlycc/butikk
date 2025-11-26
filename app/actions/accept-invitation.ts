@@ -9,7 +9,7 @@ export async function getInvitation(token: string) {
     .from("invitations")
     .select("*")
     .eq("token", token)
-    .is("used_at", null)
+    .eq("status", "pending")
     .single()
 
   if (error || !invitation) {
@@ -55,7 +55,7 @@ export async function acceptInvitation(token: string, email: string, password: s
     id: authData.user.id,
     email,
     role: invitation.role,
-    invited_by: invitation.invited_by,
+    invited_by: invitation.created_by || invitation.invited_by,
     invited_at: new Date().toISOString(),
   })
 
@@ -63,8 +63,8 @@ export async function acceptInvitation(token: string, email: string, password: s
     return { success: false, error: "Błąd podczas tworzenia profilu użytkownika" }
   }
 
-  // Mark invitation as used
-  await supabase.from("invitations").update({ used_at: new Date().toISOString() }).eq("token", token)
+  // Mark invitation as accepted
+  await supabase.from("invitations").update({ status: "accepted" }).eq("token", token)
 
   return { success: true }
 }

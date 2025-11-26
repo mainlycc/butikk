@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, LogOut, Users, Mail, FileText, Filter, X, Shield } from "lucide-react"
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
+import { Search, Users, Mail, FileText, Filter, X, Shield } from "lucide-react"
 import { toast } from "sonner"
 import { getSupabaseBrowserClient } from "@/lib/client"
 import CVSlideshow from "@/components/cv-slideshow"
@@ -36,9 +37,12 @@ interface Candidate {
   role: string | null
   seniority: string | null
   rate: string | null
+  location?: string | null
+  candidate_email?: string | null
   guardian: string | null
   guardian_email?: string | null
   cv: string | null
+  cv_pdf_url?: string | null
   technologies: string | null
   previous_contact: string | null
   project_description: string | null
@@ -133,7 +137,7 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
         candidate.seniority,
         candidate.rate,
         candidate.technologies,
-        candidate.guardian,
+        candidate.location,
         candidate.languages,
       ]
         .filter(Boolean)
@@ -148,12 +152,6 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
   useEffect(() => {
     setCurrentPage(1)
   }, [searchTerms, candidates, sorting])
-
-  const handleLogout = async () => {
-    const supabase = getSupabaseBrowserClient()
-    await supabase.auth.signOut()
-    router.push("/")
-  }
 
   const handleFilter = () => {
     toast.info(`Znaleziono ${filteredCandidates.length} kandydatów`)
@@ -240,16 +238,26 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
       {
         accessorKey: "technologies",
         header: "Technologie",
-        cell: ({ row }) => (
-          <div className="text-sm max-w-xs truncate">{row.original.technologies || "-"}</div>
-        ),
+        cell: ({ row }) => {
+          const technologies = row.original.technologies || "-"
+          return (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="text-sm max-w-xs truncate cursor-help">{technologies}</div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="max-w-md whitespace-pre-wrap">{technologies}</p>
+              </TooltipContent>
+            </Tooltip>
+          )
+        },
         enableSorting: false,
       },
       {
-        accessorKey: "guardian",
-        header: "Opiekun",
+        accessorKey: "location",
+        header: "Lokalizacja",
         cell: ({ row }) => (
-          <div className="text-sm text-muted-foreground">{row.original.guardian || "-"}</div>
+          <div className="text-sm text-muted-foreground">{row.original.location || "-"}</div>
         ),
       },
       {
@@ -283,38 +291,7 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
 
   return (
     <>
-      <div className="min-h-screen">
-        {/* Header */}
-        <header className="border-b bg-card sticky top-0 z-10 shadow-sm">
-          <div className="max-w-7xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                  <Users className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-2xl font-bold">Butik Kandydatów</h1>
-                    {isAdmin && (
-                      <Badge variant="default" className="gap-1">
-                        <Shield className="h-3 w-3" />
-                        Admin
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground">{userEmail}</p>
-                </div>
-              </div>
-              <Button variant="outline" onClick={handleLogout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Wyloguj
-              </Button>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+      <div className="space-y-6">
           {isAdmin && (
             <Card className="border-2 border-purple-500 bg-purple-50 dark:bg-purple-950/30">
               <CardContent className="pt-6">
@@ -410,7 +387,7 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
                     disabled={selectedCandidates.size === 0}
                   >
                     <Mail className="w-4 h-4 mr-2" />
-                    Wyślij zapytanie o kontakt
+                    Wyślij zapytanie
                   </Button>
                 </div>
               </div>
@@ -533,7 +510,6 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
               </CardContent>
             </Card>
           )}
-        </div>
       </div>
 
       {/* CV Slideshow Modal */}

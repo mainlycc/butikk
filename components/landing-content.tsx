@@ -153,7 +153,7 @@ export default function LandingContent({ infoData }: LandingContentProps) {
             {
               icon: Users,
               title: "Wyślij zapytanie",
-              description: "Skontaktuj się z opiekunem kandydata jednym kliknięciem",
+              description: "Wyślij zapytanie bezpośrednio do wybranych kandydatów",
             },
           ].map((feature, idx) => (
             <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">

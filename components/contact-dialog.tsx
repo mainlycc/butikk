@@ -26,6 +26,9 @@ interface Candidate {
   rate: string | null
   technologies: string | null
   cv: string | null
+  cv_pdf_url?: string | null
+  location?: string | null
+  candidate_email?: string | null
   guardian: string | null
   guardian_email?: string | null
   previous_contact: string | null
@@ -58,7 +61,7 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
       const result = await sendContactEmail(candidates, projectDescription, recruiterEmail)
 
       setIsSent(true)
-      toast.success(`E-mail został wysłany do ${result.sentTo?.length || 0} opiekunów`)
+      toast.success(`E-mail został wysłany do ${result.sentTo?.length || 0} kandydatów`)
 
       setTimeout(() => {
         onClose()
@@ -70,22 +73,8 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
     }
   }
 
-  // Grupujemy kandydatów według email opiekuna
-  // Filtrujemy kandydatów bez email opiekuna
-  const candidatesWithEmail = candidates.filter((c) => c.guardian_email)
-  
-  const caretakers = candidatesWithEmail.reduce(
-    (acc, candidate) => {
-      const email = candidate.guardian_email || ""
-      if (!email) return acc
-      if (!acc[email]) {
-        acc[email] = []
-      }
-      acc[email].push(candidate)
-      return acc
-    },
-    {} as Record<string, Candidate[]>,
-  )
+  // Filtrujemy kandydatów bez adresu email kandydata
+  const candidatesWithEmail = candidates.filter((c) => c.candidate_email)
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -93,10 +82,10 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
         <DialogHeader>
           <DialogTitle className="text-2xl flex items-center gap-2">
             <Mail className="w-6 h-6 text-primary" />
-            Wyślij zapytanie o kontakt
+            Wyślij zapytanie do kandydata
           </DialogTitle>
           <DialogDescription className="text-base">
-            Wyślij prośbę o kontakt do opiekunów wybranych kandydatów
+            Wyślij zapytanie bezpośrednio do wybranych kandydatów
           </DialogDescription>
         </DialogHeader>
 
@@ -110,65 +99,57 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
                   <p className="text-2xl font-bold">{candidates.length}</p>
                   {candidates.length !== candidatesWithEmail.length && (
                     <p className="text-xs text-muted-foreground mt-1">
-                      {candidates.length - candidatesWithEmail.length} bez email opiekuna
+                      {candidates.length - candidatesWithEmail.length} bez adresu email kandydata
                     </p>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Liczba opiekunów</p>
-                  <p className="text-2xl font-bold">{Object.keys(caretakers).length}</p>
+                  <p className="text-sm text-muted-foreground mb-1">Liczba kandydatów z adresem email</p>
+                  <p className="text-2xl font-bold">{candidatesWithEmail.length}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Selected Candidates by Caretaker */}
+          {/* Selected Candidates */}
           <div className="space-y-3">
             <h3 className="font-semibold text-lg">Wybrani kandydaci:</h3>
             <div className="space-y-4 max-h-64 overflow-y-auto pr-2">
-              {Object.keys(caretakers).length === 0 ? (
+              {candidatesWithEmail.length === 0 ? (
                 <Card className="border border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
                   <CardContent className="pt-4">
                     <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                      Żaden z wybranych kandydatów nie ma przypisanego adresu email opiekuna. 
+                      Żaden z wybranych kandydatów nie ma przypisanego adresu email. 
                       Nie można wysłać wiadomości.
                     </p>
                   </CardContent>
                 </Card>
               ) : (
-                Object.entries(caretakers).map(([caretakerEmail, candidateList]) => {
-                  const firstCandidate = candidateList[0]
-                  const caretakerName = firstCandidate.guardian || "Brak nazwy"
-                  return (
-                    <Card key={caretakerEmail} className="border">
-                      <CardContent className="pt-4">
-                        <div className="flex items-start gap-3 mb-3">
-                          <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                            <Mail className="w-4 h-4 text-primary" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-semibold truncate">{caretakerEmail}</p>
-                            {caretakerName && caretakerName !== "Brak nazwy" && (
-                              <p className="text-sm text-muted-foreground truncate">{caretakerName}</p>
-                            )}
-                            <p className="text-xs text-muted-foreground mt-1">{candidateList.length} kandydatów</p>
-                          </div>
+                <Card className="border">
+                  <CardContent className="pt-4 space-y-2">
+                    {candidatesWithEmail.map((candidate) => (
+                      <div key={candidate.id} className="flex items-center gap-2 text-sm">
+                        <div className="flex flex-col flex-1 min-w-0">
+                          <span className="font-medium truncate">
+                            {candidate.first_name} {candidate.last_name || ""}
+                          </span>
+                          {candidate.candidate_email && (
+                            <span className="text-xs text-muted-foreground truncate">
+                              {candidate.candidate_email}
+                            </span>
+                          )}
                         </div>
-                        <div className="space-y-2 pl-11">
-                          {candidateList.map((candidate) => (
-                            <div key={candidate.id} className="flex items-center gap-2 text-sm">
-                              <span className="font-medium">{candidate.first_name} {candidate.last_name || ""}</span>
-                              <span className="text-muted-foreground">•</span>
-                              <Badge variant="secondary">{candidate.role}</Badge>
-                              <Badge>{candidate.seniority}</Badge>
-                              {candidate.rate && <span className="text-muted-foreground text-xs">({candidate.rate})</span>}
-                            </div>
-                          ))}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Badge variant="secondary">{candidate.role}</Badge>
+                          <Badge>{candidate.seniority}</Badge>
+                          {candidate.rate && (
+                            <span className="text-muted-foreground text-xs">({candidate.rate})</span>
+                          )}
                         </div>
-                      </CardContent>
-                    </Card>
-                  )
-                })
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
               )}
             </div>
           </div>
@@ -188,7 +169,7 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
               disabled={isSending || isSent}
             />
             <p className="text-sm text-muted-foreground">
-              Ten opis zostanie wysłany do opiekunów wraz z listą kandydatów
+              Ten opis zostanie wysłany do kandydatów wraz z informacjami o roli i warunkach współpracy
             </p>
           </div>
 
@@ -200,7 +181,7 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
                   <CheckCircle2 className="w-6 h-6" />
                   <div>
                     <p className="font-semibold">Wiadomość została wysłana!</p>
-                    <p className="text-sm">Opiekunowie otrzymali prośbę o kontakt</p>
+                    <p className="text-sm">Kandydaci otrzymali Twoje zapytanie</p>
                   </div>
                 </div>
               </CardContent>
@@ -212,7 +193,11 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
           <Button variant="outline" onClick={onClose} disabled={isSending}>
             Anuluj
           </Button>
-          <Button onClick={handleSend} disabled={isSending || isSent || Object.keys(caretakers).length === 0} size="lg">
+          <Button
+            onClick={handleSend}
+            disabled={isSending || isSent || candidatesWithEmail.length === 0}
+            size="lg"
+          >
             {isSending ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />

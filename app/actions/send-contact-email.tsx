@@ -10,6 +10,9 @@ interface Candidate {
   rate: string | null
   technologies: string | null
   cv: string | null
+  cv_pdf_url?: string | null
+  location?: string | null
+  candidate_email?: string | null
   guardian: string | null
   guardian_email?: string | null
   previous_contact: string | null
@@ -30,9 +33,9 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
 
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    const groupedByCaretaker = candidates.reduce(
+    const groupedByCandidate = candidates.reduce(
       (acc, candidate) => {
-        const email = candidate.guardian_email || ""
+        const email = candidate.candidate_email || ""
         if (!email) return acc
         if (!acc[email]) {
           acc[email] = []
@@ -45,7 +48,7 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
 
     return {
       success: true,
-      sentTo: Object.keys(groupedByCaretaker),
+      sentTo: Object.keys(groupedByCandidate),
       demoMode: true,
     }
   }
@@ -54,9 +57,9 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
     throw new Error("Nie wybrano żadnych kandydatów")
   }
 
-  const groupedByCaretaker = candidates.reduce(
+  const groupedByCandidate = candidates.reduce(
     (acc, candidate) => {
-      const email = candidate.guardian_email || ""
+      const email = candidate.candidate_email || ""
       if (!email) return acc
       if (!acc[email]) {
         acc[email] = []
@@ -67,12 +70,12 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
     {} as Record<string, Candidate[]>,
   )
 
-  if (Object.keys(groupedByCaretaker).length === 0) {
-    throw new Error("Żaden z wybranych kandydatów nie ma przypisanego adresu email opiekuna")
+  if (Object.keys(groupedByCandidate).length === 0) {
+    throw new Error("Żaden z wybranych kandydatów nie ma przypisanego adresu email kandydata")
   }
 
   const results = await Promise.all(
-    Object.entries(groupedByCaretaker).map(async ([caretakerEmail, candidateList]) => {
+    Object.entries(groupedByCandidate).map(async ([candidateEmail, candidateList]) => {
       const candidatesInfo = candidateList
         .map(
           (c) =>
@@ -82,12 +85,13 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
 
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">Prośba o kontakt z kandydatami</h2>
-          <p><strong>Od rekrutera:</strong> ${recruiterEmail}</p>
+          <h2 style="color: #2563eb;">Zapytanie od rekrutera</h2>
+          <p>Cześć,</p>
+          <p>kontaktuje się z Tobą rekruter <strong>${recruiterEmail}</strong> z propozycją współpracy.</p>
           <p><strong>Opis projektu:</strong></p>
           <p style="background: #f3f4f6; padding: 16px; border-radius: 8px; white-space: pre-wrap;">${projectDescription}</p>
           <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;" />
-          <h3 style="color: #1f2937;">Wybrani kandydaci:</h3>
+          <h3 style="color: #1f2937;">Twoje dane w kontekście propozycji:</h3>
           <pre style="background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb;">${candidatesInfo}</pre>
         </div>
       `
@@ -95,14 +99,14 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
       try {
         await resend!.emails.send({
           from: "Butik Kandydatów <noreply@mail.mainly.pl>",
-          to: caretakerEmail,
-          subject: `Prośba o kontakt - ${candidateList.length} kandydatów`,
+          to: candidateEmail,
+          subject: `Nowe zapytanie od rekrutera`,
           html,
         })
-        return { success: true, email: caretakerEmail }
+        return { success: true, email: candidateEmail }
       } catch (error) {
-        console.error(`[v0] Error sending email to ${caretakerEmail}:`, error)
-        return { success: false, email: caretakerEmail, error }
+        console.error(`[v0] Error sending email to ${candidateEmail}:`, error)
+        return { success: false, email: candidateEmail, error }
       }
     }),
   )
@@ -112,5 +116,5 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
     throw new Error(`Nie udało się wysłać e-maili do: ${failed.map((f) => f.email).join(", ")}`)
   }
 
-  return { success: true, sentTo: Object.keys(groupedByCaretaker) }
+  return { success: true, sentTo: Object.keys(groupedByCandidate) }
 }

@@ -38,11 +38,9 @@ export default async function DatabasePage() {
     .order("sheet_row_number", { ascending: true })
 
   return (
-    <div className="min-h-screen bg-background">
-      <Suspense fallback={<DatabaseSkeleton />}>
-        <DatabaseContent initialCandidates={candidates || []} userEmail={user.email || ""} isAdmin={isAdmin} />
-      </Suspense>
-    </div>
+    <Suspense fallback={<DatabaseSkeleton />}>
+      <DatabaseContent initialCandidates={candidates || []} userEmail={user.email || ""} isAdmin={isAdmin} />
+    </Suspense>
   )
 }
 

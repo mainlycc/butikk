@@ -124,3 +124,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Ukryj sidebar gdy slideshow jest otwarty */
+[data-slot="sidebar-wrapper"].slideshow-open,
+[data-slot="sidebar-container"].slideshow-open {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
