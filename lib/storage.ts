@@ -130,7 +130,7 @@ export async function uploadPDFToStorage(
     }
 
     // Upload pliku
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from(BUCKET_NAME)
       .upload(fileName, pdfData, {
         contentType: "application/pdf",

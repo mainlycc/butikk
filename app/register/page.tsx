@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { validateInvitationToken, registerWithInvitation } from '@/lib/actions/invitations'
 import { toast } from 'sonner'
-import { Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import { Loader2, Eye, EyeOff } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()

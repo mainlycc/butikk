@@ -18,7 +18,7 @@ export function AcceptInviteContent() {
 
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [invitation, setInvitation] = useState<any>(null)
+  const [invitation, setInvitation] = useState<{ email: string; role?: string } | null>(null)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
 

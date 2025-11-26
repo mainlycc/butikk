@@ -1,18 +1,14 @@
 'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { 
   Database,
   Mail,
   LogOut,
   User,
-  Shield,
 } from 'lucide-react'
 import {
   Sidebar,

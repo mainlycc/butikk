@@ -10,6 +10,13 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    // Ignoruj pliki builda i generowane typy, żeby lint nie sypał błędami z .next
+    ignores: [
+      "**/.next/**",
+      "**/node_modules/**",
+    ],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useMemo, useEffect, useRef } from "react"
-import { useRouter } from "next/navigation"
 import { ColumnDef, SortingState, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -58,7 +57,6 @@ interface DatabaseContentProps {
 }
 
 export default function DatabaseContent({ initialCandidates, userEmail, isAdmin }: DatabaseContentProps) {
-  const router = useRouter()
   const [searchTerms, setSearchTerms] = useState("")
   const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set())
   const [showSlideshow, setShowSlideshow] = useState(false)

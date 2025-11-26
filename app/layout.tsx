@@ -7,8 +7,8 @@ import "./globals.css"
 import AppShell from "@/components/layout/AppShell"
 import { createClient } from "@/lib/supabase/server"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const geist = Geist({ subsets: ["latin"] })
+const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Butik Kandydatów",
@@ -66,7 +66,7 @@ export default async function RootLayout({
 
   return (
     <html lang="pl">
-      <body className={`font-sans antialiased`}>
+      <body className={`${geist.className} ${geistMono.variable} antialiased`}>
         <AppShell user={userProfile}>{children}</AppShell>
         <Toaster />
         <Analytics />

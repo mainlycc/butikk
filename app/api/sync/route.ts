@@ -1,6 +1,8 @@
 import { syncGoogleSheetsToSupabase } from "@/app/actions/sync-google-sheets"
 import { NextRequest, NextResponse } from "next/server"
 
+export const runtime = "nodejs"
+
 /**
  * API endpoint dla automatycznej synchronizacji (można wywołać przez cron jobs)
  * POST /api/sync - wyzwala synchronizację

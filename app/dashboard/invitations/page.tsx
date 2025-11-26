@@ -42,7 +42,7 @@ export default async function InvitationsPage() {
           </div>
         )
       }
-    } catch (adminError) {
+    } catch {
       return (
         <div className="p-4 rounded-lg border border-destructive/50 bg-destructive/10">
           <p className="text-sm text-destructive font-medium">

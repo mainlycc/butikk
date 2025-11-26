@@ -167,7 +167,9 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
             <div className="flex items-center justify-between flex-wrap gap-1">
               <div className="flex items-center gap-2">
                 <FileText className="w-3 h-3 text-primary" />
-                <CardTitle className="text-sm font-semibold leading-none">CV</CardTitle>
+                <CardTitle className="text-sm font-semibold leading-none">
+                  CV{candidateName ? ` – ${candidateName}` : ""}
+                </CardTitle>
                 {numPages && (
                   <span className="text-xs text-muted-foreground">
                     Strona {pageNumber} z {numPages}

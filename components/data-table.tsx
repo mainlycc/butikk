@@ -7,7 +7,6 @@ import {
   OnChangeFn,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
@@ -21,8 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
