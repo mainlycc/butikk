@@ -51,6 +51,11 @@ export function AcceptInviteContent() {
     e.preventDefault()
     setError("")
 
+    if (!invitation) {
+      setError("Brak danych zaproszenia. Odśwież stronę i spróbuj ponownie.")
+      return
+    }
+
     if (password.length < 6) {
       setError("Hasło musi mieć co najmniej 6 znaków")
       return
