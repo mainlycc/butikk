@@ -61,6 +61,7 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
   const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set())
   const [showSlideshow, setShowSlideshow] = useState(false)
   const [showContactDialog, setShowContactDialog] = useState(false)
+  const [contactCandidates, setContactCandidates] = useState<any[]>([])
   const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates)
   const [isAutoSyncing, setIsAutoSyncing] = useState(false)
   const syncIntervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -380,7 +381,10 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
                     Pokaz slajdów CV
                   </Button>
                   <Button 
-                    onClick={() => setShowContactDialog(true)} 
+                    onClick={() => {
+                      setContactCandidates(getSelectedCandidatesData())
+                      setShowContactDialog(true)
+                    }} 
                     size="lg"
                     disabled={selectedCandidates.size === 0}
                   >
@@ -513,16 +517,59 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
       {/* CV Slideshow Modal */}
       {showSlideshow && (
         <CVSlideshow 
-          candidates={getSelectedCandidatesData()} 
-          userEmail={userEmail}
+          candidates={getSelectedCandidatesData().map(({ 
+            id,
+            first_name,
+            last_name,
+            role,
+            seniority,
+            rate,
+            technologies,
+            cv,
+            cv_pdf_url,
+            location,
+            candidate_email,
+            guardian,
+            guardian_email,
+            previous_contact,
+            project_description,
+            languages,
+            availability,
+            skills,
+          }) => ({
+            id,
+            first_name,
+            last_name,
+            role,
+            seniority,
+            rate,
+            technologies,
+            cv,
+            cv_pdf_url,
+            location,
+            candidate_email,
+            guardian,
+            guardian_email,
+            previous_contact,
+            project_description,
+            languages,
+            availability,
+            skills,
+          }))} 
           onClose={() => setShowSlideshow(false)} 
+          onOpenContact={(candidate) => {
+            // Zamknij podgląd slajdów i otwórz ten sam dialog co z listy
+            setShowSlideshow(false)
+            setContactCandidates([candidate])
+            setShowContactDialog(true)
+          }}
         />
       )}
 
       {/* Contact Dialog */}
-      {showContactDialog && (
+      {showContactDialog && contactCandidates.length > 0 && (
         <ContactDialog
-          candidates={getSelectedCandidatesData()}
+          candidates={contactCandidates}
           recruiterEmail={userEmail}
           onClose={() => setShowContactDialog(false)}
         />

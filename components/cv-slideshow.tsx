@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ChevronLeft, ChevronRight, X, User, Briefcase, Mail, Calendar, MapPin } from "lucide-react"
-import ContactDialog from "@/components/contact-dialog"
 
 // Dynamic import z wyłączonym SSR, aby uniknąć problemu z DOMMatrix
 const PDFViewer = dynamic(() => import("@/components/pdf-viewer"), {
@@ -44,13 +43,12 @@ interface Candidate {
 
 interface CVSlideshowProps {
   candidates: Candidate[]
-  userEmail: string
   onClose: () => void
+  onOpenContact: (candidate: Candidate) => void
 }
 
-export default function CVSlideshow({ candidates, userEmail, onClose }: CVSlideshowProps) {
+export default function CVSlideshow({ candidates, onClose, onOpenContact }: CVSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [showContactDialog, setShowContactDialog] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   const currentCandidate = candidates[currentIndex]
@@ -153,10 +151,9 @@ export default function CVSlideshow({ candidates, userEmail, onClose }: CVSlides
                   </div>
                   <div className="flex flex-col items-end gap-2 min-w-0">
                     <Button
-                      onClick={() => setShowContactDialog(true)}
+                      onClick={() => onOpenContact(currentCandidate)}
                       size="lg"
                       className="gap-2 px-6"
-                      disabled={!currentCandidate.candidate_email}
                     >
                       <Mail className="w-4 h-4" />
                       Wyślij zapytanie
@@ -278,14 +275,6 @@ export default function CVSlideshow({ candidates, userEmail, onClose }: CVSlides
         </div>
       </div>
 
-      {/* Contact Dialog */}
-      {showContactDialog && (
-        <ContactDialog
-          candidates={[currentCandidate]}
-          recruiterEmail={userEmail}
-          onClose={() => setShowContactDialog(false)}
-        />
-      )}
     </div>
   )
 
