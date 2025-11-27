@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -117,6 +118,15 @@ export default function LandingContent({ infoData }: LandingContentProps) {
                   <Button type="submit" className="w-full h-12 text-lg font-semibold" disabled={isLoading}>
                     {isLoading ? "Logowanie..." : "Zaloguj się"}
                   </Button>
+
+                  <div className="text-center pt-2">
+                    <Link
+                      href="/reset-password"
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Zapomniałem hasła
+                    </Link>
+                  </div>
                 </form>
               </CardContent>
             </Card>

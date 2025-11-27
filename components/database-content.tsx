@@ -61,7 +61,7 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
   const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set())
   const [showSlideshow, setShowSlideshow] = useState(false)
   const [showContactDialog, setShowContactDialog] = useState(false)
-  const [contactCandidates, setContactCandidates] = useState<any[]>([])
+  const [contactCandidates, setContactCandidates] = useState<Candidate[]>([])
   const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates)
   const [isAutoSyncing, setIsAutoSyncing] = useState(false)
   const syncIntervalRef = useRef<NodeJS.Timeout | null>(null)

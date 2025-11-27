@@ -9,23 +9,37 @@ type UserProfile = {
   role: 'admin' | 'user'
 }
 
+type AuthUser = {
+  id: string
+  email?: string
+}
+
 export default function AppShell({
-  user,
+  authUser,
+  userProfile,
   children,
 }: {
-  user: UserProfile | null
+  authUser: AuthUser | null
+  userProfile: UserProfile | null
   children: React.ReactNode
 }) {
-  // Jeśli brak użytkownika (np. strony publiczne), renderuj bez shell'a
-  if (!user) {
+  // Jeśli brak zalogowanego użytkownika (np. strony publiczne), renderuj bez shell'a
+  if (!authUser) {
     return <>{children}</>
   }
 
+  // Użyj userProfile jeśli istnieje, w przeciwnym razie użyj danych z authUser z domyślną rolą
+  const user: UserProfile = userProfile || {
+    id: authUser.id,
+    email: authUser.email || '',
+    role: 'user', // Domyślna rola jeśli brak profilu w bazie
+  }
+
   return (
-    <SidebarProvider>
+    <SidebarProvider className="!h-full !min-h-0">
       <AppSidebar user={user} />
-      <SidebarInset>
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+      <SidebarInset className="h-full overflow-hidden">
+        <div className="h-full overflow-y-auto p-6 w-full">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   )

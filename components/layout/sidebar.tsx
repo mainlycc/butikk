@@ -59,6 +59,12 @@ export function AppSidebar({ user }: SidebarProps) {
       icon: Mail,
       roles: ['admin']
     },
+    {
+      name: 'Użytkownicy',
+      href: '/dashboard/users',
+      icon: User,
+      roles: ['admin']
+    },
   ]
 
   const filteredNavigation = navigation.filter(item => 

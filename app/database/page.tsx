@@ -38,31 +38,27 @@ export default async function DatabasePage() {
     .order("sheet_row_number", { ascending: true })
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <Suspense fallback={<DatabaseSkeleton />}>
-          <DatabaseContent
-            initialCandidates={candidates || []}
-            userEmail={user.email || ""}
-            isAdmin={isAdmin}
-          />
-        </Suspense>
-      </div>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <Suspense fallback={<DatabaseSkeleton />}>
+        <DatabaseContent
+          initialCandidates={candidates || []}
+          userEmail={user.email || ""}
+          isAdmin={isAdmin}
+        />
+      </Suspense>
     </div>
   )
 }
 
 function DatabaseSkeleton() {
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <Skeleton className="h-16 w-full" />
-        <Skeleton className="h-12 w-full" />
-        <div className="space-y-4">
-          {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} className="h-24 w-full" />
-          ))}
-        </div>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <Skeleton className="h-16 w-full" />
+      <Skeleton className="h-12 w-full" />
+      <div className="space-y-4">
+        {[...Array(5)].map((_, i) => (
+          <Skeleton key={i} className="h-24 w-full" />
+        ))}
       </div>
     </div>
   )
