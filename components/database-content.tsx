@@ -29,7 +29,8 @@ import {
 
 interface Candidate {
   id: string
-  sheet_row_number: number
+  // Wartość dostępna dla rekordów z bazy, ale nie jest wymagana w każdym miejscu
+  sheet_row_number?: number
   nr?: string | null
   first_name: string | null
   last_name?: string | null
