@@ -89,32 +89,33 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-4 py-2">
           {/* Summary */}
-          <Card className="border-2">
-            <CardContent className="pt-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Liczba kandydatów</p>
-                  <p className="text-2xl font-bold">{candidates.length}</p>
-                  {candidates.length !== candidatesWithEmail.length && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {candidates.length - candidatesWithEmail.length} bez adresu email kandydata
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Liczba kandydatów z adresem email</p>
-                  <p className="text-2xl font-bold">{candidatesWithEmail.length}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="flex items-center gap-4 px-1">
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm text-muted-foreground">Wybrano:</span>
+              <span className="text-lg font-semibold">{candidates.length}</span>
+              <span className="text-sm text-muted-foreground">kandydatów</span>
+            </div>
+            <div className="h-4 w-px bg-border"></div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm text-muted-foreground">Z adresem email:</span>
+              <span className="text-lg font-semibold text-primary">{candidatesWithEmail.length}</span>
+            </div>
+            {candidates.length !== candidatesWithEmail.length && (
+              <>
+                <div className="h-4 w-px bg-border"></div>
+                <span className="text-xs text-muted-foreground">
+                  {candidates.length - candidatesWithEmail.length} bez email
+                </span>
+              </>
+            )}
+          </div>
 
           {/* Selected Candidates */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-lg">Wybrani kandydaci:</h3>
-            <div className="space-y-4 max-h-64 overflow-y-auto pr-2">
+          <div className="space-y-2">
+            <h3 className="font-semibold text-base">Wybrani kandydaci:</h3>
+            <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
               {candidatesWithEmail.length === 0 ? (
                 <Card className="border border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
                   <CardContent className="pt-4">
@@ -126,22 +127,15 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
                 </Card>
               ) : (
                 <Card className="border">
-                  <CardContent className="pt-4 space-y-2">
+                  <CardContent className="p-3 space-y-2">
                     {candidatesWithEmail.map((candidate) => (
-                      <div key={candidate.id} className="flex items-center gap-2 text-sm">
-                        <div className="flex flex-col flex-1 min-w-0">
-                          <span className="font-medium truncate">
-                            {candidate.first_name} {candidate.last_name || ""}
-                          </span>
-                          {candidate.candidate_email && (
-                            <span className="text-xs text-muted-foreground truncate">
-                              {candidate.candidate_email}
-                            </span>
-                          )}
-                        </div>
+                      <div key={candidate.id} className="flex items-center justify-between gap-3 text-sm py-1.5 border-b last:border-b-0">
+                        <span className="font-medium">
+                          {candidate.first_name} {candidate.last_name || ""}
+                        </span>
                         <div className="flex items-center gap-2 flex-wrap">
-                          <Badge variant="secondary">{candidate.role}</Badge>
-                          <Badge>{candidate.seniority}</Badge>
+                          <Badge variant="secondary" className="text-xs">{candidate.role}</Badge>
+                          <Badge className="text-xs">{candidate.seniority}</Badge>
                           {candidate.rate && (
                             <span className="text-muted-foreground text-xs">({candidate.rate})</span>
                           )}
@@ -156,7 +150,7 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
 
           {/* Project Description */}
           <div className="space-y-2">
-            <label htmlFor="project-description" className="font-semibold text-lg">
+            <label htmlFor="project-description" className="font-semibold text-base">
               Opis projektu:
             </label>
             <Textarea

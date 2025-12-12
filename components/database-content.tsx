@@ -8,13 +8,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
-import { Search, Users, Mail, FileText, Filter, X, Shield } from "lucide-react"
+import { Search, Users, Mail, FileText, Filter, X } from "lucide-react"
 import { toast } from "sonner"
 import { getSupabaseBrowserClient } from "@/lib/client"
 import CVSlideshow from "@/components/cv-slideshow"
 import ContactDialog from "@/components/contact-dialog"
-import { AdminPanel } from "@/components/admin-panel"
-import { SyncButton } from "@/components/sync-button"
 import { syncGoogleSheetsToSupabase } from "@/app/actions/sync-google-sheets"
 import { DataTable } from "@/components/data-table"
 import {
@@ -207,10 +205,10 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
       },
       {
         accessorKey: "first_name",
-        header: "Imię i Nazwisko",
+        header: "Imię",
         cell: ({ row }) => (
           <div className="font-medium">
-            {row.original.first_name} {row.original.last_name || ""}
+            {row.original.first_name}
           </div>
         ),
         enableSorting: false,
@@ -229,6 +227,56 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
         cell: ({ row }) => (
           <Badge>{row.original.seniority || "-"}</Badge>
         ),
+        sortingFn: (rowA, rowB) => {
+          const getSeniorityValue = (seniority: string | null): { isNumeric: boolean; value: number; original: string } => {
+            if (!seniority) return { isNumeric: false, value: 0, original: "" }
+            
+            const normalized = seniority.trim()
+            
+            // Sprawdź czy zawiera liczbę (np. "11 lat", "5 lat", "3 lata")
+            const numberMatch = normalized.match(/(\d+)/)
+            if (numberMatch) {
+              const numberValue = parseInt(numberMatch[1], 10)
+              return { isNumeric: true, value: numberValue, original: normalized }
+            }
+            
+            // Jeśli nie ma liczby, traktuj jako nazwę własną
+            const lowerNormalized = normalized.toLowerCase()
+            let value = 1000 // Wysoka wartość, żeby nazwy były po liczbach
+            
+            if (lowerNormalized.includes("junior") || lowerNormalized.includes("trainee") || lowerNormalized.includes("entry")) {
+              value = 1001
+            } else if (lowerNormalized.includes("mid") || lowerNormalized.includes("middle") || lowerNormalized.includes("regular")) {
+              value = 1002
+            } else if (lowerNormalized.includes("senior")) {
+              value = 1003
+            } else if (lowerNormalized.includes("lead") || lowerNormalized.includes("principal") || lowerNormalized.includes("expert")) {
+              value = 1004
+            }
+            
+            return { isNumeric: false, value, original: normalized }
+          }
+          
+          const infoA = getSeniorityValue(rowA.original.seniority)
+          const infoB = getSeniorityValue(rowB.original.seniority)
+          
+          // Najpierw liczby, potem nazwy
+          if (infoA.isNumeric && !infoB.isNumeric) return -1
+          if (!infoA.isNumeric && infoB.isNumeric) return 1
+          
+          // Jeśli oba są liczbami, sortuj według wartości numerycznej
+          if (infoA.isNumeric && infoB.isNumeric) {
+            return infoA.value - infoB.value
+          }
+          
+          // Jeśli oba są nazwami, sortuj według przypisanej wartości
+          if (infoA.value !== infoB.value) {
+            return infoA.value - infoB.value
+          }
+          
+          // Jeśli ten sam poziom, sortuj alfabetycznie
+          return infoA.original.localeCompare(infoB.original)
+        },
       },
       {
         accessorKey: "rate",
@@ -292,28 +340,6 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
   return (
     <>
       <div className="space-y-6">
-          {isAdmin && (
-            <Card className="border-2 border-purple-500 bg-purple-50 dark:bg-purple-950/30">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <Shield className="w-5 h-5 text-purple-700 dark:text-purple-300" />
-                    <div>
-                      <p className="font-semibold text-purple-900 dark:text-purple-100">Panel Administratora</p>
-                      <p className="text-sm text-purple-800 dark:text-purple-200">
-                        Zarządzaj użytkownikami i synchronizuj dane
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <SyncButton />
-                    <AdminPanel />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Search & Filter */}
           <Card className="border-2">
             <CardContent className="pt-6">
@@ -340,24 +366,14 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
                   )}
                 </div>
 
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-3">
-                    <p className="text-muted-foreground">
-                      Wyświetlanych: <span className="font-semibold text-foreground">{filteredCandidates.length}</span>{" "}
-                      kandydatów
-                      {searchTerms && ` (z ${candidates.length} całkowitych)`}
-                    </p>
-                    {isAutoSyncing && (
-                      <span className="text-xs text-muted-foreground flex items-center gap-1">
-                        <span className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></span>
-                        Synchronizacja...
-                      </span>
-                    )}
+                {isAutoSyncing && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <span className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></span>
+                      Synchronizacja...
+                    </span>
                   </div>
-                  <p className="text-muted-foreground">
-                    Zaznaczonych: <span className="font-semibold text-foreground">{selectedCandidates.size}</span>
-                  </p>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>
