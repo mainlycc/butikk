@@ -129,7 +129,7 @@ export function AcceptInviteContent() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
       <Card className="w-full max-w-md border-slate-700 bg-slate-800/50">
         <CardHeader>
-          <CardTitle className="text-2xl text-white">Zaproszenie do Butik Kandydatów</CardTitle>
+          <CardTitle className="text-2xl text-white">Zaproszenie do QualiBase</CardTitle>
           <CardDescription className="text-slate-400">
             Zostałeś zaproszony jako{" "}
             <strong className="text-blue-400">{invitation?.role === "admin" ? "Administrator" : "Użytkownik"}</strong>

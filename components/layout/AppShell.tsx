@@ -2,6 +2,7 @@
 
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from './sidebar'
+import { usePathname } from 'next/navigation'
 
 type UserProfile = {
   id: string
@@ -23,8 +24,15 @@ export default function AppShell({
   userProfile: UserProfile | null
   children: React.ReactNode
 }) {
+  const pathname = usePathname()
+
   // Jeśli brak zalogowanego użytkownika (np. strony publiczne), renderuj bez shell'a
   if (!authUser) {
+    return <>{children}</>
+  }
+
+  // Na stronach /main* nie pokazujemy sidebaru nawet po zalogowaniu
+  if (pathname.startsWith('/main')) {
     return <>{children}</>
   }
 
@@ -38,8 +46,8 @@ export default function AppShell({
   return (
     <SidebarProvider className="!h-full !min-h-0">
       <AppSidebar user={user} />
-      <SidebarInset className="h-full overflow-hidden">
-        <div className="h-full overflow-y-auto p-6 w-full">{children}</div>
+      <SidebarInset className="min-h-screen">
+        <div className="min-h-screen p-6 w-full">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   )

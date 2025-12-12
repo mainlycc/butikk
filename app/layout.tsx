@@ -10,7 +10,7 @@ import { createClient } from "@/lib/supabase/server"
 const geist = Geist({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Butik Kandydatów",
+  title: "QualiBase",
   description: "Baza kandydatów dla rekruterów",
   generator: "v0.app",
   icons: {
@@ -72,8 +72,8 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="pl" className="h-full overflow-hidden">
-      <body className={`${geist.className} antialiased h-full overflow-hidden`}>
+    <html lang="pl" className="h-full overflow-auto">
+      <body className={`${geist.className} antialiased h-full overflow-auto`}>
         <AppShell authUser={authUser} userProfile={userProfile}>{children}</AppShell>
         <Toaster />
         <Analytics />

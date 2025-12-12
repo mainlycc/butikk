@@ -17,9 +17,10 @@ interface LandingContentProps {
     description: string
     instructions: string[]
   }
+  hideGuide?: boolean
 }
 
-export default function LandingContent({ infoData }: LandingContentProps) {
+export default function LandingContent({ infoData, hideGuide = false }: LandingContentProps) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -43,7 +44,7 @@ export default function LandingContent({ infoData }: LandingContentProps) {
     setIsLoading(true)
 
     const supabase = getSupabaseBrowserClient()
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
@@ -54,7 +55,10 @@ export default function LandingContent({ infoData }: LandingContentProps) {
       return
     }
 
-    router.push("/database")
+    // Odśwież router, aby upewnić się, że cookies są zsynchronizowane
+    router.refresh()
+    // Użyj window.location zamiast router.push, aby wymusić pełne przeładowanie
+    window.location.href = "/database"
   }
 
   return (
@@ -63,18 +67,22 @@ export default function LandingContent({ infoData }: LandingContentProps) {
       <div className="relative overflow-hidden bg-gradient-to-b from-background via-accent/30 to-background">
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
 
-        <div className="relative max-w-7xl mx-auto px-6 py-24 lg:py-32">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-32">
           <div className="text-center space-y-8">
-            <div className="inline-block">
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
-                  <Users className="w-6 h-6 text-primary-foreground" />
+            {infoData.title.trim() ? (
+              <div className="inline-block">
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
+                    <Users className="w-6 h-6 text-primary-foreground" />
+                  </div>
+                  <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tight text-balance">
+                    {infoData.title}
+                  </h1>
                 </div>
-                <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-balance">{infoData.title}</h1>
               </div>
-            </div>
+            ) : null}
 
-            <p className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto text-balance leading-relaxed">
+            <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto text-balance leading-relaxed">
               {infoData.description}
             </p>
 
@@ -134,71 +142,72 @@ export default function LandingContent({ infoData }: LandingContentProps) {
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="max-w-7xl mx-auto px-6 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-balance">Jak korzystać z systemu</h2>
-          <p className="text-lg text-muted-foreground text-balance">
-            Prosty i intuicyjny proces wyszukiwania kandydatów
-          </p>
-        </div>
+      {!hideGuide && (
+        <div className="max-w-7xl mx-auto px-6 py-24">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-balance">Jak korzystać z systemu</h2>
+            <p className="text-lg text-muted-foreground text-balance">
+              Prosty i intuicyjny proces wyszukiwania kandydatów
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            {
-              icon: Mail,
-              title: "Zaloguj się",
-              description: "Wprowadź swój adres e-mail, aby rozpocząć",
-            },
-            {
-              icon: Search,
-              title: "Filtruj kandydatów",
-              description: "Użyj wyszukiwarki, aby znaleźć idealnych kandydatów",
-            },
-            {
-              icon: FileText,
-              title: "Przeglądaj CV",
-              description: "Wyświetl CV wybranych kandydatów w formie slajdów",
-            },
-            {
-              icon: Users,
-              title: "Wyślij zapytanie",
-              description: "Wyślij zapytanie bezpośrednio do wybranych kandydatów",
-            },
-          ].map((feature, idx) => (
-            <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: Mail,
+                title: "Zaloguj się",
+                description: "Wprowadź swój adres e-mail, aby rozpocząć",
+              },
+              {
+                icon: Search,
+                title: "Filtruj kandydatów",
+                description: "Użyj wyszukiwarki, aby znaleźć idealnych kandydatów",
+              },
+              {
+                icon: FileText,
+                title: "Przeglądaj CV",
+                description: "Wyświetl CV wybranych kandydatów w formie slajdów",
+              },
+              {
+                icon: Users,
+                title: "Wyślij zapytanie",
+                description: "Wyślij zapytanie bezpośrednio do wybranych kandydatów",
+              },
+            ].map((feature, idx) => (
+              <Card key={idx} className="border-2 hover:border-primary/50 transition-colors">
+                <CardHeader>
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <feature.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  <CardDescription className="text-base leading-relaxed">{feature.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+
+          {/* Instructions */}
+          {infoData.instructions.length > 0 && (
+            <Card className="mt-16 border-2">
               <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <feature.icon className="w-6 h-6 text-primary" />
-                </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
-                <CardDescription className="text-base leading-relaxed">{feature.description}</CardDescription>
+                <CardTitle className="text-2xl">Instrukcje</CardTitle>
               </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  {infoData.instructions.map((instruction, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-sm font-semibold text-primary">{idx + 1}</span>
+                      </div>
+                      <p className="text-base leading-relaxed">{instruction}</p>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
             </Card>
-          ))}
+          )}
         </div>
-
-        {/* Instructions */}
-        {infoData.instructions.length > 0 && (
-          <Card className="mt-16 border-2">
-            <CardHeader>
-              <CardTitle className="text-2xl">Instrukcje</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                {infoData.instructions.map((instruction, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm font-semibold text-primary">{idx + 1}</span>
-                    </div>
-                    <p className="text-base leading-relaxed">{instruction}</p>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+      )}
     </div>
   )
 }

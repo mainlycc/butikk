@@ -8,13 +8,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
-import { Search, Users, Mail, FileText, Filter, X, Shield } from "lucide-react"
+import { Search, Users, Mail, FileText, Filter, X } from "lucide-react"
 import { toast } from "sonner"
 import { getSupabaseBrowserClient } from "@/lib/client"
 import CVSlideshow from "@/components/cv-slideshow"
 import ContactDialog from "@/components/contact-dialog"
-import { AdminPanel } from "@/components/admin-panel"
-import { SyncButton } from "@/components/sync-button"
 import { syncGoogleSheetsToSupabase } from "@/app/actions/sync-google-sheets"
 import { DataTable } from "@/components/data-table"
 import {
@@ -292,28 +290,6 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
   return (
     <>
       <div className="space-y-6">
-          {isAdmin && (
-            <Card className="border-2 border-purple-500 bg-purple-50 dark:bg-purple-950/30">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <Shield className="w-5 h-5 text-purple-700 dark:text-purple-300" />
-                    <div>
-                      <p className="font-semibold text-purple-900 dark:text-purple-100">Panel Administratora</p>
-                      <p className="text-sm text-purple-800 dark:text-purple-200">
-                        Zarządzaj użytkownikami i synchronizuj dane
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <SyncButton />
-                    <AdminPanel />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Search & Filter */}
           <Card className="border-2">
             <CardContent className="pt-6">
