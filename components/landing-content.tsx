@@ -54,7 +54,9 @@ export default function LandingContent({ infoData }: LandingContentProps) {
       return
     }
 
-    router.push("/database")
+    // Użyj window.location.href aby wymusić pełne przeładowanie strony
+    // To zapewnia, że layout.tsx poprawnie wykryje zalogowanego użytkownika i wyświetli sidebar
+    window.location.href = "/database"
   }
 
   return (
