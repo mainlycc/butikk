@@ -43,7 +43,6 @@ export default async function DatabasePage() {
         <DatabaseContent
           initialCandidates={candidates || []}
           userEmail={user.email || ""}
-          isAdmin={isAdmin}
         />
       </Suspense>
     </div>

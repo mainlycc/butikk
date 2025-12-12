@@ -44,7 +44,7 @@ export default function LandingContent({ infoData, hideGuide = false }: LandingC
     setIsLoading(true)
 
     const supabase = getSupabaseBrowserClient()
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+    const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     })

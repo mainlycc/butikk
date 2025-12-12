@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, Shield, UserRound, BriefcaseBusiness } from "lucide-react"
+import { CheckCircle2, UserRound, BriefcaseBusiness } from "lucide-react"
 
 export function DualPerspectiveSection() {
   return (

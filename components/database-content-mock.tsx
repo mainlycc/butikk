@@ -1,15 +1,12 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, useCallback } from "react"
 import { ColumnDef, SortingState, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
-import { Search, Users, Mail, FileText, Filter, X } from "lucide-react"
-import { toast } from "sonner"
+import { Users } from "lucide-react"
 import { DataTable } from "@/components/data-table"
 import {
   Pagination,
@@ -288,16 +285,7 @@ export default function DatabaseContentMock() {
     setCurrentPage(1)
   }, [searchTerms, candidates, sorting])
 
-  const handleFilter = () => {
-    toast.info(`Znaleziono ${filteredCandidates.length} kandydatów`)
-  }
-
-  const handleResetFilter = () => {
-    setSearchTerms("")
-    toast.info("Wyświetlane są wszyscy kandydaci")
-  }
-
-  const toggleCandidate = (id: string) => {
+  const toggleCandidate = useCallback((id: string) => {
     const newSelected = new Set(selectedCandidates)
     if (newSelected.has(id)) {
       newSelected.delete(id)
@@ -305,19 +293,15 @@ export default function DatabaseContentMock() {
       newSelected.add(id)
     }
     setSelectedCandidates(newSelected)
-  }
+  }, [selectedCandidates])
 
-  const toggleAll = () => {
+  const toggleAll = useCallback(() => {
     if (selectedCandidates.size === filteredCandidates.length) {
       setSelectedCandidates(new Set())
     } else {
       setSelectedCandidates(new Set(filteredCandidates.map((c) => c.id)))
     }
-  }
-
-  const getSelectedCandidatesData = () => {
-    return filteredCandidates.filter((c) => selectedCandidates.has(c.id))
-  }
+  }, [filteredCandidates, selectedCandidates.size])
 
   const columns = useMemo<ColumnDef<Candidate>[]>(
     () => [

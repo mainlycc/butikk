@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect, useRef } from "react"
+import { useState, useMemo, useEffect, useRef, useCallback } from "react"
 import { ColumnDef, SortingState, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -52,10 +52,9 @@ interface Candidate {
 interface DatabaseContentProps {
   initialCandidates: Candidate[]
   userEmail: string
-  isAdmin: boolean
 }
 
-export default function DatabaseContent({ initialCandidates, userEmail, isAdmin }: DatabaseContentProps) {
+export default function DatabaseContent({ initialCandidates, userEmail }: DatabaseContentProps) {
   const [searchTerms, setSearchTerms] = useState("")
   const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set())
   const [showSlideshow, setShowSlideshow] = useState(false)
@@ -160,7 +159,7 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
     toast.info("Wyświetlane są wszyscy kandydaci")
   }
 
-  const toggleCandidate = (id: string) => {
+  const toggleCandidate = useCallback((id: string) => {
     const newSelected = new Set(selectedCandidates)
     if (newSelected.has(id)) {
       newSelected.delete(id)
@@ -168,15 +167,15 @@ export default function DatabaseContent({ initialCandidates, userEmail, isAdmin 
       newSelected.add(id)
     }
     setSelectedCandidates(newSelected)
-  }
+  }, [selectedCandidates])
 
-  const toggleAll = () => {
+  const toggleAll = useCallback(() => {
     if (selectedCandidates.size === filteredCandidates.length) {
       setSelectedCandidates(new Set())
     } else {
       setSelectedCandidates(new Set(filteredCandidates.map((c) => c.id)))
     }
-  }
+  }, [filteredCandidates, selectedCandidates.size])
 
   const getSelectedCandidatesData = () => {
     return filteredCandidates.filter((c) => selectedCandidates.has(c.id))
