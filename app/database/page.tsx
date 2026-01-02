@@ -38,7 +38,7 @@ export default async function DatabasePage() {
     .order("sheet_row_number", { ascending: true })
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <Suspense fallback={<DatabaseSkeleton />}>
         <DatabaseContent
           initialCandidates={candidates || []}
@@ -51,7 +51,7 @@ export default async function DatabasePage() {
 
 function DatabaseSkeleton() {
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <Skeleton className="h-16 w-full" />
       <Skeleton className="h-12 w-full" />
       <div className="space-y-4">

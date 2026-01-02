@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { TopNav } from '@/components/layout/top-nav'
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,36 @@ import {
 import DatabaseContentMock from '@/components/database-content-mock'
 import { DualPerspectiveSection } from '@/components/dual-perspective'
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://qualibase.pl'
+
+export const metadata: Metadata = {
+  title: "Znajdź topowe talenty IT szybciej niż kiedykolwiek",
+  description: "Odblokuj potencjał swojej firmy z Qualibase. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT bezpośrednio. Platforma rekrutacyjna dla branży IT.",
+  alternates: {
+    canonical: `${baseUrl}/main`,
+  },
+  openGraph: {
+    title: "Znajdź topowe talenty IT szybciej niż kiedykolwiek | QualiBase",
+    description: "Odblokuj potencjał swojej firmy z Qualibase. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT bezpośrednio.",
+    url: `${baseUrl}/main`,
+    type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "QualiBase - Platforma Rekrutacyjna IT",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Znajdź topowe talenty IT szybciej niż kiedykolwiek | QualiBase",
+    description: "Odblokuj potencjał swojej firmy z Qualibase. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT bezpośrednio.",
+    images: ["/og-image.jpg"],
+  },
+}
+
 export default function MainPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -28,10 +59,6 @@ export default function MainPage() {
         <div className="max-w-[1280px] mx-auto flex flex-col items-center text-center gap-8">
           {/* Hero Text */}
           <div className="max-w-[800px] flex flex-col gap-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 self-center">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-              <span className="text-xs font-semibold text-primary uppercase tracking-wide">Nowa jakość rekrutacji</span>
-            </div>
             <h1 className="text-foreground text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight">
               Znajdź topowe talenty IT<br/>
               <span className="text-primary">szybciej niż kiedykolwiek</span>
@@ -44,7 +71,7 @@ export default function MainPage() {
                 <Link href="/main/kandydat">Zarejestruj się jako kandydat</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 px-6 text-base font-bold">
-                <Link href="/main/rekruter">Dla firm (rekruter)</Link>
+                <Link href="/main/rekruter">Korzystaj jako rekruter</Link>
               </Button>
             </div>
           </div>
@@ -144,7 +171,7 @@ export default function MainPage() {
                 <div className="w-12 h-12 bg-white rounded-full shadow-md flex items-center justify-center mb-3">
                   <Lock className="text-primary w-5 h-5" />
                 </div>
-                <h4 className="font-bold text-foreground mb-1">Funkcje Premium</h4>
+                <h4 className="font-bold text-foreground mb-1">Funkcje dla Rekruterów</h4>
                 <p className="text-xs text-muted-foreground mb-4">Dostępne tylko dla zalogowanych</p>
                 <Button size="sm" className="text-xs">
                   Załóż darmowe konto
@@ -167,7 +194,7 @@ export default function MainPage() {
               <Link href="/main/kandydat">Zarejestruj się jako kandydat</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="h-12 px-8 text-base font-bold">
-              <Link href="/main/rekruter">Dla firm (rekruter)</Link>
+              <Link href="/main/rekruter">Korzystaj jako rekruter</Link>
             </Button>
           </div>
         </div>

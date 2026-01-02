@@ -378,8 +378,8 @@ export default function DatabaseContent({ initialCandidates, userEmail }: Databa
           </Card>
 
           {/* Action Buttons */}
-          <Card className="border-2 border-primary/50 bg-primary/5">
-            <CardContent className="pt-6">
+          <Card className="border-2 border-primary/50 bg-primary/5 py-0">
+            <CardContent className="py-4">
               <div className="flex items-center justify-between gap-4">
                 {selectedCandidates.size > 0 ? (
                   <p className="text-base font-medium">Wybrano {selectedCandidates.size} kandydatów</p>

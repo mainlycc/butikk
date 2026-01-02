@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
@@ -6,6 +7,40 @@ import LandingContent from "@/components/landing-content"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getSupabaseServerClient } from "@/lib/server"
 import { Network, Globe, Mail, Share2 } from "lucide-react"
+
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://qualibase.pl'
+
+export const metadata: Metadata = {
+  title: "Logowanie",
+  description: "Zaloguj się do QualiBase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych dla rekruterów i firm technologicznych.",
+  alternates: {
+    canonical: `${baseUrl}/main/zaloguj`,
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+  openGraph: {
+    title: "Logowanie | QualiBase",
+    description: "Zaloguj się do QualiBase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych.",
+    url: `${baseUrl}/main/zaloguj`,
+    type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Logowanie - QualiBase",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Logowanie | QualiBase",
+    description: "Zaloguj się do QualiBase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych.",
+    images: ["/og-image.jpg"],
+  },
+}
 
 export default async function ZalogujPage() {
   const supabase = await getSupabaseServerClient()

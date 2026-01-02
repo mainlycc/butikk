@@ -44,10 +44,10 @@ export default function AppShell({
   }
 
   return (
-    <SidebarProvider className="!h-full !min-h-0">
+    <SidebarProvider className="!h-full !min-h-0 overflow-hidden">
       <AppSidebar user={user} />
-      <SidebarInset className="min-h-screen">
-        <div className="min-h-screen p-6 w-full">{children}</div>
+      <SidebarInset className="min-h-screen overflow-x-hidden">
+        <div className="min-h-screen p-6 w-full max-w-full overflow-x-hidden">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   )

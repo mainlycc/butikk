@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getSupabaseBrowserClient } from "@/lib/client"
+import { updateLastLogin } from "@/lib/actions/users"
 import { Users, Mail, Search, FileText, AlertCircle } from "lucide-react"
 
 interface LandingContentProps {
@@ -54,6 +55,9 @@ export default function LandingContent({ infoData, hideGuide = false }: LandingC
       setIsLoading(false)
       return
     }
+
+    // Aktualizuj last_login w bazie danych
+    await updateLastLogin()
 
     // Odśwież router, aby upewnić się, że cookies są zsynchronizowane
     router.refresh()

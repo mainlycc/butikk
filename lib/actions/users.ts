@@ -102,4 +102,28 @@ export async function deleteUsers(ids: string[]): Promise<{ success: boolean; er
   return { success: true }
 }
 
+export async function updateLastLogin(): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { success: false, error: 'Nie jesteś zalogowany' }
+  }
+
+  const { error } = await supabase
+    .from('users')
+    .update({ last_login: new Date().toISOString() })
+    .eq('id', user.id)
+
+  if (error) {
+    console.error('Error updating last_login:', error)
+    return { success: false, error: 'Nie udało się zaktualizować ostatniego logowania' }
+  }
+
+  return { success: true }
+}
+
 

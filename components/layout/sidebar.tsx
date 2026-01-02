@@ -54,6 +54,12 @@ export function AppSidebar({ user }: SidebarProps) {
       roles: ['admin', 'user']
     },
     {
+      name: 'Zgłoszenia',
+      href: '/dashboard/registrations',
+      icon: Mail,
+      roles: ['admin']
+    },
+    {
       name: 'Zaproszenia',
       href: '/dashboard/invitations',
       icon: Mail,

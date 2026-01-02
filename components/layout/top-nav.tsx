@@ -44,7 +44,7 @@ export function TopNav() {
             asChild
             className="flex h-9 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-sm"
           >
-            <Link href="/main#rejestracja">Rejestracja</Link>
+            <Link href="/main/kandydat">Rejestracja</Link>
           </Button>
         </div>
       </div>

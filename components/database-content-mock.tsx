@@ -2,9 +2,11 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react"
 import { ColumnDef, SortingState, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
+import Link from "next/link"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Users } from "lucide-react"
 import { DataTable } from "@/components/data-table"
@@ -38,6 +40,7 @@ interface Candidate {
   skills?: string | null
   languages?: string | null
   availability?: string | null
+  blurred?: boolean
 }
 
 // Hipotetyczne dane kandydatów
@@ -242,6 +245,48 @@ const mockCandidates: Candidate[] = [
     languages: "Polski (native), Angielski (C1)",
     availability: "3 tygodnie",
   },
+  {
+    id: "11",
+    first_name: "Łukasz",
+    last_name: "Kowalczyk",
+    role: "Cloud Architect",
+    seniority: "Senior",
+    rate: "180-220 PLN/h",
+    location: "Warszawa (Remote)",
+    candidate_email: "lukasz.kowalczyk@example.com",
+    guardian: "Ewa Nowak",
+    guardian_email: "ewa.nowak@example.com",
+    cv: "Cloud Architect z doświadczeniem w enterprise solutions...",
+    cv_pdf_url: null,
+    technologies: "AWS, Azure, GCP, Terraform, Kubernetes, Docker, Serverless",
+    previous_contact: null,
+    project_description: "Cloud migration dla korporacji",
+    skills: "Cloud Strategy, Architecture Design, Cost Optimization",
+    languages: "Polski (native), Angielski (C1)",
+    availability: "1 miesiąc",
+    blurred: true,
+  },
+  {
+    id: "12",
+    first_name: "Karolina",
+    last_name: "Dąbrowska",
+    role: "AI/ML Engineer",
+    seniority: "Senior",
+    rate: "160-190 PLN/h",
+    location: "Kraków (Hybrid)",
+    candidate_email: "karolina.dabrowska@example.com",
+    guardian: "Marcin Wiśniewski",
+    guardian_email: "marcin.wisniewski@example.com",
+    cv: "AI/ML Engineer specjalizująca się w deep learning i NLP...",
+    cv_pdf_url: null,
+    technologies: "Python, TensorFlow, PyTorch, MLflow, Scikit-learn, NLP, Computer Vision",
+    previous_contact: "2024-01-05",
+    project_description: "Chatbot z AI dla customer service",
+    skills: "Model Training, MLOps, Feature Engineering, A/B Testing",
+    languages: "Polski (native), Angielski (C1)",
+    availability: "2 tygodnie",
+    blurred: true,
+  },
 ]
 
 export default function DatabaseContentMock() {
@@ -316,10 +361,12 @@ export default function DatabaseContentMock() {
           />
         ),
         cell: ({ row }) => (
-          <Checkbox
-            checked={selectedCandidates.has(row.original.id)}
-            onCheckedChange={() => toggleCandidate(row.original.id)}
-          />
+          <div className={row.original.blurred ? "blur-sm" : ""}>
+            <Checkbox
+              checked={selectedCandidates.has(row.original.id)}
+              onCheckedChange={() => toggleCandidate(row.original.id)}
+            />
+          </div>
         ),
         enableSorting: false,
         enableHiding: false,
@@ -328,7 +375,7 @@ export default function DatabaseContentMock() {
         accessorKey: "first_name",
         header: "Imię",
         cell: ({ row }) => (
-          <div className="font-medium">
+          <div className={`font-medium ${row.original.blurred ? "blur-sm" : ""}`}>
             {row.original.first_name}
           </div>
         ),
@@ -338,7 +385,9 @@ export default function DatabaseContentMock() {
         accessorKey: "role",
         header: "Rola",
         cell: ({ row }) => (
-          <Badge variant="secondary">{row.original.role || "-"}</Badge>
+          <div className={row.original.blurred ? "blur-sm" : ""}>
+            <Badge variant="secondary">{row.original.role || "-"}</Badge>
+          </div>
         ),
         enableSorting: false,
       },
@@ -346,13 +395,19 @@ export default function DatabaseContentMock() {
         accessorKey: "seniority",
         header: "Seniority",
         cell: ({ row }) => (
-          <Badge>{row.original.seniority || "-"}</Badge>
+          <div className={row.original.blurred ? "blur-sm" : ""}>
+            <Badge>{row.original.seniority || "-"}</Badge>
+          </div>
         ),
       },
       {
         accessorKey: "rate",
         header: "Stawka",
-        cell: ({ row }) => <div className="text-sm">{row.original.rate || "-"}</div>,
+        cell: ({ row }) => (
+          <div className={`text-sm ${row.original.blurred ? "blur-sm" : ""}`}>
+            {row.original.rate || "-"}
+          </div>
+        ),
       },
       {
         accessorKey: "technologies",
@@ -362,7 +417,9 @@ export default function DatabaseContentMock() {
           return (
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="text-sm max-w-xs truncate cursor-help">{technologies}</div>
+                <div className={`text-sm max-w-xs truncate cursor-help ${row.original.blurred ? "blur-sm" : ""}`}>
+                  {technologies}
+                </div>
               </TooltipTrigger>
               <TooltipContent>
                 <p className="max-w-md whitespace-pre-wrap">{technologies}</p>
@@ -376,13 +433,19 @@ export default function DatabaseContentMock() {
         accessorKey: "location",
         header: "Lokalizacja",
         cell: ({ row }) => (
-          <div className="text-sm text-muted-foreground">{row.original.location || "-"}</div>
+          <div className={`text-sm text-muted-foreground ${row.original.blurred ? "blur-sm" : ""}`}>
+            {row.original.location || "-"}
+          </div>
         ),
       },
       {
         accessorKey: "availability",
         header: "Dostępność",
-        cell: ({ row }) => <div className="text-sm">{row.original.availability || "-"}</div>,
+        cell: ({ row }) => (
+          <div className={`text-sm ${row.original.blurred ? "blur-sm" : ""}`}>
+            {row.original.availability || "-"}
+          </div>
+        ),
       },
     ],
     [selectedCandidates, filteredCandidates.length, toggleCandidate, toggleAll]
@@ -427,6 +490,14 @@ export default function DatabaseContentMock() {
                 sorting={sorting}
                 onSortingChange={setSorting}
               />
+              {paginatedCandidates.some(c => c.blurred) && (
+                <div className="mt-4 text-center border-t pt-4">
+                  <p className="text-sm text-muted-foreground mb-3">Chcesz zobaczyć więcej? Dołącz jako rekruter</p>
+                  <Button asChild size="default" className="h-10 px-6 text-sm font-semibold">
+                    <Link href="/main/rekruter">Korzystaj jako rekruter</Link>
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </CardContent>

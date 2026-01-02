@@ -36,8 +36,9 @@ export async function inviteUser(email: string, role: "user" | "admin") {
     email,
     token,
     role,
-    invited_by: user.id,
+    created_by: user.id,
     expires_at: expiresAt.toISOString(),
+    status: "pending",
   })
 
   if (inviteError) {
