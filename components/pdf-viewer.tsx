@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { Document, Page, pdfjs } from "react-pdf"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { FileText, ChevronLeft, ChevronRight, Loader2, Upload } from "lucide-react"
+import { FileText, Loader2, Upload } from "lucide-react"
 import "react-pdf/dist/Page/AnnotationLayer.css"
 import "react-pdf/dist/Page/TextLayer.css"
 
@@ -23,7 +23,6 @@ interface PDFViewerProps {
 
 export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallbackText, allowFileUpload = false }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number | null>(null)
-  const [pageNumber, setPageNumber] = useState(1)
   const [loading, setLoading] = useState(true)
   const [showLoading, setShowLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -52,7 +51,6 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
   useEffect(() => {
     if (initialPdfUrl) {
       setPdfUrl(initialPdfUrl)
-      setPageNumber(1)
       setLoading(true)
       setError(null)
     }
@@ -71,7 +69,6 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
       const url = URL.createObjectURL(file) // Tworzy tymczasowy URL w pamięci
       previousBlobUrlRef.current = url
       setPdfUrl(url)
-      setPageNumber(1)
       setLoading(true)
       setError(null)
     }
@@ -98,14 +95,6 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
     console.error("PDF load error:", error)
     setError("Nie udało się załadować pliku PDF")
     setLoading(false)
-  }
-
-  function goToPrevPage() {
-    setPageNumber((prev) => Math.max(1, prev - 1))
-  }
-
-  function goToNextPage() {
-    setPageNumber((prev) => Math.min(numPages || 1, prev + 1))
   }
 
   if (!mounted) {
@@ -172,7 +161,7 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
                 </CardTitle>
                 {numPages && (
                   <span className="text-xs text-muted-foreground">
-                    Strona {pageNumber} z {numPages}
+                    {numPages} {numPages === 1 ? 'strona' : numPages < 5 ? 'strony' : 'stron'}
                   </span>
                 )}
               </div>
@@ -196,32 +185,12 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
                     </Button>
                   </label>
                 )}
-                {numPages && numPages > 1 && (
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={goToPrevPage}
-                      disabled={pageNumber <= 1}
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={goToNextPage}
-                      disabled={pageNumber >= numPages}
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
-                {/* Przyciski "Nowa karta" i "Pobierz" zostały usunięte jako zbędne */}
+                {/* Nawigacja między stronami usunięta - wszystkie strony wyświetlane jednocześnie */}
               </div>
             </div>
           </CardHeader>
-          <CardContent className="flex-1 p-4 overflow-visible">
-            <div className="flex justify-center items-start">
+          <CardContent className="flex-1 p-4 overflow-y-auto">
+            <div className="flex flex-col items-center gap-4">
               {showLoading && (
                 <div className="flex flex-col items-center justify-center py-8">
                   <Loader2 className="w-8 h-8 animate-spin text-primary mb-2" />
@@ -234,15 +203,18 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
                   onLoadSuccess={onDocumentLoadSuccess}
                   onLoadError={onDocumentLoadError}
                   loading={null}
-                  className="flex justify-center"
+                  className="flex flex-col items-center"
                 >
-                  <Page
-                    pageNumber={pageNumber}
-                    renderTextLayer={true}
-                    renderAnnotationLayer={true}
-                    className="shadow-lg"
-                    width={Math.min(800, typeof window !== "undefined" ? window.innerWidth - 100 : 800)}
-                  />
+                  {numPages && Array.from({ length: numPages }, (_, i) => i + 1).map((pageNum) => (
+                    <Page
+                      key={pageNum}
+                      pageNumber={pageNum}
+                      renderTextLayer={true}
+                      renderAnnotationLayer={true}
+                      className="shadow-lg mb-4"
+                      width={Math.min(800, typeof window !== "undefined" ? window.innerWidth - 100 : 800)}
+                    />
+                  ))}
                 </Document>
               )}
               {error && pdfUrl && (

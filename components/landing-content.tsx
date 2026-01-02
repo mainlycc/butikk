@@ -57,7 +57,8 @@ export default function LandingContent({ infoData, hideGuide = false }: LandingC
 
     // Odśwież router, aby upewnić się, że cookies są zsynchronizowane
     router.refresh()
-    // Użyj window.location zamiast router.push, aby wymusić pełne przeładowanie
+    // Użyj window.location.href aby wymusić pełne przeładowanie strony
+    // To zapewnia, że layout.tsx poprawnie wykryje zalogowanego użytkownika i wyświetli sidebar
     window.location.href = "/database"
   }
 
