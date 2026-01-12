@@ -11,8 +11,8 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { Search, Users, Mail, FileText, Filter, X } from "lucide-react"
 import { toast } from "sonner"
 import { getSupabaseBrowserClient } from "@/lib/client"
-import CVSlideshow from "@/components/cv-slideshow"
 import ContactDialog from "@/components/contact-dialog"
+import { useRouter } from "next/navigation"
 import { syncGoogleSheetsToSupabase } from "@/app/actions/sync-google-sheets"
 import { DataTable } from "@/components/data-table"
 import {
@@ -55,9 +55,9 @@ interface DatabaseContentProps {
 }
 
 export default function DatabaseContent({ initialCandidates, userEmail }: DatabaseContentProps) {
+  const router = useRouter()
   const [searchTerms, setSearchTerms] = useState("")
   const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set())
-  const [showSlideshow, setShowSlideshow] = useState(false)
   const [showContactDialog, setShowContactDialog] = useState(false)
   const [contactCandidates, setContactCandidates] = useState<Candidate[]>([])
   const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates)
@@ -388,7 +388,14 @@ export default function DatabaseContent({ initialCandidates, userEmail }: Databa
                 )}
                 <div className="flex gap-3">
                   <Button 
-                    onClick={() => setShowSlideshow(true)} 
+                    onClick={() => {
+                      const selectedIds = Array.from(selectedCandidates)
+                      if (selectedIds.length > 0) {
+                        const params = new URLSearchParams()
+                        params.set("selected", selectedIds.join(","))
+                        router.push(`/database/candidate/${selectedIds[0]}?${params.toString()}`)
+                      }
+                    }} 
                     variant="outline" 
                     size="lg"
                     disabled={selectedCandidates.size === 0}
@@ -529,58 +536,6 @@ export default function DatabaseContent({ initialCandidates, userEmail }: Databa
             </Card>
           )}
       </div>
-
-      {/* CV Slideshow Modal */}
-      {showSlideshow && (
-        <CVSlideshow 
-          candidates={getSelectedCandidatesData().map(({ 
-            id,
-            first_name,
-            last_name,
-            role,
-            seniority,
-            rate,
-            technologies,
-            cv,
-            cv_pdf_url,
-            location,
-            candidate_email,
-            guardian,
-            guardian_email,
-            previous_contact,
-            project_description,
-            languages,
-            availability,
-            skills,
-          }) => ({
-            id,
-            first_name,
-            last_name,
-            role,
-            seniority,
-            rate,
-            technologies,
-            cv,
-            cv_pdf_url,
-            location,
-            candidate_email,
-            guardian,
-            guardian_email,
-            previous_contact,
-            project_description,
-            languages,
-            availability,
-            skills,
-          }))} 
-          onClose={() => setShowSlideshow(false)} 
-          onOpenContact={(candidate) => {
-            // Zamknij podgląd slajdów i otwórz ten sam dialog co z listy
-            setShowSlideshow(false)
-            setContactCandidates([candidate])
-            setShowContactDialog(true)
-          }}
-        />
-      )}
 
       {/* Contact Dialog */}
       {showContactDialog && contactCandidates.length > 0 && (

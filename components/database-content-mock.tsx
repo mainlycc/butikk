@@ -264,7 +264,6 @@ const mockCandidates: Candidate[] = [
     skills: "Cloud Strategy, Architecture Design, Cost Optimization",
     languages: "Polski (native), Angielski (C1)",
     availability: "1 miesiąc",
-    blurred: true,
   },
   {
     id: "12",
@@ -285,6 +284,207 @@ const mockCandidates: Candidate[] = [
     skills: "Model Training, MLOps, Feature Engineering, A/B Testing",
     languages: "Polski (native), Angielski (C1)",
     availability: "2 tygodnie",
+  },
+  {
+    id: "13",
+    first_name: "Marcin",
+    last_name: "Jankowski",
+    role: "Backend Developer",
+    seniority: "Mid",
+    rate: "130-150 PLN/h",
+    location: "Poznań (Remote)",
+    candidate_email: "marcin.jankowski@example.com",
+    guardian: "Aleksandra Nowak",
+    guardian_email: "aleksandra.nowak@example.com",
+    cv: "Backend developer z doświadczeniem w REST API i mikroserwisach...",
+    cv_pdf_url: null,
+    technologies: "Node.js, Express, MongoDB, PostgreSQL, Redis, Docker",
+    previous_contact: null,
+    project_description: "API dla platformy e-commerce",
+    skills: "API Design, Database Optimization, Microservices",
+    languages: "Polski (native), Angielski (B2)",
+    availability: "Od zaraz",
+  },
+  {
+    id: "14",
+    first_name: "Natalia",
+    last_name: "Krawczyk",
+    role: "Frontend Developer",
+    seniority: "Mid",
+    rate: "120-140 PLN/h",
+    location: "Wrocław (Hybrid)",
+    candidate_email: "natalia.krawczyk@example.com",
+    guardian: "Tomasz Kowalski",
+    guardian_email: "tomasz.kowalski@example.com",
+    cv: "Frontend developer specjalizująca się w React i Vue.js...",
+    cv_pdf_url: null,
+    technologies: "React, Vue.js, TypeScript, CSS, Sass, Webpack, Vite",
+    previous_contact: "2024-01-20",
+    project_description: "Aplikacja webowa dla sektora finansowego",
+    skills: "Component Architecture, State Management, Responsive Design",
+    languages: "Polski (native), Angielski (B2)",
+    availability: "1 miesiąc",
+  },
+  {
+    id: "15",
+    first_name: "Krzysztof",
+    last_name: "Mazur",
+    role: "Full Stack Developer",
+    seniority: "Senior",
+    rate: "150-180 PLN/h",
+    location: "Gdańsk (Remote)",
+    candidate_email: "krzysztof.mazur@example.com",
+    guardian: "Monika Zielińska",
+    guardian_email: "monika.zielinska@example.com",
+    cv: "Full Stack Developer z 10-letnim doświadczeniem w projektach enterprise...",
+    cv_pdf_url: null,
+    technologies: "React, Node.js, TypeScript, PostgreSQL, GraphQL, AWS",
+    previous_contact: null,
+    project_description: "Platforma SaaS dla zarządzania zasobami",
+    skills: "System Architecture, Code Review, Team Leadership",
+    languages: "Polski (native), Angielski (C1)",
+    availability: "2 tygodnie",
+  },
+  {
+    id: "16",
+    first_name: "Joanna",
+    last_name: "Pawlak",
+    role: "QA Engineer",
+    seniority: "Mid",
+    rate: "100-120 PLN/h",
+    location: "Kraków (On-site)",
+    candidate_email: "joanna.pawlak@example.com",
+    guardian: "Robert Nowak",
+    guardian_email: "robert.nowak@example.com",
+    cv: "QA Engineer z doświadczeniem w testowaniu aplikacji webowych i mobilnych...",
+    cv_pdf_url: null,
+    technologies: "Selenium, Cypress, Postman, Jira, TestRail, SQL",
+    previous_contact: "2024-02-10",
+    project_description: "Test automation dla aplikacji fintech",
+    skills: "Test Planning, Bug Tracking, Regression Testing",
+    languages: "Polski (native), Angielski (B2)",
+    availability: "Od zaraz",
+  },
+  {
+    id: "17",
+    first_name: "Bartosz",
+    last_name: "Król",
+    role: "DevOps Engineer",
+    seniority: "Senior",
+    rate: "140-170 PLN/h",
+    location: "Warszawa (Hybrid)",
+    candidate_email: "bartosz.krol@example.com",
+    guardian: "Ewa Kowalczyk",
+    guardian_email: "ewa.kowalczyk@example.com",
+    cv: "DevOps Engineer z certyfikacjami AWS i Kubernetes...",
+    cv_pdf_url: null,
+    technologies: "AWS, Kubernetes, Docker, Terraform, Jenkins, GitLab CI/CD",
+    previous_contact: null,
+    project_description: "CI/CD pipeline dla platformy cloud",
+    skills: "Infrastructure as Code, Monitoring, Security",
+    languages: "Polski (native), Angielski (C1)",
+    availability: "3 tygodnie",
+  },
+  {
+    id: "18",
+    first_name: "Aleksandra",
+    last_name: "Wróbel",
+    role: "UX Designer",
+    seniority: "Mid",
+    rate: "110-130 PLN/h",
+    location: "Poznań (Remote)",
+    candidate_email: "aleksandra.wrobel@example.com",
+    guardian: "Michał Szymański",
+    guardian_email: "michal.szymanski@example.com",
+    cv: "UX Designer z portfolio aplikacji mobilnych i webowych...",
+    cv_pdf_url: null,
+    technologies: "Figma, Adobe XD, Sketch, InVision, Prototyping",
+    previous_contact: "2024-01-30",
+    project_description: "Redesign aplikacji mobilnej dla banku",
+    skills: "User Research, Wireframing, Usability Testing",
+    languages: "Polski (native), Angielski (B2)",
+    availability: "1 miesiąc",
+  },
+  {
+    id: "19",
+    first_name: "Damian",
+    last_name: "Sikora",
+    role: "Backend Developer",
+    seniority: "Senior",
+    rate: "160-200 PLN/h",
+    location: "Kraków (Remote)",
+    candidate_email: "damian.sikora@example.com",
+    guardian: "Anna Lewandowska",
+    guardian_email: "anna.lewandowska@example.com",
+    cv: "Backend Developer specjalizujący się w Java i Spring Boot...",
+    cv_pdf_url: null,
+    technologies: "Java, Spring Boot, Hibernate, PostgreSQL, RabbitMQ, Redis",
+    previous_contact: null,
+    project_description: "Mikroserwisy dla platformy e-commerce",
+    skills: "System Design, Performance Tuning, Code Review",
+    languages: "Polski (native), Angielski (C1)",
+    availability: "2 tygodnie",
+  },
+  {
+    id: "20",
+    first_name: "Patrycja",
+    last_name: "Górecka",
+    role: "Frontend Developer",
+    seniority: "Senior",
+    rate: "150-180 PLN/h",
+    location: "Warszawa (Hybrid)",
+    candidate_email: "patrycja.gorecka@example.com",
+    guardian: "Piotr Wiśniewski",
+    guardian_email: "piotr.wisniewski@example.com",
+    cv: "Senior Frontend Developer z doświadczeniem w React i Next.js...",
+    cv_pdf_url: null,
+    technologies: "React, Next.js, TypeScript, Tailwind CSS, GraphQL, Jest",
+    previous_contact: "2024-02-05",
+    project_description: "Aplikacja webowa dla sektora medycznego",
+    skills: "Performance Optimization, Accessibility, Code Review",
+    languages: "Polski (native), Angielski (C1)",
+    availability: "Od zaraz",
+  },
+  {
+    id: "21",
+    first_name: "Rafał",
+    last_name: "Baran",
+    role: "Data Scientist",
+    seniority: "Senior",
+    rate: "170-200 PLN/h",
+    location: "Gdańsk (Remote)",
+    candidate_email: "rafal.baran@example.com",
+    guardian: "Katarzyna Nowak",
+    guardian_email: "katarzyna.nowak@example.com",
+    cv: "Data Scientist z doświadczeniem w machine learning i data analysis...",
+    cv_pdf_url: null,
+    technologies: "Python, Pandas, NumPy, Scikit-learn, Jupyter, SQL, Tableau",
+    previous_contact: null,
+    project_description: "Analytics platform dla e-commerce",
+    skills: "Statistical Analysis, Data Visualization, Model Building",
+    languages: "Polski (native), Angielski (C1)",
+    availability: "1 miesiąc",
+    blurred: true,
+  },
+  {
+    id: "22",
+    first_name: "Sylwia",
+    last_name: "Rutkowska",
+    role: "Scrum Master",
+    seniority: "Senior",
+    rate: "130-160 PLN/h",
+    location: "Wrocław (Hybrid)",
+    candidate_email: "sylwia.rutkowska@example.com",
+    guardian: "Łukasz Dąbrowski",
+    guardian_email: "lukasz.dabrowski@example.com",
+    cv: "Certyfikowany Scrum Master z doświadczeniem w zarządzaniu zespołami...",
+    cv_pdf_url: null,
+    technologies: "Jira, Confluence, Agile, Scrum, Kanban",
+    previous_contact: "2024-01-25",
+    project_description: "Zarządzanie zespołem developerskim w projekcie fintech",
+    skills: "Agile Coaching, Sprint Planning, Stakeholder Management",
+    languages: "Polski (native), Angielski (C1)",
+    availability: "2 tygodnie",
     blurred: true,
   },
 ]
@@ -295,7 +495,9 @@ export default function DatabaseContentMock() {
   const [candidates] = useState<Candidate[]>(mockCandidates)
   const [currentPage, setCurrentPage] = useState(1)
   const [sorting, setSorting] = useState<SortingState>([])
+  const [visibleCandidatesCount, setVisibleCandidatesCount] = useState(10)
   const itemsPerPage = 50
+  const expandStep = 10
 
   const filteredCandidates = useMemo(() => {
     if (!searchTerms.trim()) return candidates
@@ -325,9 +527,10 @@ export default function DatabaseContentMock() {
     })
   }, [candidates, searchTerms])
 
-  // Resetuj stronę gdy zmienia się filtrowanie lub sortowanie
+  // Resetuj stronę i stan rozwijania gdy zmienia się filtrowanie lub sortowanie
   useEffect(() => {
     setCurrentPage(1)
+    setVisibleCandidatesCount(10)
   }, [searchTerms, candidates, sorting])
 
   const toggleCandidate = useCallback((id: string) => {
@@ -348,6 +551,24 @@ export default function DatabaseContentMock() {
     }
   }, [filteredCandidates, selectedCandidates.size])
 
+  // Ogranicz listę kandydatów do widocznych
+  const visibleCandidates = useMemo(() => {
+    return filteredCandidates.slice(0, visibleCandidatesCount)
+  }, [filteredCandidates, visibleCandidatesCount])
+  
+  // Utwórz mapę która przechowuje informację o tym które rekordy są rozmyte
+  // Zawsze ostatnie 2 kandydatów są rozmyte
+  const blurredMap = useMemo(() => {
+    const map = new Map<string, boolean>()
+    const totalVisible = visibleCandidates.length
+    for (let i = 0; i < visibleCandidates.length; i++) {
+      const candidate = visibleCandidates[i]
+      // Ostatnie 2 kandydatów są zawsze rozmyte
+      map.set(candidate.id, totalVisible > 2 && i >= totalVisible - 2)
+    }
+    return map
+  }, [visibleCandidates])
+
   const columns = useMemo<ColumnDef<Candidate>[]>(
     () => [
       {
@@ -360,64 +581,80 @@ export default function DatabaseContentMock() {
             onCheckedChange={toggleAll}
           />
         ),
-        cell: ({ row }) => (
-          <div className={row.original.blurred ? "blur-sm" : ""}>
-            <Checkbox
-              checked={selectedCandidates.has(row.original.id)}
-              onCheckedChange={() => toggleCandidate(row.original.id)}
-            />
-          </div>
-        ),
+        cell: ({ row }) => {
+          const isBlurred = blurredMap.get(row.original.id) ?? false
+          return (
+            <div className={isBlurred ? "blur-sm" : ""}>
+              <Checkbox
+                checked={selectedCandidates.has(row.original.id)}
+                onCheckedChange={() => toggleCandidate(row.original.id)}
+              />
+            </div>
+          )
+        },
         enableSorting: false,
         enableHiding: false,
       },
       {
         accessorKey: "first_name",
         header: "Imię",
-        cell: ({ row }) => (
-          <div className={`font-medium ${row.original.blurred ? "blur-sm" : ""}`}>
-            {row.original.first_name}
-          </div>
-        ),
+        cell: ({ row }) => {
+          const isBlurred = blurredMap.get(row.original.id) ?? false
+          return (
+            <div className={`font-medium ${isBlurred ? "blur-sm" : ""}`}>
+              {row.original.first_name}
+            </div>
+          )
+        },
         enableSorting: false,
       },
       {
         accessorKey: "role",
         header: "Rola",
-        cell: ({ row }) => (
-          <div className={row.original.blurred ? "blur-sm" : ""}>
-            <Badge variant="secondary">{row.original.role || "-"}</Badge>
-          </div>
-        ),
+        cell: ({ row }) => {
+          const isBlurred = blurredMap.get(row.original.id) ?? false
+          return (
+            <div className={isBlurred ? "blur-sm" : ""}>
+              <Badge variant="secondary">{row.original.role || "-"}</Badge>
+            </div>
+          )
+        },
         enableSorting: false,
       },
       {
         accessorKey: "seniority",
         header: "Seniority",
-        cell: ({ row }) => (
-          <div className={row.original.blurred ? "blur-sm" : ""}>
-            <Badge>{row.original.seniority || "-"}</Badge>
-          </div>
-        ),
+        cell: ({ row }) => {
+          const isBlurred = blurredMap.get(row.original.id) ?? false
+          return (
+            <div className={isBlurred ? "blur-sm" : ""}>
+              <Badge>{row.original.seniority || "-"}</Badge>
+            </div>
+          )
+        },
       },
       {
         accessorKey: "rate",
         header: "Stawka",
-        cell: ({ row }) => (
-          <div className={`text-sm ${row.original.blurred ? "blur-sm" : ""}`}>
-            {row.original.rate || "-"}
-          </div>
-        ),
+        cell: ({ row }) => {
+          const isBlurred = blurredMap.get(row.original.id) ?? false
+          return (
+            <div className={`text-sm ${isBlurred ? "blur-sm" : ""}`}>
+              {row.original.rate || "-"}
+            </div>
+          )
+        },
       },
       {
         accessorKey: "technologies",
         header: "Technologie",
         cell: ({ row }) => {
+          const isBlurred = blurredMap.get(row.original.id) ?? false
           const technologies = row.original.technologies || "-"
           return (
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className={`text-sm max-w-xs truncate cursor-help ${row.original.blurred ? "blur-sm" : ""}`}>
+                <div className={`text-sm max-w-xs truncate cursor-help ${isBlurred ? "blur-sm" : ""}`}>
                   {technologies}
                 </div>
               </TooltipTrigger>
@@ -432,28 +669,34 @@ export default function DatabaseContentMock() {
       {
         accessorKey: "location",
         header: "Lokalizacja",
-        cell: ({ row }) => (
-          <div className={`text-sm text-muted-foreground ${row.original.blurred ? "blur-sm" : ""}`}>
-            {row.original.location || "-"}
-          </div>
-        ),
+        cell: ({ row }) => {
+          const isBlurred = blurredMap.get(row.original.id) ?? false
+          return (
+            <div className={`text-sm text-muted-foreground ${isBlurred ? "blur-sm" : ""}`}>
+              {row.original.location || "-"}
+            </div>
+          )
+        },
       },
       {
         accessorKey: "availability",
         header: "Dostępność",
-        cell: ({ row }) => (
-          <div className={`text-sm ${row.original.blurred ? "blur-sm" : ""}`}>
-            {row.original.availability || "-"}
-          </div>
-        ),
+        cell: ({ row }) => {
+          const isBlurred = blurredMap.get(row.original.id) ?? false
+          return (
+            <div className={`text-sm ${isBlurred ? "blur-sm" : ""}`}>
+              {row.original.availability || "-"}
+            </div>
+          )
+        },
       },
     ],
-    [selectedCandidates, filteredCandidates.length, toggleCandidate, toggleAll]
+    [selectedCandidates, filteredCandidates.length, toggleCandidate, toggleAll, blurredMap]
   )
 
   // Użyj useReactTable do sortowania wszystkich danych przed paginacją
   const table = useReactTable({
-    data: filteredCandidates,
+    data: visibleCandidates,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -470,6 +713,15 @@ export default function DatabaseContentMock() {
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
   const paginatedCandidates = sortedCandidates.slice(startIndex, endIndex)
+  
+  // Funkcja do rozwijania kolejnych rekordów
+  const handleExpand = useCallback(() => {
+    setVisibleCandidatesCount(prev => Math.min(prev + expandStep, filteredCandidates.length))
+  }, [filteredCandidates.length])
+
+  // Sprawdź czy są jeszcze niewidoczne kandydaci
+  const hasMoreCandidates = visibleCandidatesCount < filteredCandidates.length
+  const allCandidatesVisible = visibleCandidatesCount >= filteredCandidates.length
 
   return (
     <div className="space-y-6">
@@ -490,7 +742,19 @@ export default function DatabaseContentMock() {
                 sorting={sorting}
                 onSortingChange={setSorting}
               />
-              {paginatedCandidates.some(c => c.blurred) && (
+              {hasMoreCandidates && (
+                <div className="mt-4 text-center border-t pt-4">
+                  <p className="text-sm text-muted-foreground mb-3">Zobacz więcej kandydatów</p>
+                  <Button 
+                    onClick={handleExpand}
+                    size="default" 
+                    className="h-10 px-6 text-sm font-semibold"
+                  >
+                    Rozwiń
+                  </Button>
+                </div>
+              )}
+              {allCandidatesVisible && (
                 <div className="mt-4 text-center border-t pt-4">
                   <p className="text-sm text-muted-foreground mb-3">Chcesz zobaczyć więcej? Dołącz jako rekruter</p>
                   <Button asChild size="default" className="h-10 px-6 text-sm font-semibold">
@@ -504,7 +768,7 @@ export default function DatabaseContentMock() {
       </Card>
 
       {/* Pagination */}
-      {filteredCandidates.length > itemsPerPage && (
+      {sortedCandidates.length > itemsPerPage && (
         <Card className="border-2">
           <CardContent className="pt-6">
             <Pagination>
