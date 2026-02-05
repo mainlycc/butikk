@@ -111,13 +111,10 @@ export default async function ZalogujPage() {
           </div>
         </div>
         <div className="max-w-[1280px] mx-auto border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-muted-foreground">© 2024 Qualibase Inc. Wszelkie prawa zastrzeżone.</p>
+          <p className="text-xs text-muted-foreground">© 2025 Qualibase Inc. Wszelkie prawa zastrzeżone.</p>
           <div className="flex gap-6">
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground">
+            <Link href="/polityka-prywatnosci" className="text-xs text-muted-foreground hover:text-foreground">
               Polityka Prywatności
-            </Link>
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground">
-              Regulamin
             </Link>
           </div>
         </div>

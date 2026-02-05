@@ -122,10 +122,10 @@
   }
   html,
   body {
-    @apply h-full overflow-auto;
+    @apply h-full;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
   }
 }
 

@@ -17,13 +17,12 @@ export async function submitRecruiterRegistration(
     const fullName = formData.get("fullName") as string
     const email = formData.get("email") as string
     const company = formData.get("company") as string
-    const companyUrl = formData.get("companyUrl") as string | null
     const linkedinUrl = formData.get("linkedinUrl") as string | null
     const source = formData.get("source") as string | null
     const message = formData.get("message") as string | null
 
     // Walidacja podstawowych pól
-    if (!fullName || !email || !company || !companyUrl || !linkedinUrl) {
+    if (!fullName || !email) {
       return { success: false, error: "Wypełnij wszystkie wymagane pola" }
     }
 
@@ -33,9 +32,8 @@ export async function submitRecruiterRegistration(
       return { success: false, error: "Nieprawidłowy adres email" }
     }
 
-    // Walidacja URL-i
+    // Walidacja URL-i (jeśli podane)
     try {
-      if (companyUrl) new URL(companyUrl)
       if (linkedinUrl) new URL(linkedinUrl)
     } catch {
       return { success: false, error: "Nieprawidłowy format URL" }
@@ -61,8 +59,7 @@ export async function submitRecruiterRegistration(
       .insert({
         full_name: fullName.trim(),
         email: email.toLowerCase().trim(),
-        company: company.trim(),
-        company_url: companyUrl?.trim() || null,
+        company: company.trim() || null,
         linkedin_url: linkedinUrl?.trim() || null,
         source: source || null,
         message: message?.trim() || null,

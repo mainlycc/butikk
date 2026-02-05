@@ -26,7 +26,6 @@ type RecruiterForm = {
   fullName: string
   email: string
   company: string
-  companyUrl: string
   linkedinUrl: string
   source: string
   message: string
@@ -36,7 +35,6 @@ const initialState: RecruiterForm = {
   fullName: '',
   email: '',
   company: '',
-  companyUrl: '',
   linkedinUrl: '',
   source: '',
   message: '',
@@ -60,7 +58,6 @@ export default function RecruiterPage() {
       formData.append('fullName', form.fullName)
       formData.append('email', form.email)
       formData.append('company', form.company)
-      formData.append('companyUrl', form.companyUrl)
       formData.append('linkedinUrl', form.linkedinUrl)
       formData.append('source', form.source || '')
       formData.append('message', form.message || '')
@@ -85,9 +82,9 @@ export default function RecruiterPage() {
     <div className="min-h-screen flex flex-col bg-background">
       <TopNav />
       <main className="flex-1">
-        <section className="py-12 px-4">
+        <section className="py-8 px-4">
           <div className="max-w-3xl mx-auto space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">Dla firm</p>
                 <h1 className="text-3xl font-bold">Rejestracja rekrutera</h1>
@@ -95,12 +92,12 @@ export default function RecruiterPage() {
                   Wypełnij formularz, a nasz zespół skontaktuje się z Tobą, aby omówić potrzeby rekrutacyjne.
                 </p>
               </div>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="w-full md:w-auto">
                 <Link href="/main/kandydat">Zgłoś się jako kandydat</Link>
               </Button>
             </div>
 
-            <Card>
+            <Card className="shadow-sm">
               <CardHeader>
                 <CardTitle>Formularz kontaktowy</CardTitle>
               </CardHeader>
@@ -108,7 +105,7 @@ export default function RecruiterPage() {
                 <form className="space-y-6" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="fullName">Imię i nazwisko</Label>
+                      <Label htmlFor="fullName">Imię i nazwisko *</Label>
                       <Input
                         id="fullName"
                         value={form.fullName}
@@ -118,7 +115,7 @@ export default function RecruiterPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">Email *</Label>
                       <Input
                         id="email"
                         type="email"
@@ -137,19 +134,7 @@ export default function RecruiterPage() {
                         id="company"
                         value={form.company}
                         onChange={(e) => handleChange('company')(e.target.value)}
-                        required
                         placeholder="Nazwa firmy"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="companyUrl">Link do strony firmy</Label>
-                      <Input
-                        id="companyUrl"
-                        type="url"
-                        value={form.companyUrl}
-                        onChange={(e) => handleChange('companyUrl')(e.target.value)}
-                        required
-                        placeholder="https://"
                       />
                     </div>
                   </div>
@@ -162,7 +147,6 @@ export default function RecruiterPage() {
                         type="url"
                         value={form.linkedinUrl}
                         onChange={(e) => handleChange('linkedinUrl')(e.target.value)}
-                        required
                         placeholder="https://linkedin.com/in/..."
                       />
                     </div>
@@ -253,13 +237,10 @@ export default function RecruiterPage() {
           </div>
         </div>
         <div className="max-w-[1280px] mx-auto border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-muted-foreground">© 2024 Qualibase Inc. Wszelkie prawa zastrzeżone.</p>
+          <p className="text-xs text-muted-foreground">© 2025 Qualibase Inc. Wszelkie prawa zastrzeżone.</p>
           <div className="flex gap-6">
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground">
+            <Link href="/polityka-prywatnosci" className="text-xs text-muted-foreground hover:text-foreground">
               Polityka Prywatności
-            </Link>
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground">
-              Regulamin
             </Link>
           </div>
         </div>

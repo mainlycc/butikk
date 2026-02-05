@@ -108,7 +108,7 @@ export default function CVSlideshow({ candidates, onClose, onOpenContact }: CVSl
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="border-b bg-card shadow-sm">
-          <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <h2 className="text-2xl font-bold">Podgląd CV</h2>
@@ -125,17 +125,17 @@ export default function CVSlideshow({ candidates, onClose, onOpenContact }: CVSl
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto flex flex-col">
-          <div className="max-w-7xl mx-auto w-full flex flex-col px-6 py-4">
+          <div className="max-w-7xl mx-auto w-full flex flex-col px-3 sm:px-6 py-4">
             {/* Header z informacjami o kandydacie */}
             <Card className="border-2 shadow-xl mb-4">
               <CardHeader className="border-b bg-gradient-to-r from-primary/5 to-accent/5">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
                       <User className="w-8 h-8 text-primary-foreground" />
                     </div>
                     <div className="space-y-1">
-                      <CardTitle className="text-2xl">
+                      <CardTitle className="text-xl sm:text-2xl">
                         {currentCandidate.first_name} {currentCandidate.last_name || ""}
                       </CardTitle>
                       <div className="flex items-center gap-2 flex-wrap">
@@ -153,7 +153,7 @@ export default function CVSlideshow({ candidates, onClose, onOpenContact }: CVSl
                     <Button
                       onClick={() => onOpenContact(currentCandidate)}
                       size="lg"
-                      className="gap-2 px-6"
+                      className="gap-2 px-4 sm:px-6 w-full sm:w-auto"
                     >
                       <Mail className="w-4 h-4" />
                       Wyślij zapytanie
@@ -163,7 +163,7 @@ export default function CVSlideshow({ candidates, onClose, onOpenContact }: CVSl
               </CardHeader>
 
               <CardContent className="pt-6 pb-6 flex justify-center">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-base max-w-5xl w-full mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 text-base max-w-5xl w-full mx-auto">
                   {/* Technologie/Skills */}
                   {(currentCandidate.technologies || currentCandidate.skills) && (
                     <div className="md:col-span-2">

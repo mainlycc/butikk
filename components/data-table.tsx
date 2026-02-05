@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Card } from "@/components/ui/card"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -53,64 +54,92 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                const canSort = header.column.getCanSort()
-                return (
-                  <TableHead
-                    key={header.id}
-                    className={`${canSort ? "cursor-pointer select-none hover:bg-muted/50" : ""} px-2`}
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    <div className="flex items-center gap-2">
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {canSort && (
-                        <span className="ml-1">
-                          {header.column.getIsSorted() === "desc" ? (
-                            <ArrowDown className="h-4 w-4" />
-                          ) : header.column.getIsSorted() === "asc" ? (
-                            <ArrowUp className="h-4 w-4" />
-                          ) : (
-                            <ArrowUpDown className="h-4 w-4 opacity-50" />
-                          )}
-                        </span>
-                      )}
-                    </div>
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="px-2 py-2">
+      {/* Widok kartowy na bardzo małych ekranach */}
+      <div className="grid gap-3 sm:hidden">
+        {table.getRowModel().rows?.length ? (
+          table.getRowModel().rows.map((row) => (
+            <Card
+              key={row.id}
+              className="border rounded-lg p-3 space-y-2"
+              data-state={row.getIsSelected() && "selected"}
+            >
+              {row.getVisibleCells().map((cell, index) => (
+                <div key={cell.id} className="flex text-sm gap-2">
+                  <div className="flex-1">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                  </div>
+                </div>
+              ))}
+            </Card>
+          ))
+        ) : (
+          <p className="text-center text-sm text-muted-foreground py-4">
+            Brak wyników.
+          </p>
+        )}
+      </div>
+
+      {/* Klasyczna tabela na >= sm */}
+      <div className="hidden sm:block">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  const canSort = header.column.getCanSort()
+                  return (
+                    <TableHead
+                      key={header.id}
+                      className={`${canSort ? "cursor-pointer select-none hover:bg-muted/50" : ""} px-2`}
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      <div className="flex items-center gap-2">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {canSort && (
+                          <span className="ml-1">
+                            {header.column.getIsSorted() === "desc" ? (
+                              <ArrowDown className="h-4 w-4" />
+                            ) : header.column.getIsSorted() === "asc" ? (
+                              <ArrowUp className="h-4 w-4" />
+                            ) : (
+                              <ArrowUpDown className="h-4 w-4 opacity-50" />
+                            )}
+                          </span>
+                        )}
+                      </div>
+                    </TableHead>
+                  )
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                Brak wyników.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="px-2 py-2">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  Brak wyników.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }

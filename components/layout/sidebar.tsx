@@ -9,6 +9,7 @@ import {
   Mail,
   LogOut,
   User,
+  Network,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -95,11 +96,11 @@ export function AppSidebar({ user }: SidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/database">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Database className="size-4" />
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-background text-primary">
+                  <Network className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">QualiBase</span>
+                  <span className="truncate font-medium">Qualibase</span>
                   <span className="truncate text-xs">Baza rekrutacyjna</span>
                 </div>
               </Link>

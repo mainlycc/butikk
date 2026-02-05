@@ -99,7 +99,7 @@ export function UsersManagement({ users: initialUsers }: UsersManagementProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Users className="h-7 w-7" />
@@ -113,8 +113,8 @@ export function UsersManagement({ users: initialUsers }: UsersManagementProps) {
 
       {selectedIds.length > 0 && (
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
+          <CardContent className="pt-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <p className="text-sm text-muted-foreground">
                 Zaznaczono {selectedIds.length} użytkowników
               </p>

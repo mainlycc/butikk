@@ -157,7 +157,7 @@ export function InvitationsManagement({ invitations: initialInvitations }: Invit
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold">Zarządzanie zaproszeniami</h1>
           <p className="text-muted-foreground">
@@ -169,12 +169,12 @@ export function InvitationsManagement({ invitations: initialInvitations }: Invit
 
       {selectedIds.length > 0 && (
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
+          <CardContent className="pt-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <p className="text-sm text-muted-foreground">
                 Zaznaczono {selectedIds.length} zaproszeń
               </p>
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 md:flex-row">
                 <Button
                   variant="outline"
                   size="sm"

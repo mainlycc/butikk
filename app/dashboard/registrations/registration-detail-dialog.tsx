@@ -255,7 +255,7 @@ export function RegistrationDetailDialog({
   const data = registration.data
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-3xl max-h-[90vh] overflow-y-auto sm:rounded-lg">
         <DialogHeader>
           <DialogTitle>Szczegóły zgłoszenia rekrutera</DialogTitle>
           <DialogDescription>

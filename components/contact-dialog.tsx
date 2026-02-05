@@ -78,7 +78,7 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-3xl max-h-[90vh] overflow-y-auto sm:rounded-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl flex items-center gap-2">
             <Mail className="w-6 h-6 text-primary" />

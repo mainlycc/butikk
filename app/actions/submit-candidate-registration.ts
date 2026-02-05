@@ -83,6 +83,7 @@ export async function submitCandidateRegistration(
     // Pobierz dane z formularza
     const fullName = formData.get("fullName") as string
     const email = formData.get("email") as string
+    const phone = formData.get("phone") as string
     const specialization = formData.get("specialization") as string
     const experience = formData.get("experience") as string
     const linkedinUrl = formData.get("linkedinUrl") as string | null
@@ -91,7 +92,7 @@ export async function submitCandidateRegistration(
     const cvFile = formData.get("cvFile") as File | null
 
     // Walidacja podstawowych pól
-    if (!fullName || !email || !specialization || !experience || !cvFile) {
+    if (!fullName || !email || !phone || !cvFile) {
       return { success: false, error: "Wypełnij wszystkie wymagane pola" }
     }
 

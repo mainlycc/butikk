@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Network } from 'lucide-react'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Menu } from 'lucide-react'
 
 export function TopNav() {
   return (
@@ -32,7 +34,7 @@ export function TopNav() {
             Dla Kandydatów
           </Link>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             className="hidden sm:flex h-9 px-4 bg-transparent hover:bg-gray-100 text-foreground text-sm font-bold"
@@ -46,6 +48,53 @@ export function TopNav() {
           >
             <Link href="/main/kandydat">Rejestracja</Link>
           </Button>
+
+          {/* Mobile menu */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="ml-2 md:hidden"
+                aria-label="Otwórz menu"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-full max-w-xs">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <nav className="mt-6 space-y-4">
+                <Link
+                  href="/main#o-nas"
+                  className="block text-sm font-medium text-foreground hover:text-primary"
+                >
+                  O nas
+                </Link>
+                <Link
+                  href="/main#dla-rekrutera"
+                  className="block text-sm font-medium text-foreground hover:text-primary"
+                >
+                  Dla Rekruterów
+                </Link>
+                <Link
+                  href="/main#dla-kandydata"
+                  className="block text-sm font-medium text-foreground hover:text-primary"
+                >
+                  Dla Kandydatów
+                </Link>
+                <div className="pt-4 space-y-3">
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href="/main/zaloguj">Zaloguj</Link>
+                  </Button>
+                  <Button asChild className="w-full">
+                    <Link href="/main/kandydat">Rejestracja</Link>
+                  </Button>
+                </div>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

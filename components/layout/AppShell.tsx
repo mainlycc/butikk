@@ -1,6 +1,6 @@
 'use client'
 
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { AppSidebar } from './sidebar'
 import { usePathname } from 'next/navigation'
 
@@ -44,10 +44,15 @@ export default function AppShell({
   }
 
   return (
-    <SidebarProvider className="!h-full !min-h-0 overflow-hidden">
+    <SidebarProvider className="!min-h-screen w-full overflow-hidden">
       <AppSidebar user={user} />
       <SidebarInset className="min-h-screen overflow-x-hidden">
-        <div className="min-h-screen p-6 w-full max-w-full overflow-x-hidden">{children}</div>
+        <div className="min-h-screen w-full max-w-full px-3 py-4 sm:px-6 sm:py-6 overflow-x-hidden">
+          <div className="mb-4 flex items-center justify-between md:hidden">
+            <SidebarTrigger />
+          </div>
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

@@ -100,7 +100,7 @@ export default function RegisterPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-background">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Błąd</CardTitle>
@@ -119,7 +119,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
       <Card className="w-full max-w-md shadow-xl border-2">
         <CardHeader>
           <CardTitle className="text-2xl">Rejestracja</CardTitle>

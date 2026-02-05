@@ -67,7 +67,7 @@ export function RegistrationsManagement({
   return (
     <>
       <Tabs defaultValue="candidates" className="space-y-4">
-        <TabsList>
+        <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="candidates" className="flex items-center gap-2">
             <User className="h-4 w-4" />
             Kandydaci

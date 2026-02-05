@@ -55,7 +55,7 @@ export default function MainPage() {
       <TopNav />
       
       {/* Hero Section */}
-      <section className="bg-white pt-12 pb-20 px-4 sm:px-10 border-b">
+      <section className="bg-white pt-10 pb-16 px-4 sm:px-10 border-b">
         <div className="max-w-[1280px] mx-auto flex flex-col items-center text-center gap-8">
           {/* Hero Text */}
           <div className="max-w-[800px] flex flex-col gap-4">
@@ -66,12 +66,16 @@ export default function MainPage() {
             <p className="text-muted-foreground text-lg sm:text-xl font-normal leading-relaxed max-w-[600px] mx-auto">
               Odblokuj potencjał swojej firmy z Qualibase. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT bezpośrednio.
             </p>
-            <div className="flex gap-3 justify-center pt-2">
-              <Button asChild size="lg" className="h-12 px-6 text-base font-bold shadow-lg">
-                <Link href="/main/kandydat">Zarejestruj się jako kandydat</Link>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+              <Button asChild size="lg" className="h-12 px-6 text-base font-bold shadow-lg w-full sm:w-auto">
+                <Link href="/main/kandydat">
+                  Zarejestruj się jako kandydat
+                </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="h-12 px-6 text-base font-bold">
-                <Link href="/main/rekruter">Korzystaj jako rekruter</Link>
+              <Button asChild size="lg" variant="outline" className="h-12 px-6 text-base font-bold w-full sm:w-auto">
+                <Link href="/main/rekruter">
+                  Korzystaj jako rekruter
+                </Link>
               </Button>
             </div>
           </div>
@@ -246,13 +250,10 @@ export default function MainPage() {
           </div>
         </div>
         <div className="max-w-[1280px] mx-auto border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-muted-foreground">© 2024 Qualibase Inc. Wszelkie prawa zastrzeżone.</p>
+          <p className="text-xs text-muted-foreground">© 2025 Qualibase Inc. Wszelkie prawa zastrzeżone.</p>
           <div className="flex gap-6">
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground">
+            <Link href="/polityka-prywatnosci" className="text-xs text-muted-foreground hover:text-foreground">
               Polityka Prywatności
-            </Link>
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground">
-              Regulamin
             </Link>
           </div>
         </div>

@@ -25,6 +25,7 @@ const sourceOptions = [
 type CandidateForm = {
   fullName: string
   email: string
+  phone: string
   specialization: string
   experience: string
   linkedinUrl: string
@@ -36,6 +37,7 @@ type CandidateForm = {
 const initialState: CandidateForm = {
   fullName: '',
   email: '',
+  phone: '',
   specialization: '',
   experience: '',
   linkedinUrl: '',
@@ -106,9 +108,9 @@ export default function CandidatePage() {
     <div className="min-h-screen flex flex-col bg-background">
       <TopNav />
       <main className="flex-1">
-        <section className="py-12 px-4">
+        <section className="py-8 px-4">
           <div className="max-w-3xl mx-auto space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">Dla kandydatów</p>
                 <h1 className="text-3xl font-bold">Rejestracja kandydata</h1>
@@ -116,12 +118,12 @@ export default function CandidatePage() {
                   Dołącz do naszej bazy talentów. Podaj podstawowe informacje, a odezwiemy się z dopasowanymi ofertami.
                 </p>
               </div>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="w-full md:w-auto">
                 <Link href="/main/rekruter">Zgłoś firmę</Link>
               </Button>
             </div>
 
-            <Card>
+            <Card className="shadow-sm">
               <CardHeader>
                 <CardTitle>Formularz kontaktowy</CardTitle>
               </CardHeader>
@@ -129,7 +131,7 @@ export default function CandidatePage() {
                 <form className="space-y-6" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="fullName">Imię i nazwisko</Label>
+                      <Label htmlFor="fullName">Imię i nazwisko *</Label>
                       <Input
                         id="fullName"
                         value={form.fullName}
@@ -139,7 +141,7 @@ export default function CandidatePage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">Email *</Label>
                       <Input
                         id="email"
                         type="email"
@@ -147,6 +149,17 @@ export default function CandidatePage() {
                         onChange={(e) => handleChange('email')(e.target.value)}
                         required
                         placeholder="anna.nowak@example.com"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Numer telefonu *</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={form.phone}
+                        onChange={(e) => handleChange('phone')(e.target.value)}
+                        required
+                        placeholder="+48 600 000 000"
                       />
                     </div>
                   </div>
@@ -158,7 +171,6 @@ export default function CandidatePage() {
                         id="specialization"
                         value={form.specialization}
                         onChange={(e) => handleChange('specialization')(e.target.value)}
-                        required
                         placeholder="Frontend, Backend, Data, QA..."
                       />
                     </div>
@@ -171,7 +183,6 @@ export default function CandidatePage() {
                         max={50}
                         value={form.experience}
                         onChange={(e) => handleChange('experience')(e.target.value)}
-                        required
                         placeholder="np. 5"
                       />
                     </div>
@@ -191,7 +202,7 @@ export default function CandidatePage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="cvFile">CV</Label>
+                    <Label htmlFor="cvFile">CV *</Label>
                     <div className="space-y-2">
                       <Input id="cvFile" type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} required />
                       <p className="text-sm text-muted-foreground">Dodaj aktualne CV. Akceptujemy PDF/DOCX.</p>
@@ -284,13 +295,10 @@ export default function CandidatePage() {
           </div>
         </div>
         <div className="max-w-[1280px] mx-auto border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-muted-foreground">© 2024 Qualibase Inc. Wszelkie prawa zastrzeżone.</p>
+          <p className="text-xs text-muted-foreground">© 2025 Qualibase Inc. Wszelkie prawa zastrzeżone.</p>
           <div className="flex gap-6">
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground">
+            <Link href="/polityka-prywatnosci" className="text-xs text-muted-foreground hover:text-foreground">
               Polityka Prywatności
-            </Link>
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground">
-              Regulamin
             </Link>
           </div>
         </div>
