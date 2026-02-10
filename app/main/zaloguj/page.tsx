@@ -91,9 +91,6 @@ export default async function ZalogujPage() {
             <Link href="/main#o-nas" className="text-muted-foreground text-sm hover:text-primary">
               O nas
             </Link>
-            <Link href="/main#kontakt" className="text-muted-foreground text-sm hover:text-primary">
-              Kontakt
-            </Link>
           </div>
           <div className="flex flex-col gap-3">
             <h4 className="text-foreground text-sm font-bold uppercase tracking-wide">Social</h4>

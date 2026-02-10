@@ -33,6 +33,12 @@ export function TopNav() {
           >
             Dla Kandydatów
           </Link>
+          <Link 
+            href="/main#kontakt" 
+            className="text-foreground text-sm font-medium hover:text-primary transition-colors"
+          >
+            Kontakt
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -83,6 +89,12 @@ export function TopNav() {
                   className="block text-sm font-medium text-foreground hover:text-primary"
                 >
                   Dla Kandydatów
+                </Link>
+                <Link
+                  href="/main#kontakt"
+                  className="block text-sm font-medium text-foreground hover:text-primary"
+                >
+                  Kontakt
                 </Link>
                 <div className="pt-4 space-y-3">
                   <Button asChild variant="outline" className="w-full">
