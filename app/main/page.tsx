@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { TopNav } from '@/components/layout/top-nav'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { 
+import {
   Globe,
   Mail,
   Share2,
@@ -14,7 +14,7 @@ import {
   Braces,
   Cloud,
   Code2,
-  Database
+  Database,
 } from 'lucide-react'
 import DatabaseContentMock from '@/components/database-content-mock'
 import { DualPerspectiveSection } from '@/components/dual-perspective'
@@ -204,6 +204,139 @@ export default function MainPage() {
         </div>
       </section>
 
+      {/* Kontakt Section (bardziej wyróżniona na dole strony) */}
+      <section
+        id="kontakt"
+        className="border-t bg-gradient-to-b from-white via-blue-50/40 to-white"
+      >
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="mx-auto max-w-3xl text-center mb-10">
+            <p className="text-xs font-semibold tracking-[0.25em] text-primary uppercase mb-3">
+              Kontakt
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-4">
+              Porozmawiajmy o współpracy
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              Masz pytania dotyczące QualiBase, rekrutacji lub danych? Odezwij się do nas – chętnie doradzimy,
+              jak najlepiej wykorzystać platformę w Twojej organizacji.
+            </p>
+          </div>
+
+          <Card className="shadow-sm">
+            <CardContent className="p-6 sm:p-8">
+              <div className="grid gap-8 md:grid-cols-[1.1fr_minmax(0,1fr)] items-start">
+                {/* Dane kontaktowe */}
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <h3 className="text-lg sm:text-xl font-semibold text-foreground">
+                      Dane kontaktowe
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Najszybciej złapiesz nas mailowo – odpowiadamy zazwyczaj w ciągu 1 dnia roboczego.
+                    </p>
+                  </div>
+
+                  <div className="space-y-4 text-sm sm:text-base text-muted-foreground">
+                    <div>
+                      <p className="font-medium text-foreground mb-1">E‑mail</p>
+                      <Link
+                        href="mailto:dominik.nowicki@qualibase.pl"
+                        className="inline-flex items-center gap-2 text-primary hover:underline"
+                      >
+                        dominik.nowicki@qualibase.pl
+                        <Mail className="w-4 h-4" />
+                      </Link>
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground mb-1">Telefon</p>
+                      <Link
+                        href="tel:+48501447626"
+                        className="inline-flex items-center gap-2 text-primary hover:underline"
+                      >
+                        +48 501 447 626
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <Button
+                      asChild
+                      className="w-full sm:w-auto"
+                    >
+                      <Link href="mailto:dominik.nowicki@qualibase.pl?subject=Zapytanie%20dotyczące%20QualiBase">
+                        Napisz do nas
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Dane spółki */}
+                <div className="space-y-4 text-sm sm:text-base text-muted-foreground">
+                  <h3 className="text-lg sm:text-xl font-semibold text-foreground">
+                    Dane spółki
+                  </h3>
+                  <div className="rounded-2xl border bg-white/70 p-5 sm:p-6 space-y-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Nazwa pełna
+                      </p>
+                      <p className="font-medium">
+                        DESKSET SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          KRS
+                        </p>
+                        <p>0001199624</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          NIP
+                        </p>
+                        <p>6772531924</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          REGON
+                        </p>
+                        <p>542978418</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          Kapitał zakładowy
+                        </p>
+                        <p>55 000 zł</p>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Adres siedziby
+                      </p>
+                      <p>Juliusza Lea 22 / 14, 30-052 Kraków, Polska</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Forma prawna
+                      </p>
+                      <p>SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Data rejestracji
+                      </p>
+                      <p>13 października 2025 r.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-white border-t pt-16 pb-8 px-4 sm:px-10">
         <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
@@ -218,19 +351,19 @@ export default function MainPage() {
           </div>
           <div className="flex flex-col gap-3">
             <h4 className="text-foreground text-sm font-bold uppercase tracking-wide">Platforma</h4>
-            <Link href="#" className="text-muted-foreground text-sm hover:text-primary">
+            <Link href="/main/zaloguj" className="text-muted-foreground text-sm hover:text-primary">
               Przeglądaj oferty
             </Link>
-            <Link href="#" className="text-muted-foreground text-sm hover:text-primary">
+            <Link href="/main/zaloguj" className="text-muted-foreground text-sm hover:text-primary">
               Baza kandydatów
             </Link>
           </div>
           <div className="flex flex-col gap-3">
             <h4 className="text-foreground text-sm font-bold uppercase tracking-wide">Firma</h4>
-            <Link href="#" className="text-muted-foreground text-sm hover:text-primary">
+            <Link href="#o-nas" className="text-muted-foreground text-sm hover:text-primary">
               O nas
             </Link>
-            <Link href="#" className="text-muted-foreground text-sm hover:text-primary">
+            <Link href="#kontakt" className="text-muted-foreground text-sm hover:text-primary">
               Kontakt
             </Link>
           </div>

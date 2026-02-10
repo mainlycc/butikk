@@ -27,6 +27,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   sorting?: SortingState
   onSortingChange?: OnChangeFn<SortingState>
+  mobileView?: "cards" | "table"
 }
 
 export function DataTable<TData, TValue>({
@@ -34,6 +35,7 @@ export function DataTable<TData, TValue>({
   data,
   sorting: externalSorting,
   onSortingChange: externalOnSortingChange,
+  mobileView = "cards",
 }: DataTableProps<TData, TValue>) {
   const [internalSorting, setInternalSorting] = React.useState<SortingState>([])
   
@@ -55,32 +57,34 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full">
       {/* Widok kartowy na bardzo małych ekranach */}
-      <div className="grid gap-3 sm:hidden">
-        {table.getRowModel().rows?.length ? (
-          table.getRowModel().rows.map((row) => (
-            <Card
-              key={row.id}
-              className="border rounded-lg p-3 space-y-2"
-              data-state={row.getIsSelected() && "selected"}
-            >
-              {row.getVisibleCells().map((cell, index) => (
-                <div key={cell.id} className="flex text-sm gap-2">
-                  <div className="flex-1">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      {mobileView === "cards" && (
+        <div className="grid gap-3 sm:hidden">
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <Card
+                key={row.id}
+                className="border rounded-lg p-3 space-y-2"
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <div key={cell.id} className="flex text-sm gap-2">
+                    <div className="flex-1">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </Card>
-          ))
-        ) : (
-          <p className="text-center text-sm text-muted-foreground py-4">
-            Brak wyników.
-          </p>
-        )}
-      </div>
+                ))}
+              </Card>
+            ))
+          ) : (
+            <p className="text-center text-sm text-muted-foreground py-4">
+              Brak wyników.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Klasyczna tabela na >= sm */}
-      <div className="hidden sm:block">
+      <div className={mobileView === "table" ? "" : "hidden sm:block"}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

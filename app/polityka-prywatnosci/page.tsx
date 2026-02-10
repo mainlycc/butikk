@@ -236,10 +236,10 @@ export default function PrivacyPolicyPage() {
           </div>
           <div className="flex flex-col gap-3">
             <h4 className="text-foreground text-sm font-bold uppercase tracking-wide">Firma</h4>
-            <Link href="#" className="text-muted-foreground text-sm hover:text-primary">
+            <Link href="/main#o-nas" className="text-muted-foreground text-sm hover:text-primary">
               O nas
             </Link>
-            <Link href="#" className="text-muted-foreground text-sm hover:text-primary">
+            <Link href="/main#kontakt" className="text-muted-foreground text-sm hover:text-primary">
               Kontakt
             </Link>
           </div>

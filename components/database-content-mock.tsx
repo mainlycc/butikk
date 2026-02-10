@@ -741,6 +741,7 @@ export default function DatabaseContentMock() {
                 data={paginatedCandidates}
                 sorting={sorting}
                 onSortingChange={setSorting}
+                mobileView="table"
               />
               {hasMoreCandidates && (
                 <div className="mt-4 text-center border-t pt-4">
