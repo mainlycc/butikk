@@ -3,13 +3,13 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { TopNav } from '@/components/layout/top-nav'
+import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { Globe, Mail, Share2, Network } from 'lucide-react'
 import { toast } from 'sonner'
 import { submitCandidateRegistration } from '@/app/actions/submit-candidate-registration'
 
@@ -62,6 +62,34 @@ export default function CandidatePage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     
+    // Debug: loguj wartości formularza
+    console.log('Form values:', {
+      fullName: form.fullName,
+      email: form.email,
+      phone: form.phone,
+      cvFile: form.cvFile ? form.cvFile.name : 'brak',
+    })
+    
+    // Walidacja wymaganych pól
+    const trimmedFullName = form.fullName?.trim() || ''
+    const trimmedEmail = form.email?.trim() || ''
+    const trimmedPhone = form.phone?.trim() || ''
+
+    if (!trimmedFullName) {
+      toast.error('Proszę wypełnić pole "Imię i nazwisko"')
+      return
+    }
+
+    if (!trimmedEmail) {
+      toast.error('Proszę wypełnić pole "Email"')
+      return
+    }
+
+    if (!trimmedPhone) {
+      toast.error('Proszę wypełnić pole "Numer telefonu"')
+      return
+    }
+
     if (!form.cvFile) {
       toast.error('Proszę załączyć plik CV')
       return
@@ -71,16 +99,19 @@ export default function CandidatePage() {
 
     try {
       const formData = new FormData()
-      formData.append('fullName', form.fullName)
-      formData.append('email', form.email)
-      formData.append('specialization', form.specialization)
-      formData.append('experience', form.experience)
-      formData.append('linkedinUrl', form.linkedinUrl || '')
+      formData.append('fullName', trimmedFullName)
+      formData.append('email', trimmedEmail)
+      formData.append('phone', trimmedPhone)
+      formData.append('specialization', form.specialization?.trim() || '')
+      formData.append('experience', form.experience?.trim() || '')
+      formData.append('linkedinUrl', form.linkedinUrl?.trim() || '')
       formData.append('source', form.source || '')
-      formData.append('message', form.message || '')
+      formData.append('message', form.message?.trim() || '')
       formData.append('cvFile', form.cvFile)
 
+      console.log('Sending form data...')
       const result = await submitCandidateRegistration(formData)
+      console.log('Result:', result)
 
       if (result.success) {
         toast.success('Zgłoszenie zostało wysłane! Nasz zespół skontaktuje się z Tobą wkrótce.')
@@ -136,7 +167,6 @@ export default function CandidatePage() {
                         id="fullName"
                         value={form.fullName}
                         onChange={(e) => handleChange('fullName')(e.target.value)}
-                        required
                         placeholder="Anna Nowak"
                       />
                     </div>
@@ -147,7 +177,6 @@ export default function CandidatePage() {
                         type="email"
                         value={form.email}
                         onChange={(e) => handleChange('email')(e.target.value)}
-                        required
                         placeholder="anna.nowak@example.com"
                       />
                     </div>
@@ -158,7 +187,6 @@ export default function CandidatePage() {
                         type="tel"
                         value={form.phone}
                         onChange={(e) => handleChange('phone')(e.target.value)}
-                        required
                         placeholder="+48 600 000 000"
                       />
                     </div>
@@ -204,7 +232,7 @@ export default function CandidatePage() {
                   <div className="space-y-2">
                     <Label htmlFor="cvFile">CV *</Label>
                     <div className="space-y-2">
-                      <Input id="cvFile" type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} required />
+                      <Input id="cvFile" type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} />
                       <p className="text-sm text-muted-foreground">Dodaj aktualne CV. Akceptujemy PDF/DOCX.</p>
                       <p className="text-sm text-foreground">{cvLabel}</p>
                     </div>
@@ -249,57 +277,7 @@ export default function CandidatePage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t pt-16 pb-8 px-4 sm:px-10">
-        <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-          <div className="col-span-1 md:col-span-1 flex flex-col gap-4">
-            <div className="flex items-center gap-2 text-foreground">
-              <Network className="text-primary w-6 h-6" />
-              <h3 className="text-lg font-bold">Qualibase</h3>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Nowoczesna platforma rekrutacyjna dla branży IT.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3">
-            <h4 className="text-foreground text-sm font-bold uppercase tracking-wide">Platforma</h4>
-            <Link href="#" className="text-muted-foreground text-sm hover:text-primary">
-              Przeglądaj oferty
-            </Link>
-            <Link href="#" className="text-muted-foreground text-sm hover:text-primary">
-              Baza kandydatów
-            </Link>
-          </div>
-          <div className="flex flex-col gap-3">
-            <h4 className="text-foreground text-sm font-bold uppercase tracking-wide">Firma</h4>
-            <Link href="/main#o-nas" className="text-muted-foreground text-sm hover:text-primary">
-              O nas
-            </Link>
-          </div>
-          <div className="flex flex-col gap-3">
-            <h4 className="text-foreground text-sm font-bold uppercase tracking-wide">Social</h4>
-            <div className="flex gap-4">
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Globe className="w-5 h-5" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Mail className="w-5 h-5" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Share2 className="w-5 h-5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className="max-w-[1280px] mx-auto border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-muted-foreground">© 2025 Qualibase Inc. Wszelkie prawa zastrzeżone.</p>
-          <div className="flex gap-6">
-            <Link href="/polityka-prywatnosci" className="text-xs text-muted-foreground hover:text-foreground">
-              Polityka Prywatności
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
