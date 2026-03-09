@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Logowanie",
   description: "Zaloguj się do QualiBase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych dla rekruterów i firm technologicznych.",
   alternates: {
-    canonical: `${baseUrl}/main/zaloguj`,
+    canonical: `${baseUrl}/zaloguj`,
   },
   robots: {
     index: false,
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Logowanie | QualiBase",
     description: "Zaloguj się do QualiBase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych.",
-    url: `${baseUrl}/main/zaloguj`,
+    url: `${baseUrl}/zaloguj`,
     type: "website",
     images: [
       {

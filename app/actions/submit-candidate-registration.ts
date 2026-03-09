@@ -91,14 +91,39 @@ export async function submitCandidateRegistration(
     const message = formData.get("message") as string | null
     const cvFile = formData.get("cvFile") as File | null
 
-    // Walidacja podstawowych pól
-    if (!fullName || !email || !phone || !cvFile) {
+    // Debug: loguj wartości
+    console.log("Server validation - received values:", {
+      fullName: fullName ? `"${fullName}" (length: ${fullName.length})` : "null/undefined",
+      email: email ? `"${email}" (length: ${email.length})` : "null/undefined",
+      phone: phone ? `"${phone}" (length: ${phone.length})` : "null/undefined",
+      cvFile: cvFile ? `File: ${cvFile.name} (size: ${cvFile.size})` : "null/undefined",
+    })
+
+    // Walidacja podstawowych pól - sprawdź czy nie są null/undefined i czy nie są pustymi stringami po trim()
+    const trimmedFullName = fullName?.trim() || ""
+    const trimmedEmail = email?.trim() || ""
+    const trimmedPhone = phone?.trim() || ""
+
+    console.log("Server validation - trimmed values:", {
+      trimmedFullName: trimmedFullName ? `"${trimmedFullName}"` : "empty",
+      trimmedEmail: trimmedEmail ? `"${trimmedEmail}"` : "empty",
+      trimmedPhone: trimmedPhone ? `"${trimmedPhone}"` : "empty",
+      cvFile: cvFile ? "present" : "missing",
+    })
+
+    if (!trimmedFullName || !trimmedEmail || !trimmedPhone || !cvFile) {
+      console.log("Server validation failed:", {
+        fullName: !trimmedFullName,
+        email: !trimmedEmail,
+        phone: !trimmedPhone,
+        cvFile: !cvFile,
+      })
       return { success: false, error: "Wypełnij wszystkie wymagane pola" }
     }
 
     // Walidacja emaila
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(trimmedEmail)) {
       return { success: false, error: "Nieprawidłowy adres email" }
     }
 
@@ -118,7 +143,7 @@ export async function submitCandidateRegistration(
     const { data: existingRegistration } = await supabase
       .from("candidate_registrations")
       .select("id")
-      .eq("email", email.toLowerCase())
+      .eq("email", trimmedEmail.toLowerCase())
       .eq("status", "pending")
       .maybeSingle()
 
@@ -137,10 +162,11 @@ export async function submitCandidateRegistration(
     const { error: insertError } = await adminClient
       .from("candidate_registrations")
       .insert({
-        full_name: fullName.trim(),
-        email: email.toLowerCase().trim(),
-        specialization: specialization.trim(),
-        experience: parseInt(experience, 10) || null,
+        full_name: trimmedFullName,
+        email: trimmedEmail.toLowerCase(),
+        phone: trimmedPhone,
+        specialization: specialization?.trim() || null,
+        experience: experience ? parseInt(experience, 10) : null,
         linkedin_url: linkedinUrl?.trim() || null,
         source: source || null,
         message: message?.trim() || null,

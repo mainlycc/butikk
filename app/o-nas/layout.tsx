@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   title: "O nas",
   description: "Poznaj QualiBase - platformę rekrutacyjną dla branży IT. Ułatwiamy procesy rekrutacyjne i wspieramy rozwój zawodowy specjalistów IT oraz rekruterów.",
   alternates: {
-    canonical: `${baseUrl}/main/o-nas`,
+    canonical: `${baseUrl}/o-nas`,
   },
   openGraph: {
     title: "O nas | QualiBase",
     description: "Poznaj QualiBase - platformę rekrutacyjną dla branży IT. Ułatwiamy procesy rekrutacyjne i wspieramy rozwój zawodowy specjalistów IT oraz rekruterów.",
-    url: `${baseUrl}/main/o-nas`,
+    url: `${baseUrl}/o-nas`,
     type: "website",
     images: [
       {

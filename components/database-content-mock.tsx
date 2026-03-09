@@ -759,7 +759,7 @@ export default function DatabaseContentMock() {
                 <div className="mt-4 text-center border-t pt-4">
                   <p className="text-sm text-muted-foreground mb-3">Chcesz zobaczyć więcej? Dołącz jako rekruter</p>
                   <Button asChild size="default" className="h-10 px-6 text-sm font-semibold">
-                    <Link href="/main/rekruter">Korzystaj jako rekruter</Link>
+                    <Link href="/rekruter">Korzystaj jako rekruter</Link>
                   </Button>
                 </div>
               )}

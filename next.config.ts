@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
   },
+  async redirects() {
+    return [
+      { source: '/main', destination: '/', permanent: true },
+      { source: '/main/:path*', destination: '/:path*', permanent: true },
+    ]
+  },
 };
 
 export default nextConfig;

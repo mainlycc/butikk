@@ -13,25 +13,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/main`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/main/kandydat`,
+      url: `${baseUrl}/kandydat`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/main/rekruter`,
+      url: `${baseUrl}/rekruter`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/main/o-nas`,
+      url: `${baseUrl}/o-nas`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.6,

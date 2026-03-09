@@ -31,8 +31,9 @@ export default function AppShell({
     return <>{children}</>
   }
 
-  // Na stronach /main* nie pokazujemy sidebaru nawet po zalogowaniu
-  if (pathname.startsWith('/main')) {
+  const landingPaths = ['/', '/kandydat', '/rekruter', '/o-nas', '/zaloguj', '/kontakt', '/polityka-prywatnosci']
+  const isLandingPage = pathname === '/' || landingPaths.some(p => p !== '/' && pathname.startsWith(p))
+  if (isLandingPage) {
     return <>{children}</>
   }
 

@@ -150,7 +150,7 @@ export default function CandidatePage() {
                 </p>
               </div>
               <Button asChild variant="outline" className="w-full md:w-auto">
-                <Link href="/main/rekruter">Zgłoś firmę</Link>
+                <Link href="/rekruter">Zgłoś firmę</Link>
               </Button>
             </div>
 

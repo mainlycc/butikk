@@ -1,7 +1,25 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
+const CANONICAL_HOST = "www.qualibase.pl"
+
 export async function middleware(request: NextRequest) {
+  const host = request.headers.get("host") ?? ""
+
+  if (
+    host &&
+    host !== CANONICAL_HOST &&
+    host !== "localhost" &&
+    !host.startsWith("localhost:") &&
+    !host.includes("vercel.app")
+  ) {
+    const url = new URL(request.url)
+    url.protocol = "https"
+    url.host = CANONICAL_HOST
+    url.port = ""
+    return NextResponse.redirect(url, 308)
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,

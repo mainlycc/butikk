@@ -92,7 +92,7 @@ export function AppSidebar({ user }: SidebarProps) {
   return (
     <Sidebar variant="inset">
       <SidebarHeader className="p-4">
-        <Link href="/main" className="flex items-center gap-2 text-foreground">
+        <Link href="/" className="flex items-center gap-2 text-foreground">
           <Network className="text-primary text-3xl" />
           <h2 className="text-foreground text-xl font-bold tracking-tight">Qualibase</h2>
         </Link>

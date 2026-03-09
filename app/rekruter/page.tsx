@@ -93,7 +93,7 @@ export default function RecruiterPage() {
                 </p>
               </div>
               <Button asChild variant="outline" className="w-full md:w-auto">
-                <Link href="/main/kandydat">Zgłoś się jako kandydat</Link>
+                <Link href="/kandydat">Zgłoś się jako kandydat</Link>
               </Button>
             </div>
 

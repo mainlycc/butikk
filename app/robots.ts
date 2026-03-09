@@ -9,10 +9,9 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: [
           '/',
-          '/main',
-          '/main/kandydat',
-          '/main/rekruter',
-          '/main/o-nas',
+          '/kandydat',
+          '/rekruter',
+          '/o-nas',
         ],
         disallow: [
           '/database',
@@ -21,7 +20,7 @@ export default function robots(): MetadataRoute.Robots {
           '/reset-password',
           '/update-password',
           '/accept-invite',
-          '/main/zaloguj',
+          '/zaloguj',
           '/api',
         ],
       },

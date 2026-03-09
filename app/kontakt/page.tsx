@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   description:
     'Skontaktuj się z Deskset Sp. z o.o. – operatorem platformy QualiBase. Dane kontaktowe, adres siedziby oraz informacje rejestrowe spółki.',
   alternates: {
-    canonical: `${baseUrl}/main#kontakt`,
+    canonical: `${baseUrl}/#kontakt`,
   },
 }
 
 export default function ContactPage() {
-  redirect('/main#kontakt')
+  redirect('/#kontakt')
 }
 

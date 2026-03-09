@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   title: "Rejestracja rekrutera",
   description: "Zgłoś swoją firmę do bazy QualiBase. Znajdź najlepszych specjalistów IT dla swojej organizacji. Platforma rekrutacyjna dla firm technologicznych.",
   alternates: {
-    canonical: `${baseUrl}/main/rekruter`,
+    canonical: `${baseUrl}/rekruter`,
   },
   openGraph: {
     title: "Rejestracja rekrutera | QualiBase",
     description: "Zgłoś swoją firmę do bazy QualiBase. Znajdź najlepszych specjalistów IT dla swojej organizacji. Platforma rekrutacyjna dla firm technologicznych.",
-    url: `${baseUrl}/main/rekruter`,
+    url: `${baseUrl}/rekruter`,
     type: "website",
     images: [
       {

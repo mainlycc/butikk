@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   title: "Rejestracja kandydata",
   description: "Dołącz do naszej bazy talentów IT. Zarejestruj się jako kandydat i otrzymuj dopasowane oferty pracy od najlepszych firm technologicznych.",
   alternates: {
-    canonical: `${baseUrl}/main/kandydat`,
+    canonical: `${baseUrl}/kandydat`,
   },
   openGraph: {
     title: "Rejestracja kandydata | QualiBase",
     description: "Dołącz do naszej bazy talentów IT. Zarejestruj się jako kandydat i otrzymuj dopasowane oferty pracy od najlepszych firm technologicznych.",
-    url: `${baseUrl}/main/kandydat`,
+    url: `${baseUrl}/kandydat`,
     type: "website",
     images: [
       {

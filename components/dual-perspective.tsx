@@ -43,7 +43,7 @@ export function DualPerspectiveSection() {
             </CardContent>
             <CardFooter className="pt-0">
               <Button asChild className="w-full sm:w-auto">
-                <Link href="/main/kandydat">
+                <Link href="/kandydat">
                   Stwórz profil kandydata
                 </Link>
               </Button>
@@ -73,7 +73,7 @@ export function DualPerspectiveSection() {
             </CardContent>
             <CardFooter className="pt-0">
               <Button asChild className="w-full sm:w-auto">
-                <Link href="/main/rekruter">
+                <Link href="/rekruter">
                   Stwórz profil rekrutera
                 </Link>
               </Button>
