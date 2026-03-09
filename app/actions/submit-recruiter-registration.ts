@@ -71,7 +71,7 @@ export async function submitRecruiterRegistration(
       return { success: false, error: "Nie udało się zapisać zgłoszenia. Spróbuj ponownie." }
     }
 
-    revalidatePath("/dashboard/registrations")
+    revalidatePath("/app/dashboard/registrations")
     
     return { success: true }
   } catch (error) {

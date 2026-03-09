@@ -119,8 +119,8 @@ export async function approveRecruiterRegistration(
       // Zaproszenie zostało wysłane, więc to nie jest krytyczny błąd
     }
 
-    revalidatePath("/dashboard/registrations")
-    revalidatePath("/dashboard/invitations")
+    revalidatePath("/app/dashboard/registrations")
+    revalidatePath("/app/dashboard/invitations")
 
     return { success: true }
   } catch (error) {

@@ -19,9 +19,10 @@ interface LandingContentProps {
     instructions: string[]
   }
   hideGuide?: boolean
+  redirectUrl?: string
 }
 
-export default function LandingContent({ infoData, hideGuide = false }: LandingContentProps) {
+export default function LandingContent({ infoData, hideGuide = false, redirectUrl }: LandingContentProps) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -59,11 +60,8 @@ export default function LandingContent({ infoData, hideGuide = false }: LandingC
     // Aktualizuj last_login w bazie danych
     await updateLastLogin()
 
-    // Odśwież router, aby upewnić się, że cookies są zsynchronizowane
     router.refresh()
-    // Użyj window.location.href aby wymusić pełne przeładowanie strony
-    // To zapewnia, że layout.tsx poprawnie wykryje zalogowanego użytkownika i wyświetli sidebar
-    window.location.href = "/database"
+    window.location.href = redirectUrl || "/app/kandydaci"
   }
 
   return (

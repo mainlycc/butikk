@@ -122,7 +122,7 @@ export async function createInvitation(
     console.log('Invitation email sent successfully to:', email)
   }
 
-  revalidatePath('/dashboard/invitations')
+  revalidatePath('/app/dashboard/invitations')
   return { success: true, invitation: invitation as Invitation }
 }
 
@@ -297,7 +297,7 @@ export async function registerWithInvitation(
   }
 
   // Odśwież cache dla strony zaproszeń (aby admin zobaczył zmieniony status)
-  revalidatePath('/dashboard/invitations')
+  revalidatePath('/app/dashboard/invitations')
 
   return { success: true }
 }
@@ -375,7 +375,7 @@ export async function resendInvitations(ids: string[]): Promise<{ success: boole
     }
   }
 
-  revalidatePath('/dashboard/invitations')
+  revalidatePath('/app/dashboard/invitations')
   return { success: true }
 }
 
@@ -407,7 +407,7 @@ export async function deleteInvitations(ids: string[]): Promise<{ success: boole
     return { success: false, error: 'Nie udało się usunąć zaproszeń' }
   }
 
-  revalidatePath('/dashboard/invitations')
+  revalidatePath('/app/dashboard/invitations')
   return { success: true }
 }
 
@@ -439,7 +439,7 @@ export async function cancelInvitation(id: string): Promise<{ success: boolean; 
     return { success: false, error: 'Nie udało się anulować zaproszenia' }
   }
 
-  revalidatePath('/dashboard/invitations')
+  revalidatePath('/app/dashboard/invitations')
   return { success: true }
 }
 

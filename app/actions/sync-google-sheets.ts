@@ -2,6 +2,7 @@
 
 import { getSupabaseServerClient } from "@/lib/server"
 import { downloadAndUploadPDF, generatePDFFileName } from "@/lib/storage"
+import { generateCandidateSlug, deduplicateSlug } from "@/lib/utils/slug"
 
 // ID arkusza Google Sheets
 const CANDIDATES_SHEET_ID = process.env.NEXT_PUBLIC_CANDIDATES_SHEET_ID || "1XCpfMqh2-iZJnXHx42zsc8utynW8WNe89Fy2jslUnKY"
@@ -193,6 +194,15 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
       console.log("Długość wiersza:", candidates[0].length)
     }
 
+    // Pobierz istniejące slugi z bazy, żeby uniknąć duplikatów
+    const { data: existingSlugRows } = await supabase
+      .from("candidates")
+      .select("slug")
+      .not("slug", "is", null)
+    const usedSlugs = new Set<string>(
+      (existingSlugRows || []).map((r: { slug: string }) => r.slug)
+    )
+
     let successCount = 0
     let errorCount = 0
 
@@ -272,23 +282,33 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
         }
       }
 
+      const role = rolaIndex >= 0 ? getValue(rolaIndex) || null : null
+      const seniority = seniorityIndex >= 0 ? getValue(seniorityIndex) || null : null
+      const technologies = technologieIndex >= 0 ? getValue(technologieIndex) || null : null
+      const location = lokalizacjaIndex >= 0 ? getValue(lokalizacjaIndex) || null : null
+
+      const baseSlug = generateCandidateSlug({ seniority, role, technologies, location })
+      const slug = deduplicateSlug(baseSlug, usedSlugs)
+      usedSlugs.add(slug)
+
       const candidate = {
         sheet_row_number: isNaN(sheetRowNumber) ? i + 2 : sheetRowNumber,
         nr: nrIndex >= 0 ? getValue(nrIndex) || null : null,
         first_name: firstName || null,
         last_name: lastName,
-        role: rolaIndex >= 0 ? getValue(rolaIndex) || null : null,
-        seniority: seniorityIndex >= 0 ? getValue(seniorityIndex) || null : null,
+        role,
+        seniority,
         rate: stawkaIndex >= 0 ? getValue(stawkaIndex) || null : null,
         guardian: opiekunIndex >= 0 ? getValue(opiekunIndex) || null : null,
         guardian_email: guardianEmailIndex >= 0 ? getValue(guardianEmailIndex) || null : null,
-        location: lokalizacjaIndex >= 0 ? getValue(lokalizacjaIndex) || null : null,
+        location,
         candidate_email: emailKandydataIndex >= 0 ? getValue(emailKandydataIndex) || null : null,
         cv: cvIndex >= 0 ? getValue(cvIndex) || null : null,
         cv_pdf_url: cvPdfUrl,
-        technologies: technologieIndex >= 0 ? getValue(technologieIndex) || null : null,
+        technologies,
         languages: languagesIndex >= 0 ? getValue(languagesIndex) || null : null,
         availability: dostepnoscIndex >= 0 ? getValue(dostepnoscIndex) || null : null,
+        slug,
         last_synced_at: new Date().toISOString(),
       }
 

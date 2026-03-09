@@ -50,25 +50,25 @@ export function AppSidebar({ user }: SidebarProps) {
   const navigation = [
     {
       name: 'Baza kandydatów',
-      href: '/database',
+      href: '/app/kandydaci',
       icon: Database,
       roles: ['admin', 'user']
     },
     {
       name: 'Zgłoszenia',
-      href: '/dashboard/registrations',
+      href: '/app/dashboard/registrations',
       icon: Mail,
       roles: ['admin']
     },
     {
       name: 'Zaproszenia',
-      href: '/dashboard/invitations',
+      href: '/app/dashboard/invitations',
       icon: Mail,
       roles: ['admin']
     },
     {
       name: 'Użytkownicy',
-      href: '/dashboard/users',
+      href: '/app/dashboard/users',
       icon: User,
       roles: ['admin']
     },

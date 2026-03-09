@@ -16,10 +16,10 @@ export function Footer() {
         </div>
         <div className="flex flex-col gap-3">
           <h4 className="text-foreground text-sm font-bold uppercase tracking-wide">Platforma</h4>
-          <Link href="/zaloguj" className="text-muted-foreground text-sm hover:text-primary">
+          <Link href="/app/login" className="text-muted-foreground text-sm hover:text-primary">
             Przeglądaj oferty
           </Link>
-          <Link href="/zaloguj" className="text-muted-foreground text-sm hover:text-primary">
+          <Link href="/kandydaci" className="text-muted-foreground text-sm hover:text-primary">
             Baza kandydatów
           </Link>
         </div>

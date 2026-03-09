@@ -68,7 +68,7 @@ export async function rejectCandidateRegistration(
       reason: reason,
     })
 
-    revalidatePath("/dashboard/registrations")
+    revalidatePath("/app/dashboard/registrations")
 
     return { success: true }
   } catch (error) {

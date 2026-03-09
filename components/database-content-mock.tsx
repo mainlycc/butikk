@@ -19,27 +19,19 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import type { PrivateCandidate } from "@/lib/types/candidate"
 
-interface Candidate {
+interface Candidate extends Partial<PrivateCandidate> {
   id: string
-  nr?: string | null
   first_name: string | null
-  last_name?: string | null
   role: string | null
   seniority: string | null
   rate: string | null
-  location?: string | null
-  candidate_email?: string | null
-  guardian: string | null
-  guardian_email?: string | null
-  cv: string | null
-  cv_pdf_url?: string | null
   technologies: string | null
+  guardian: string | null
+  cv: string | null
   previous_contact: string | null
   project_description: string | null
-  skills?: string | null
-  languages?: string | null
-  availability?: string | null
   blurred?: boolean
 }
 

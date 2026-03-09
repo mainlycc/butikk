@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
     return [
       { source: '/main', destination: '/', permanent: true },
       { source: '/main/:path*', destination: '/:path*', permanent: true },
+      { source: '/zaloguj', destination: '/app/login', permanent: true },
+      { source: '/database', destination: '/app/kandydaci', permanent: true },
+      { source: '/database/candidate/:id', destination: '/app/kandydat/:id', permanent: true },
+      { source: '/dashboard/:path*', destination: '/app/dashboard/:path*', permanent: true },
     ]
   },
 };

@@ -46,7 +46,7 @@ export function TopNav() {
             className="hidden sm:flex h-9 px-4 bg-transparent hover:bg-gray-100 text-foreground text-sm font-bold"
             asChild
           >
-            <Link href="/zaloguj">Zaloguj</Link>
+            <Link href="/app/login">Zaloguj</Link>
           </Button>
           <Button
             asChild
@@ -98,7 +98,7 @@ export function TopNav() {
                 </Link>
                 <div className="pt-4 space-y-3">
                   <Button asChild variant="outline" className="w-full">
-                    <Link href="/zaloguj">Zaloguj</Link>
+                    <Link href="/app/login">Zaloguj</Link>
                   </Button>
                   <Button asChild className="w-full">
                     <Link href="/kandydat">Rejestracja</Link>

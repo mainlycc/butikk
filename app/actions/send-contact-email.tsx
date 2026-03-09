@@ -1,23 +1,9 @@
 "use server"
 
 import { Resend } from "resend"
+import type { PrivateCandidate } from "@/lib/types/candidate"
 
-interface Candidate {
-  id: string
-  first_name: string | null
-  role: string | null
-  seniority: string | null
-  rate: string | null
-  technologies: string | null
-  cv: string | null
-  cv_pdf_url?: string | null
-  location?: string | null
-  candidate_email?: string | null
-  guardian: string | null
-  guardian_email?: string | null
-  previous_contact: string | null
-  project_description: string | null
-}
+type Candidate = PrivateCandidate
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 

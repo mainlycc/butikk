@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { ChevronLeft, ChevronRight, ArrowLeft, User, Briefcase, Mail, Calendar, MapPin } from "lucide-react"
 import ContactDialog from "@/components/contact-dialog"
 import { useState } from "react"
+import type { PrivateCandidate } from "@/lib/types/candidate"
 
 // Dynamic import z wyłączonym SSR, aby uniknąć problemu z DOMMatrix
 const PDFViewer = dynamic(() => import("@/components/pdf-viewer"), {
@@ -22,26 +23,7 @@ const PDFViewer = dynamic(() => import("@/components/pdf-viewer"), {
   ),
 })
 
-interface Candidate {
-  id: string
-  first_name: string | null
-  last_name?: string | null
-  role: string | null
-  seniority: string | null
-  rate: string | null
-  technologies: string | null
-  cv: string | null
-  cv_pdf_url?: string | null
-  location?: string | null
-  candidate_email?: string | null
-  guardian: string | null
-  guardian_email?: string | null
-  previous_contact: string | null
-  project_description: string | null
-  languages?: string | null
-  availability?: string | null
-  skills?: string | null
-}
+type Candidate = PrivateCandidate
 
 interface CandidateViewProps {
   candidate: Candidate
@@ -73,7 +55,7 @@ export default function CandidateView({
       params.set("selected", selectedIds.join(","))
     }
     const queryString = params.toString()
-    router.push(`/database/candidate/${previousCandidate.id}${queryString ? `?${queryString}` : ""}`)
+    router.push(`/app/kandydat/${previousCandidate.id}${queryString ? `?${queryString}` : ""}`)
   }, [previousCandidate, router, selectedIds])
 
   const handleNext = useCallback(() => {
@@ -84,11 +66,11 @@ export default function CandidateView({
       params.set("selected", selectedIds.join(","))
     }
     const queryString = params.toString()
-    router.push(`/database/candidate/${nextCandidate.id}${queryString ? `?${queryString}` : ""}`)
+    router.push(`/app/kandydat/${nextCandidate.id}${queryString ? `?${queryString}` : ""}`)
   }, [nextCandidate, router, selectedIds])
 
   const handleBackToList = useCallback(() => {
-    router.push("/database")
+    router.push("/app/kandydaci")
   }, [router])
 
   return (

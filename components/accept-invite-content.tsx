@@ -78,7 +78,7 @@ export function AcceptInviteContent() {
 
     setSuccess(true)
     setTimeout(() => {
-      router.push("/database")
+      router.push("/app/kandydaci")
     }, 2000)
   }
 

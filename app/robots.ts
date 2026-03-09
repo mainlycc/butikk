@@ -9,23 +9,23 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: [
           '/',
+          '/kandydaci',
           '/kandydat',
           '/rekruter',
           '/o-nas',
+          '/kontakt',
+          '/polityka-prywatnosci',
         ],
         disallow: [
-          '/database',
-          '/dashboard',
+          '/app',
+          '/api',
           '/register',
           '/reset-password',
           '/update-password',
           '/accept-invite',
-          '/zaloguj',
-          '/api',
         ],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
   }
 }
-

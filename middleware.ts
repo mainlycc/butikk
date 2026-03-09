@@ -49,9 +49,18 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  // Only try to refresh if we have a session
   if (session) {
     await supabase.auth.getUser()
+  }
+
+  const pathname = request.nextUrl.pathname
+
+  if (pathname.startsWith('/app') && pathname !== '/app/login') {
+    if (!session) {
+      const loginUrl = new URL('/app/login', request.url)
+      loginUrl.searchParams.set('redirect', pathname)
+      return NextResponse.redirect(loginUrl)
+    }
   }
 
   return response

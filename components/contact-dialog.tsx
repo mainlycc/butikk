@@ -16,27 +16,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Mail, Loader2, CheckCircle2 } from "lucide-react"
 import { toast } from "sonner"
+import type { PrivateCandidate } from "@/lib/types/candidate"
 
-interface Candidate {
-  id: string
-  first_name: string | null
-  last_name?: string | null
-  role: string | null
-  seniority: string | null
-  rate: string | null
-  technologies: string | null
-  cv: string | null
-  cv_pdf_url?: string | null
-  location?: string | null
-  candidate_email?: string | null
-  guardian: string | null
-  guardian_email?: string | null
-  previous_contact: string | null
-  project_description: string | null
-  languages?: string | null
-  availability?: string | null
-  skills?: string | null
-}
+type Candidate = PrivateCandidate
 
 interface ContactDialogProps {
   candidates: Candidate[]

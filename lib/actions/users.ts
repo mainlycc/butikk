@@ -98,7 +98,7 @@ export async function deleteUsers(ids: string[]): Promise<{ success: boolean; er
     return { success: false, error: 'Nie udało się usunąć użytkowników z bazy' }
   }
 
-  revalidatePath('/dashboard/users')
+  revalidatePath('/app/dashboard/users')
   return { success: true }
 }
 

@@ -24,30 +24,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import type { PrivateCandidate } from "@/lib/types/candidate"
 
-interface Candidate {
-  id: string
-  // Wartość dostępna dla rekordów z bazy, ale nie jest wymagana w każdym miejscu
-  sheet_row_number?: number
-  nr?: string | null
-  first_name: string | null
-  last_name?: string | null
-  role: string | null
-  seniority: string | null
-  rate: string | null
-  location?: string | null
-  candidate_email?: string | null
-  guardian: string | null
-  guardian_email?: string | null
-  cv: string | null
-  cv_pdf_url?: string | null
-  technologies: string | null
-  previous_contact: string | null
-  project_description: string | null
-  skills?: string | null
-  languages?: string | null
-  availability?: string | null
-}
+type Candidate = PrivateCandidate
 
 interface DatabaseContentProps {
   initialCandidates: Candidate[]
@@ -393,7 +372,7 @@ export default function DatabaseContent({ initialCandidates, userEmail }: Databa
                       if (selectedIds.length > 0) {
                         const params = new URLSearchParams()
                         params.set("selected", selectedIds.join(","))
-                        router.push(`/database/candidate/${selectedIds[0]}?${params.toString()}`)
+                        router.push(`/app/kandydat/${selectedIds[0]}?${params.toString()}`)
                       }
                     }} 
                     variant="outline" 

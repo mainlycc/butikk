@@ -20,26 +20,9 @@ const PDFViewer = dynamic(() => import("@/components/pdf-viewer"), {
   ),
 })
 
-interface Candidate {
-  id: string
-  first_name: string | null
-  last_name?: string | null
-  role: string | null
-  seniority: string | null
-  rate: string | null
-  technologies: string | null
-  cv: string | null
-  cv_pdf_url?: string | null
-   location?: string | null
-   candidate_email?: string | null
-  guardian: string | null
-  guardian_email?: string | null
-  previous_contact: string | null
-  project_description: string | null
-  languages?: string | null
-  availability?: string | null
-  skills?: string | null
-}
+import type { PrivateCandidate } from "@/lib/types/candidate"
+
+type Candidate = PrivateCandidate
 
 interface CVSlideshowProps {
   candidates: Candidate[]

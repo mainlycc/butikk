@@ -112,8 +112,8 @@ export async function approveCandidateRegistration(
       // Kandydat został dodany, więc to nie jest krytyczny błąd
     }
 
-    revalidatePath("/dashboard/registrations")
-    revalidatePath("/database")
+    revalidatePath("/app/dashboard/registrations")
+    revalidatePath("/app/kandydaci")
 
     return { success: true }
   } catch (error) {
