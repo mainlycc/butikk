@@ -27,6 +27,7 @@ import {
 } from "lucide-react"
 import type { PublicCandidate } from "@/lib/types/candidate"
 import SimilarCandidates from "@/components/similar-candidates"
+import LockedCvSkeleton from "@/components/locked-cv-skeleton"
 
 interface PublicCandidateViewProps {
   candidate: PublicCandidate
@@ -130,6 +131,29 @@ export default function PublicCandidateView({
               {candidate.role || "Profil kandydata"}
             </h1>
             <div className="flex items-center gap-2 flex-wrap">
+              {candidate.availability && (
+                <Badge
+                  variant="outline"
+                  className={
+                    candidate.availability.toLowerCase().includes("immediate")
+                      ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 text-sm sm:text-base px-3 py-1.5 rounded-full"
+                      : "bg-background text-sm sm:text-base px-3 py-1.5 rounded-full"
+                  }
+                >
+                  Dostępność:{" "}
+                  <span className="ml-1 inline-flex items-center gap-2 font-semibold">
+                    {candidate.availability.toLowerCase().includes("immediate") && (
+                      <span className="relative inline-flex h-2.5 w-2.5 items-center justify-center">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/60" />
+                        <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.75)]" />
+                      </span>
+                    )}
+                    {candidate.availability.toLowerCase().includes("immediate")
+                      ? "od zaraz"
+                      : candidate.availability}
+                  </span>
+                </Badge>
+              )}
               {candidate.experience_years != null && (
                 <Badge
                   variant="outline"
@@ -158,19 +182,6 @@ export default function PublicCandidateView({
                   {candidate.location.toLowerCase().includes("zdalnie") || candidate.location.toLowerCase().includes("remote")
                     ? "Tryb pracy: Zdalnie"
                     : `Lokalizacja: ${candidate.location}`}
-                </Badge>
-              )}
-              {candidate.availability && (
-                <Badge
-                  variant="outline"
-                  className="bg-background text-sm sm:text-base px-3 py-1.5 rounded-full"
-                >
-                  Dostępność:{" "}
-                  <span className="ml-1 font-semibold">
-                    {candidate.availability.toLowerCase().includes("immediate")
-                      ? "od zaraz"
-                      : candidate.availability}
-                  </span>
                 </Badge>
               )}
             </div>
@@ -226,7 +237,7 @@ export default function PublicCandidateView({
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 text-sm font-medium">
                     <FileText className="w-4 h-4 text-muted-foreground" />
-                    <span className={locked}>Podgląd CV</span>
+                    <span>Podgląd CV</span>
                   </div>
                   <Badge className="bg-primary text-primary-foreground text-xs">Premium</Badge>
                 </div>
@@ -235,25 +246,10 @@ export default function PublicCandidateView({
                 <div className="mt-4 flex items-center justify-center">
                   <div className="relative w-full max-w-[420px]">
                     <div className="mx-auto aspect-[210/297] w-full rounded-xl border bg-background/70 shadow-sm overflow-hidden">
-                      {/* subtle page header lines */}
-                      <div className="absolute inset-0 p-6">
-                        <div className={`h-5 w-2/3 rounded bg-muted/50 ${locked}`} />
-                        <div className={`mt-3 h-3 w-1/2 rounded bg-muted/40 ${locked}`} />
-                        <div className={`mt-6 space-y-2 ${locked}`}>
-                          <div className="h-2.5 w-full rounded bg-muted/40" />
-                          <div className="h-2.5 w-[92%] rounded bg-muted/35" />
-                          <div className="h-2.5 w-[88%] rounded bg-muted/35" />
-                          <div className="h-2.5 w-[80%] rounded bg-muted/35" />
-                        </div>
-                        <div className={`mt-6 space-y-2 ${locked}`}>
-                          <div className="h-2.5 w-full rounded bg-muted/35" />
-                          <div className="h-2.5 w-[90%] rounded bg-muted/35" />
-                          <div className="h-2.5 w-[84%] rounded bg-muted/35" />
-                        </div>
-                      </div>
+                      <LockedCvSkeleton />
 
                       {/* overlay lock */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-md">
+                      <div className="absolute inset-0 flex items-center justify-center bg-background/35 backdrop-blur-sm">
                         <div className="flex flex-col items-center gap-2 text-center px-6">
                           <div className="w-14 h-14 rounded-full border bg-background flex items-center justify-center shadow-sm">
                             <Lock className="w-6 h-6 text-primary" />
@@ -325,7 +321,10 @@ export default function PublicCandidateView({
                     <>
                       <div className="flex flex-wrap gap-1.5">
                         {visibleTechnologies.map((t) => (
-                          <Badge key={t} variant="secondary" className="text-[11px] px-2 py-0.5">
+                          <Badge
+                            key={t}
+                            className="text-[11px] px-2 py-0.5 bg-blue-600/15 text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20"
+                          >
                             {t}
                           </Badge>
                         ))}
@@ -363,7 +362,9 @@ export default function PublicCandidateView({
                   <Bookmark className="w-4 h-4 mr-2" />
                   Zapisz profil
                 </Button>
-                <div className="text-center text-xs text-muted-foreground" />
+                <div className="text-center text-xs text-muted-foreground">
+                  Dołącz do <span className="font-semibold text-foreground">440 firm</span>, które już rekrutują
+                </div>
               </div>
             </CardContent>
           </Card>

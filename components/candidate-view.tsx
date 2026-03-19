@@ -157,6 +157,29 @@ export default function CandidateView({
                 {candidate.role || "Profil kandydata"}
               </h1>
               <div className="flex items-center gap-2 flex-wrap">
+              {candidate.availability && (
+                <Badge
+                  variant="outline"
+                  className={
+                    candidate.availability.toLowerCase().includes("immediate")
+                      ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 text-sm sm:text-base px-3 py-1.5 rounded-full"
+                      : "bg-background text-sm sm:text-base px-3 py-1.5 rounded-full"
+                  }
+                >
+                  Dostępność:{" "}
+                  <span className="ml-1 inline-flex items-center gap-2 font-semibold">
+                    {candidate.availability.toLowerCase().includes("immediate") && (
+                      <span className="relative inline-flex h-2.5 w-2.5 items-center justify-center">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/60" />
+                        <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.75)]" />
+                      </span>
+                    )}
+                    {candidate.availability.toLowerCase().includes("immediate")
+                      ? "od zaraz"
+                      : candidate.availability}
+                  </span>
+                </Badge>
+              )}
                 {candidate.experience_years != null && (
                   <Badge
                     variant="outline"
@@ -185,19 +208,6 @@ export default function CandidateView({
                     {candidate.location.toLowerCase().includes("zdalnie") || candidate.location.toLowerCase().includes("remote")
                       ? "Tryb pracy: Zdalnie"
                       : `Lokalizacja: ${candidate.location}`}
-                  </Badge>
-                )}
-                {candidate.availability && (
-                  <Badge
-                    variant="outline"
-                    className="bg-background text-sm sm:text-base px-3 py-1.5 rounded-full"
-                  >
-                    Dostępność:{" "}
-                    <span className="ml-1 font-semibold">
-                      {candidate.availability.toLowerCase().includes("immediate")
-                        ? "od zaraz"
-                        : candidate.availability}
-                    </span>
                   </Badge>
                 )}
               </div>
