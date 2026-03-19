@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
-  getAllPublicCandidates,
+  getPublicCandidates,
   getPublicCandidatesCount,
 } from "@/lib/data/candidates-queries"
 import {
@@ -18,17 +18,20 @@ import PublicDatabaseContent from "@/components/public-database-content"
 
 interface PageProps {
   params: Promise<{ rola: string; technologia: string }>
+  searchParams: Promise<{ page?: string }>
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { rola, technologia } = await params
+  const { page } = await searchParams
   const role = decodeURIComponent(rola)
   const technology = decodeURIComponent(technologia)
+  const currentPage = Number(page) > 1 ? Number(page) : 1
   const count = await getPublicCandidatesCount({ role, technology })
 
-  const title = getListingMetaTitle({ role, technology, count })
-  const description = getListingMetaDescription({ role, technology, count })
-  const canonical = getListingCanonicalUrl({ role: rola, technology: technologia })
+  const title = getListingMetaTitle({ role, technology, count, page: currentPage })
+  const description = getListingMetaDescription({ role, technology, count, page: currentPage })
+  const canonical = getListingCanonicalUrl({ role: rola, technology: technologia, page: currentPage })
 
   return {
     title,
@@ -39,18 +42,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function TechnologiaPage({ params }: PageProps) {
+export default async function TechnologiaPage({ params, searchParams }: PageProps) {
   const { rola, technologia } = await params
+  const { page } = await searchParams
   const role = decodeURIComponent(rola)
   const technology = decodeURIComponent(technologia)
+  const currentPage = Number(page) > 1 ? Number(page) : 1
 
-  const [candidates, count] = await Promise.all([
-    getAllPublicCandidates({ role, technology }),
-    getPublicCandidatesCount({ role, technology }),
-  ])
+  const { data: candidates, total, totalPages } = await getPublicCandidates({ role, technology }, currentPage)
 
-  const h1 = getListingH1({ role, technology, count })
-  const description = getListingDescription({ role, technology, count })
+  const h1 = getListingH1({ role, technology, count: total, page: currentPage })
+  const description = getListingDescription({ role, technology, count: total, page: currentPage })
   const breadcrumbs = getListingBreadcrumbs({ role: rola, technology: technologia })
 
   return (
@@ -66,7 +68,12 @@ export default async function TechnologiaPage({ params }: PageProps) {
       <p className="text-muted-foreground mb-8 max-w-2xl">{description}</p>
 
       <Suspense fallback={<TableSkeleton />}>
-        <PublicDatabaseContent candidates={candidates} />
+        <PublicDatabaseContent
+          candidates={candidates}
+          page={currentPage}
+          totalPages={totalPages}
+          basePath={`/kandydaci/${rola}/${technologia}`}
+        />
       </Suspense>
     </section>
   )

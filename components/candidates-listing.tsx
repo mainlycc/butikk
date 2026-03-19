@@ -36,7 +36,7 @@ function CandidateCard({ candidate }: { candidate: PublicCandidate }) {
               <div className="flex items-center gap-2 flex-wrap">
                 {candidate.seniority && (
                   <Badge variant="default" className="text-xs">
-                    {candidate.seniority}
+                    Seniority: {candidate.seniority}
                   </Badge>
                 )}
                 {candidate.role && (

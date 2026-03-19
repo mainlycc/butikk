@@ -26,15 +26,21 @@ import Link from "next/link"
 
 interface PublicDatabaseContentProps {
   candidates: PublicCandidate[]
+  page: number
+  totalPages: number
+  basePath: string
 }
 
-export default function PublicDatabaseContent({ candidates: initialCandidates }: PublicDatabaseContentProps) {
+export default function PublicDatabaseContent({
+  candidates: initialCandidates,
+  page,
+  totalPages,
+  basePath,
+}: PublicDatabaseContentProps) {
   const router = useRouter()
   const [searchTerms, setSearchTerms] = useState("")
   const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set())
-  const [currentPage, setCurrentPage] = useState(1)
   const [sorting, setSorting] = useState<SortingState>([])
-  const itemsPerPage = 20
 
   const filteredCandidates = useMemo(() => {
     if (!searchTerms.trim()) return initialCandidates
@@ -61,10 +67,6 @@ export default function PublicDatabaseContent({ candidates: initialCandidates }:
       return terms.every((term) => searchableText.includes(term))
     })
   }, [initialCandidates, searchTerms])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [searchTerms, sorting])
 
   const handleFilter = () => {
     toast.info(`Znaleziono ${filteredCandidates.length} kandydatów`)
@@ -113,10 +115,12 @@ export default function PublicDatabaseContent({ candidates: initialCandidates }:
           />
         ),
         cell: ({ row }) => (
-          <Checkbox
-            checked={selectedCandidates.has(row.original.slug)}
-            onCheckedChange={() => toggleCandidate(row.original.slug)}
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <Checkbox
+              checked={selectedCandidates.has(row.original.slug)}
+              onCheckedChange={() => toggleCandidate(row.original.slug)}
+            />
+          </div>
         ),
         enableSorting: false,
         enableHiding: false,
@@ -205,9 +209,6 @@ export default function PublicDatabaseContent({ candidates: initialCandidates }:
   })
 
   const sortedCandidates = table.getRowModel().rows.map((row) => row.original)
-  const totalPages = Math.ceil(sortedCandidates.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const paginatedCandidates = sortedCandidates.slice(startIndex, startIndex + itemsPerPage)
 
   return (
     <div className="space-y-6">
@@ -281,9 +282,12 @@ export default function PublicDatabaseContent({ candidates: initialCandidates }:
             <div className="p-4">
               <DataTable
                 columns={columns}
-                data={paginatedCandidates}
+                data={sortedCandidates}
                 sorting={sorting}
                 onSortingChange={setSorting}
+                onRowClick={(candidate) => {
+                  router.push(`/kandydat/${candidate.slug}`)
+                }}
               />
             </div>
           )}
@@ -291,19 +295,15 @@ export default function PublicDatabaseContent({ candidates: initialCandidates }:
       </Card>
 
       {/* Pagination */}
-      {filteredCandidates.length > itemsPerPage && (
+      {totalPages > 1 && (
         <Card className="border-2">
           <CardContent className="pt-6">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage > 1) setCurrentPage(currentPage - 1)
-                    }}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    href={page > 2 ? `${basePath}?page=${page - 1}` : basePath}
+                    className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                   />
                 </PaginationItem>
 
@@ -311,13 +311,13 @@ export default function PublicDatabaseContent({ candidates: initialCandidates }:
                   const pages: (number | "ellipsis")[] = []
                   if (totalPages <= 7) {
                     for (let i = 1; i <= totalPages; i++) pages.push(i)
-                  } else if (currentPage <= 3) {
+                  } else if (page <= 3) {
                     pages.push(1, 2, 3, 4, "ellipsis", totalPages)
-                  } else if (currentPage >= totalPages - 2) {
+                  } else if (page >= totalPages - 2) {
                     pages.push(1, "ellipsis")
                     for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i)
                   } else {
-                    pages.push(1, "ellipsis", currentPage - 1, currentPage, currentPage + 1, "ellipsis", totalPages)
+                    pages.push(1, "ellipsis", page - 1, page, page + 1, "ellipsis", totalPages)
                   }
                   return pages.map((page, index) =>
                     page === "ellipsis" ? (
@@ -327,12 +327,8 @@ export default function PublicDatabaseContent({ candidates: initialCandidates }:
                     ) : (
                       <PaginationItem key={page}>
                         <PaginationLink
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            setCurrentPage(page)
-                          }}
-                          isActive={currentPage === page}
+                          href={page === 1 ? basePath : `${basePath}?page=${page}`}
+                          isActive={page === page}
                           className="cursor-pointer"
                         >
                           {page}
@@ -344,12 +340,8 @@ export default function PublicDatabaseContent({ candidates: initialCandidates }:
 
                 <PaginationItem>
                   <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      if (currentPage < totalPages) setCurrentPage(currentPage + 1)
-                    }}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    href={`${basePath}?page=${page + 1}`}
+                    className={page === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
                   />
                 </PaginationItem>
               </PaginationContent>

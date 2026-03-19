@@ -173,10 +173,12 @@ export default function DatabaseContent({ initialCandidates, userEmail }: Databa
           />
         ),
         cell: ({ row }) => (
-          <Checkbox
-            checked={selectedCandidates.has(row.original.id)}
-            onCheckedChange={() => toggleCandidate(row.original.id)}
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <Checkbox
+              checked={selectedCandidates.has(row.original.id)}
+              onCheckedChange={() => toggleCandidate(row.original.id)}
+            />
+          </div>
         ),
         enableSorting: false,
         enableHiding: false,
@@ -414,6 +416,16 @@ export default function DatabaseContent({ initialCandidates, userEmail }: Databa
                     data={paginatedCandidates}
                     sorting={sorting}
                     onSortingChange={setSorting}
+                    onRowClick={(candidate) => {
+                      const selectedIds = Array.from(selectedCandidates)
+                      if (selectedIds.length > 0) {
+                        const params = new URLSearchParams()
+                        params.set("selected", selectedIds.join(","))
+                        router.push(`/app/kandydat/${candidate.id}?${params.toString()}`)
+                      } else {
+                        router.push(`/app/kandydat/${candidate.id}`)
+                      }
+                    }}
                   />
                 </div>
               )}

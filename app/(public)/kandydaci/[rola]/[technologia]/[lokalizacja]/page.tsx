@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
-  getAllPublicCandidates,
+  getPublicCandidates,
   getPublicCandidatesCount,
 } from "@/lib/data/candidates-queries"
 import {
@@ -18,21 +18,25 @@ import PublicDatabaseContent from "@/components/public-database-content"
 
 interface PageProps {
   params: Promise<{ rola: string; technologia: string; lokalizacja: string }>
+  searchParams: Promise<{ page?: string }>
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { rola, technologia, lokalizacja } = await params
+  const { page } = await searchParams
   const role = decodeURIComponent(rola)
   const technology = decodeURIComponent(technologia)
   const location = decodeURIComponent(lokalizacja)
+  const currentPage = Number(page) > 1 ? Number(page) : 1
   const count = await getPublicCandidatesCount({ role, technology, location })
 
-  const title = getListingMetaTitle({ role, technology, location, count })
-  const description = getListingMetaDescription({ role, technology, location, count })
+  const title = getListingMetaTitle({ role, technology, location, count, page: currentPage })
+  const description = getListingMetaDescription({ role, technology, location, count, page: currentPage })
   const canonical = getListingCanonicalUrl({
     role: rola,
     technology: technologia,
     location: lokalizacja,
+    page: currentPage,
   })
 
   return {
@@ -44,19 +48,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function LokalizacjaPage({ params }: PageProps) {
+export default async function LokalizacjaPage({ params, searchParams }: PageProps) {
   const { rola, technologia, lokalizacja } = await params
+  const { page } = await searchParams
   const role = decodeURIComponent(rola)
   const technology = decodeURIComponent(technologia)
   const location = decodeURIComponent(lokalizacja)
+  const currentPage = Number(page) > 1 ? Number(page) : 1
 
-  const [candidates, count] = await Promise.all([
-    getAllPublicCandidates({ role, technology, location }),
-    getPublicCandidatesCount({ role, technology, location }),
-  ])
+  const { data: candidates, total, totalPages } = await getPublicCandidates(
+    { role, technology, location },
+    currentPage
+  )
 
-  const h1 = getListingH1({ role, technology, location, count })
-  const description = getListingDescription({ role, technology, location, count })
+  const h1 = getListingH1({ role, technology, location, count: total, page: currentPage })
+  const description = getListingDescription({ role, technology, location, count: total, page: currentPage })
   const breadcrumbs = getListingBreadcrumbs({
     role: rola,
     technology: technologia,
@@ -76,7 +82,12 @@ export default async function LokalizacjaPage({ params }: PageProps) {
       <p className="text-muted-foreground mb-8 max-w-2xl">{description}</p>
 
       <Suspense fallback={<TableSkeleton />}>
-        <PublicDatabaseContent candidates={candidates} />
+        <PublicDatabaseContent
+          candidates={candidates}
+          page={currentPage}
+          totalPages={totalPages}
+          basePath={`/kandydaci/${rola}/${technologia}/${lokalizacja}`}
+        />
       </Suspense>
     </section>
   )

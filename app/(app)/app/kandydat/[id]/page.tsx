@@ -4,6 +4,7 @@ import { Suspense } from "react"
 import CandidateView from "@/components/candidate-view"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { PrivateCandidate } from "@/lib/types/candidate"
+import { normalizeTechnologies, techOverlapScore } from "@/lib/utils/similar-candidates"
 
 export const dynamic = "force-dynamic"
 
@@ -64,11 +65,36 @@ export default async function CandidatePage(props: PageProps) {
   const previousCandidate = currentIndex > 0 ? selectedCandidates[currentIndex - 1] : null
   const nextCandidate = currentIndex < selectedCandidates.length - 1 ? selectedCandidates[currentIndex + 1] : null
 
+  // Podobne kandydatury (globalnie) wg wspólnych technologii
+  const { data: allCandidatesMinimal } = await supabase
+    .from("candidates")
+    .select("id, role, seniority, technologies, location, sheet_row_number")
+    .order("sheet_row_number", { ascending: true })
+
+  const currentTech = normalizeTechnologies(currentCandidate.technologies)
+  const similarCandidates =
+    currentTech.length === 0 || !allCandidatesMinimal
+      ? []
+      : (allCandidatesMinimal as Array<Pick<Candidate, "id" | "role" | "seniority" | "technologies" | "location" | "sheet_row_number">>)
+          .filter((c) => c.id !== currentCandidate.id)
+          .map((c) => ({
+            ...c,
+            _score: techOverlapScore(currentTech, normalizeTechnologies(c.technologies)),
+          }))
+          .filter((c) => c._score > 0)
+          .sort((a, b) => {
+            if (b._score !== a._score) return b._score - a._score
+            return (a.sheet_row_number ?? 0) - (b.sheet_row_number ?? 0)
+          })
+          .slice(0, 3)
+          .map(({ _score, ...c }) => c)
+
   return (
     <div className="w-full space-y-6">
       <Suspense fallback={<CandidateSkeleton />}>
         <CandidateView
           candidate={currentCandidate}
+          similarCandidates={similarCandidates}
           previousCandidate={previousCandidate}
           nextCandidate={nextCandidate}
           currentIndex={currentIndex}

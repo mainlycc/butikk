@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import ExpandableTags from "@/components/expandable-tags"
 import {
-  getAllPublicCandidates,
+  getPublicCandidates,
   getPublicCandidatesCount,
   getAvailableTechnologies,
   getAvailableRoles,
@@ -20,12 +20,18 @@ import {
 import { getBreadcrumbSchema } from "@/lib/seo/structured-data"
 import PublicDatabaseContent from "@/components/public-database-content"
 
-export async function generateMetadata(): Promise<Metadata> {
+interface PageProps {
+  searchParams: Promise<{ page?: string }>
+}
+
+export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
+  const { page } = await searchParams
+  const currentPage = Number(page) > 1 ? Number(page) : 1
   const count = await getPublicCandidatesCount()
 
-  const title = getListingMetaTitle({ count })
-  const description = getListingMetaDescription({ count })
-  const canonical = getListingCanonicalUrl({})
+  const title = getListingMetaTitle({ count, page: currentPage })
+  const description = getListingMetaDescription({ count, page: currentPage })
+  const canonical = getListingCanonicalUrl({ page: currentPage })
 
   return {
     title,
@@ -36,16 +42,18 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function KandydaciPage() {
-  const [candidates, count, technologies, roles] = await Promise.all([
-    getAllPublicCandidates(),
-    getPublicCandidatesCount(),
+export default async function KandydaciPage({ searchParams }: PageProps) {
+  const { page } = await searchParams
+  const currentPage = Number(page) > 1 ? Number(page) : 1
+
+  const [{ data: candidates, total, totalPages }, technologies, roles] = await Promise.all([
+    getPublicCandidates({}, currentPage),
     getAvailableTechnologies(),
     getAvailableRoles(),
   ])
 
-  const h1 = getListingH1({ count })
-  const description = getListingDescription({ count })
+  const h1 = getListingH1({ count: total, page: currentPage })
+  const description = getListingDescription({ count: total, page: currentPage })
   const breadcrumbs = getListingBreadcrumbs({})
 
   return (
@@ -74,7 +82,12 @@ export default async function KandydaciPage() {
       </div>
 
       <Suspense fallback={<TableSkeleton />}>
-        <PublicDatabaseContent candidates={candidates} />
+        <PublicDatabaseContent
+          candidates={candidates}
+          page={currentPage}
+          totalPages={totalPages}
+          basePath="/kandydaci"
+        />
       </Suspense>
     </section>
   )

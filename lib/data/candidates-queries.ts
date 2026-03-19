@@ -5,6 +5,7 @@ import type {
   PaginatedCandidates,
 } from "@/lib/types/candidate"
 import { slugify } from "@/lib/utils/slug"
+import { normalizeTechnologies, techOverlapScore } from "@/lib/utils/similar-candidates"
 
 const PAGE_SIZE = 20
 
@@ -205,6 +206,54 @@ export async function getCandidateBySlug(
 
   if (error || !data) return null
   return data as PublicCandidate
+}
+
+type SimilarPublicCandidate = PublicCandidate & { _score: number }
+
+/**
+ * Pobiera podobnych publicznych kandydatów na podstawie wspólnych technologii.
+ * Similarity = liczba wspólnych tokenów z `technologies` (CSV).
+ */
+export async function getSimilarPublicCandidates(
+  slug: string,
+  limit = 3
+): Promise<PublicCandidate[]> {
+  const supabase = await createClient()
+
+  const { data: current, error: currentError } = await supabase
+    .from("public_candidates")
+    .select("id, slug, technologies")
+    .eq("slug", slug)
+    .single()
+
+  if (currentError || !current) return []
+
+  const currentTech = normalizeTechnologies(current.technologies as string | null)
+  if (currentTech.length === 0) return []
+
+  const { data: all, error } = await supabase
+    .from("public_candidates")
+    .select("id, slug, role, seniority, technologies, location, experience_years, summary, availability, languages, skills")
+    .neq("slug", slug)
+
+  if (error || !all) return []
+
+  const scored: SimilarPublicCandidate[] = (all as PublicCandidate[])
+    .map((c) => {
+      const score = techOverlapScore(
+        currentTech,
+        normalizeTechnologies(c.technologies)
+      )
+      return { ...c, _score: score }
+    })
+    .filter((c) => c._score > 0)
+    .sort((a, b) => {
+      if (b._score !== a._score) return b._score - a._score
+      // stabilny tie-breaker
+      return String(a.id).localeCompare(String(b.id))
+    })
+
+  return scored.slice(0, limit).map(({ _score, ...c }) => c)
 }
 
 /**

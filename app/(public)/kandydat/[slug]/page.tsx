@@ -1,7 +1,12 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getCandidateBySlug } from "@/lib/data/candidates-queries"
+import { getCandidateBySlug, getSimilarPublicCandidates } from "@/lib/data/candidates-queries"
 import { getBreadcrumbSchema } from "@/lib/seo/structured-data"
+import {
+  getCandidateAutoDescription,
+  getCandidateMetaDescription,
+  getCandidateMetaTitle,
+} from "@/lib/seo/candidate-content"
 import { slugify } from "@/lib/utils/slug"
 import PublicCandidateView from "@/components/public-candidate-view"
 
@@ -20,10 +25,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Kandydat nie znaleziony | QualiBase" }
   }
 
-  const parts = [candidate.seniority, candidate.role, candidate.location].filter(Boolean)
-  const title = `${parts.join(" — ")} | QualiBase`
-  const description = candidate.summary
-    || `Profil kandydata: ${parts.join(", ")}. Sprawdź technologie, doświadczenie i dostępność.`
+  const title = getCandidateMetaTitle(candidate)
+  const description = getCandidateMetaDescription(candidate)
   const canonical = `${baseUrl}/kandydat/${slug}`
 
   return {
@@ -50,8 +53,13 @@ export default async function PublicCandidateProfilePage({ params, searchParams 
   const { slug } = await params
   const { selected } = await searchParams
 
-  const candidate = await getCandidateBySlug(slug)
+  const [candidate, similarCandidates] = await Promise.all([
+    getCandidateBySlug(slug),
+    getSimilarPublicCandidates(slug, 3),
+  ])
   if (!candidate) notFound()
+
+  const autoDescription = getCandidateAutoDescription(candidate)
 
   const selectedSlugs = selected ? selected.split(",").filter(Boolean) : []
 
@@ -79,7 +87,7 @@ export default async function PublicCandidateProfilePage({ params, searchParams 
   ]
 
   return (
-    <section className="container mx-auto px-4 py-10 max-w-3xl">
+    <section className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 max-w-5xl">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbSchema(breadcrumbs)) }}
@@ -91,6 +99,8 @@ export default async function PublicCandidateProfilePage({ params, searchParams 
 
       <PublicCandidateView
         candidate={candidate}
+        autoDescription={autoDescription}
+        similarCandidates={similarCandidates}
         previousSlug={previousSlug}
         nextSlug={nextSlug}
         currentIndex={currentIndex >= 0 ? currentIndex : 0}

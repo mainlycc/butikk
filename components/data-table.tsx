@@ -28,6 +28,7 @@ interface DataTableProps<TData, TValue> {
   sorting?: SortingState
   onSortingChange?: OnChangeFn<SortingState>
   mobileView?: "cards" | "table"
+  onRowClick?: (row: TData) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -36,6 +37,7 @@ export function DataTable<TData, TValue>({
   sorting: externalSorting,
   onSortingChange: externalOnSortingChange,
   mobileView = "cards",
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [internalSorting, setInternalSorting] = React.useState<SortingState>([])
   
@@ -63,8 +65,9 @@ export function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row) => (
               <Card
                 key={row.id}
-                className="border rounded-lg p-3 space-y-2"
+                className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
                 data-state={row.getIsSelected() && "selected"}
+                onClick={() => onRowClick?.(row.original)}
               >
                 {row.getVisibleCells().map((cell) => (
                   <div key={cell.id} className="flex text-sm gap-2">
@@ -126,6 +129,8 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={onRowClick ? "cursor-pointer hover:bg-muted/50 transition-colors" : ""}
+                  onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-2 py-2">

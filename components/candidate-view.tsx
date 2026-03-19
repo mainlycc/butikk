@@ -1,15 +1,30 @@
-"use client"
+ "use client"
 
 import { useCallback } from "react"
 import { useRouter } from "next/navigation"
 import dynamic from "next/dynamic"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ChevronLeft, ChevronRight, ArrowLeft, User, Briefcase, Mail, Calendar, MapPin } from "lucide-react"
-import ContactDialog from "@/components/contact-dialog"
+import {
+  Activity,
+  ArrowLeft,
+  Calendar,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Eye,
+  FileText,
+  Mail,
+  MapPin,
+  User,
+} from "lucide-react"
 import { useState } from "react"
+import ContactDialog from "@/components/contact-dialog"
+import SimilarCandidates from "@/components/similar-candidates"
 import type { PrivateCandidate } from "@/lib/types/candidate"
+import { getCandidateAutoDescription } from "@/lib/seo/candidate-content"
 
 // Dynamic import z wyłączonym SSR, aby uniknąć problemu z DOMMatrix
 const PDFViewer = dynamic(() => import("@/components/pdf-viewer"), {
@@ -27,6 +42,7 @@ type Candidate = PrivateCandidate
 
 interface CandidateViewProps {
   candidate: Candidate
+  similarCandidates: Array<Pick<Candidate, "id" | "role" | "seniority" | "technologies" | "location">>
   previousCandidate: Candidate | null
   nextCandidate: Candidate | null
   currentIndex: number
@@ -37,6 +53,7 @@ interface CandidateViewProps {
 
 export default function CandidateView({
   candidate,
+  similarCandidates,
   previousCandidate,
   nextCandidate,
   currentIndex,
@@ -46,10 +63,20 @@ export default function CandidateView({
 }: CandidateViewProps) {
   const router = useRouter()
   const [showContactDialog, setShowContactDialog] = useState(false)
+  const [showAllTechnologies, setShowAllTechnologies] = useState(false)
+
+  const technologies = candidate.technologies
+    ?.split(",")
+    .map((t) => t.trim())
+    .filter(Boolean)
+
+  const empty = "—"
+  const autoDescription = getCandidateAutoDescription(candidate)
+  const technologyLimit = 20
 
   const handlePrevious = useCallback(() => {
     if (!previousCandidate) return
-    
+
     const params = new URLSearchParams()
     if (selectedIds.length > 0) {
       params.set("selected", selectedIds.join(","))
@@ -60,7 +87,7 @@ export default function CandidateView({
 
   const handleNext = useCallback(() => {
     if (!nextCandidate) return
-    
+
     const params = new URLSearchParams()
     if (selectedIds.length > 0) {
       params.set("selected", selectedIds.join(","))
@@ -76,185 +103,292 @@ export default function CandidateView({
   return (
     <>
       <div className="space-y-6">
-        {/* Header z przyciskiem powrotu i nawigacją */}
-        <Card className="border-2">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between gap-4">
-              <Button variant="outline" onClick={handleBackToList} className="gap-2">
-                <ArrowLeft className="w-4 h-4" />
-                Powrót do listy
+        {/* Pasek nawigacji jak w widoku publicznym */}
+        <Card className="border-2 shadow-sm">
+          <CardContent className="py-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleBackToList}
+                className="text-xs"
+              >
+                <ArrowLeft className="w-3 h-3 mr-1" />
+                Lista
               </Button>
-              {totalCount > 1 && (
-                <>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-base px-4 py-1">
-                      {currentIndex + 1} / {totalCount}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      onClick={handlePrevious}
-                      disabled={!previousCandidate}
-                      className="min-w-32"
-                    >
-                      <ChevronLeft className="w-5 h-5 mr-2" />
-                      Poprzedni
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      onClick={handleNext}
-                      disabled={!nextCandidate}
-                      className="min-w-32"
-                    >
-                      Następny
-                      <ChevronRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  </div>
-                </>
-              )}
+
+              <span className="text-xs text-muted-foreground font-medium">
+                {currentIndex + 1} z {totalCount}
+              </span>
+
+              <div className="flex gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!previousCandidate}
+                  onClick={handlePrevious}
+                  className="text-xs px-2"
+                  aria-label="Poprzedni kandydat"
+                >
+                  <ChevronLeft className="w-3 h-3" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!nextCandidate}
+                  onClick={handleNext}
+                  className="text-xs px-2"
+                  aria-label="Następny kandydat"
+                >
+                  <ChevronRight className="w-3 h-3" />
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Informacje o kandydacie */}
-        <Card className="border-2 shadow-xl">
-          <CardHeader className="border-b bg-gradient-to-r from-primary/5 to-accent/5">
-            <div className="flex items-start justify-between gap-4 flex-wrap">
-              <div className="flex items-start gap-4">
-                <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
-                  <User className="w-8 h-8 text-primary-foreground" />
-                </div>
+        {/* Layout jak na stronie publicznej, ale z pełnymi danymi */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Lewa kolumna */}
+          <div className="lg:col-span-8 space-y-6">
+            {/* Tytuł + badże */}
+            <div className="space-y-3">
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
+                {candidate.role || "Profil kandydata"}
+              </h1>
+              <div className="flex items-center gap-2 flex-wrap">
+                {candidate.experience_years != null && (
+                  <Badge
+                    variant="outline"
+                    className="bg-background text-sm sm:text-base px-3 py-1.5 rounded-full"
+                  >
+                    Doświadczenie:{" "}
+                    <span className="ml-1 font-semibold">
+                      {candidate.experience_years}{" "}
+                      {candidate.experience_years === 1 ? "rok" : "lat"}
+                    </span>
+                  </Badge>
+                )}
+                {candidate.seniority && (
+                  <Badge
+                    variant="outline"
+                    className="bg-background text-sm sm:text-base px-3 py-1.5 rounded-full"
+                  >
+                    Seniority: <span className="ml-1 font-semibold">{candidate.seniority}</span>
+                  </Badge>
+                )}
+                {candidate.location && (
+                  <Badge
+                    variant="outline"
+                    className="bg-background text-sm sm:text-base px-3 py-1.5 rounded-full"
+                  >
+                    {candidate.location.toLowerCase().includes("zdalnie") || candidate.location.toLowerCase().includes("remote")
+                      ? "Tryb pracy: Zdalnie"
+                      : `Lokalizacja: ${candidate.location}`}
+                  </Badge>
+                )}
+                {candidate.availability && (
+                  <Badge
+                    variant="outline"
+                    className="bg-background text-sm sm:text-base px-3 py-1.5 rounded-full"
+                  >
+                    Dostępność:{" "}
+                    <span className="ml-1 font-semibold">
+                      {candidate.availability.toLowerCase().includes("immediate")
+                        ? "od zaraz"
+                        : candidate.availability}
+                    </span>
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            {/* OPIS (jak w widoku publicznym) */}
+            <Card className="border-2 shadow-sm gap-0 py-0">
+              <CardHeader className="px-6 pt-4 pb-0 gap-0">
+                <CardTitle className="text-sm tracking-wide text-muted-foreground">
+                  OPIS
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-6 pt-2 pb-4">
                 <div className="space-y-1">
-                  <CardTitle className="text-2xl">
-                    {candidate.first_name} {candidate.last_name || ""}
-                  </CardTitle>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="secondary" className="text-sm px-2 py-1">
-                      {candidate.role}
-                    </Badge>
-                    <Badge className="text-sm px-2 py-1">{candidate.seniority}</Badge>
-                    {candidate.rate && (
-                      <span className="text-muted-foreground text-sm">• {candidate.rate}</span>
+                  <p className="text-sm leading-relaxed">
+                    {autoDescription}
+                  </p>
+                  {candidate.summary && candidate.summary.trim().length > 0 && (
+                    <div className="text-sm leading-relaxed text-muted-foreground">
+                      <span className="font-medium text-foreground">Dodatkowe informacje:</span>{" "}
+                      {candidate.summary}
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Główna karta z pełnymi danymi */}
+            <Card className="border-2 shadow-sm">
+              <CardHeader className="pb-2">
+                <div className="flex items-start justify-between gap-3 flex-wrap">
+                  <div>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <User className="w-4 h-4 text-primary" />
+                      Pełne dane tego kandydata
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      Imię, nazwisko i pełne CV są widoczne, a dane kontaktowe udostępniamy po zapytaniu o kandydata.
+                    </p>
+                  </div>
+                  <Button
+                    size="lg"
+                    className="gap-2 px-5"
+                    onClick={() => setShowContactDialog(true)}
+                  >
+                    <Mail className="w-4 h-4" />
+                    Zapytaj o kandydata
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Dane osobowe */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex items-center gap-2 rounded-lg bg-muted/40 px-3 py-2">
+                    <User className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-base sm:text-lg font-bold uppercase tracking-wide">
+                      {[candidate.first_name, candidate.last_name].filter(Boolean).join(" ") || empty}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 rounded-lg bg-muted/40 px-3 py-2">
+                    <Mail className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Adres e-mail dostępny po wysłaniu zapytania
+                    </span>
+                  </div>
+                </div>
+
+                {/* CV */}
+                <div className="mt-4">
+                  <PDFViewer
+                    pdfUrl={candidate.cv_pdf_url || "/default-cv.pdf"}
+                    candidateName={`${candidate.first_name || ""} ${candidate.last_name || ""}`.trim() || "CV kandydata"}
+                    fallbackText={candidate.cv}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Prawa kolumna (sidebar) */}
+          <div className="lg:col-span-4 space-y-4">
+            {/* Stawka */}
+            <Card className="border-2 shadow-sm">
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm text-muted-foreground">Stawka B2B (netto)</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-12 flex items-center">
+                  <span className="text-3xl font-bold tracking-wide">
+                    {candidate.rate || empty}
+                  </span>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Stawka na podstawie danych kandydata.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Szczegóły jak w widoku publicznym */}
+            <Card className="border-2 shadow-sm">
+              <CardContent className="pt-5">
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="text-muted-foreground shrink-0">Języki</span>
+                    <span className="font-medium text-right min-w-0 break-words leading-snug">
+                      {candidate.languages || empty}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-muted-foreground">Technologie</div>
+                    {technologies && technologies.length > 0 ? (
+                      <>
+                        <div className="flex flex-wrap gap-1.5">
+                          {(showAllTechnologies ? technologies : technologies.slice(0, technologyLimit)).map((t) => (
+                            <Badge key={t} variant="secondary" className="text-[11px] px-2 py-0.5">
+                              {t}
+                            </Badge>
+                          ))}
+                        </div>
+                        {technologies.length > technologyLimit && (
+                          <div className="flex justify-start">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => setShowAllTechnologies((v) => !v)}
+                            >
+                              {showAllTechnologies
+                                ? "Zwiń"
+                                : `Rozwiń więcej (${technologies.length - technologyLimit})`}
+                            </Button>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="font-medium break-words leading-snug">{empty}</div>
                     )}
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-col items-end gap-2 min-w-0">
-                <Button
-                  onClick={() => setShowContactDialog(true)}
-                  size="lg"
-                  className="gap-2 px-6"
-                >
-                  <Mail className="w-4 h-4" />
-                  Wyślij zapytanie
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
+              </CardContent>
+            </Card>
 
-          <CardContent className="pt-6 pb-6 flex justify-center">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-base max-w-5xl w-full mx-auto">
-              {/* Technologie/Skills */}
-              {(candidate.technologies || candidate.skills) && (
-                <div className="md:col-span-2">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Briefcase className="w-4 h-4 text-primary" />
-                    <h4 className="font-semibold text-base md:text-lg">Technologie</h4>
-                  </div>
-                  <p className="text-sm md:text-base text-muted-foreground whitespace-pre-wrap">
-                    {candidate.technologies || candidate.skills}
-                  </p>
+            {/* Statystyki / aktywność jak w widoku publicznym – na razie placeholdery */}
+            <Card className="border-2 shadow-sm">
+              <CardContent className="py-4 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Eye className="w-4 h-4" />
+                  Wyświetlenia (7 dni)
                 </div>
-              )}
+                <div className="text-2xl font-bold">{empty}</div>
+              </CardContent>
+            </Card>
 
-              {/* Języki */}
-              {candidate.languages && (
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Briefcase className="w-4 h-4 text-primary" />
-                    <h4 className="font-semibold text-base md:text-lg">Języki</h4>
-                  </div>
-                  <p className="text-sm md:text-base text-muted-foreground">{candidate.languages}</p>
+            <Card className="border-2 shadow-sm">
+              <CardContent className="py-4 space-y-2 text-sm">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Activity className="w-4 h-4" />
+                  Profil aktywny:
+                  <span className="ml-auto font-medium text-foreground">{empty}</span>
                 </div>
-              )}
-
-              {/* Dostępność */}
-              {candidate.availability && (
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Calendar className="w-4 h-4 text-primary" />
-                    <h4 className="font-semibold text-base md:text-lg">Dostępność</h4>
-                  </div>
-                  <p className="text-sm md:text-base text-muted-foreground">
-                    {candidate.availability}
-                  </p>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <CheckCircle2 className="w-4 h-4" />
+                  Ostatnia aktualizacja:
+                  <span className="ml-auto font-medium text-foreground">{empty}</span>
                 </div>
-              )}
-
-              {/* Lokalizacja */}
-              {candidate.location && (
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    <h4 className="font-semibold text-base md:text-lg">Lokalizacja</h4>
-                  </div>
-                  <p className="text-sm md:text-base text-muted-foreground font-medium text-foreground">
-                    {candidate.location}
-                  </p>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Clock className="w-4 h-4" />
+                  Odpowiada w:
+                  <span className="ml-auto font-medium text-foreground">{empty}</span>
                 </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* PDF Viewer */}
-        <div className="flex flex-col">
-          <PDFViewer
-            pdfUrl={candidate.cv_pdf_url || "/default-cv.pdf"}
-            candidateName={`${candidate.first_name} ${candidate.last_name || ""}`}
-            fallbackText={candidate.cv}
-          />
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
-        {/* Navigation Footer */}
-        {totalCount > 1 && (
-          <Card className="border-2">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between gap-4">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={handlePrevious}
-                  disabled={!previousCandidate}
-                  className="min-w-32"
-                >
-                  <ChevronLeft className="w-5 h-5 mr-2" />
-                  Poprzedni
-                </Button>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">
-                    {currentIndex + 1} / {totalCount}
-                  </span>
-                </div>
-
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={handleNext}
-                  disabled={!nextCandidate}
-                  className="min-w-32"
-                >
-                  Następny
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Podobni kandydaci pod layoutem – jak wcześniej */}
+        <SimilarCandidates
+          title="Podobne kandydatury"
+          description="Na podstawie wspólnych technologii"
+          items={similarCandidates.map((c) => ({
+            key: c.id,
+            href: `/app/kandydat/${c.id}`,
+            heading: c.role || "Profil kandydata",
+            seniority: c.seniority || undefined,
+            location: c.location || null,
+            technologies: c.technologies || undefined,
+          }))}
+        />
       </div>
 
       {/* Contact Dialog */}
