@@ -1,16 +1,8 @@
 "use client"
 
 import * as React from "react"
-import {
-  ColumnDef,
-  SortingState,
-  OnChangeFn,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
+import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import type { ColumnDef, SortingState, OnChangeFn } from "@tanstack/react-table"
 
 import {
   Table,
@@ -34,25 +26,13 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  sorting: externalSorting,
-  onSortingChange: externalOnSortingChange,
   mobileView = "cards",
   onRowClick,
 }: DataTableProps<TData, TValue>) {
-  const [internalSorting, setInternalSorting] = React.useState<SortingState>([])
-  
-  const sorting = externalSorting ?? internalSorting
-  const handleSortingChange = externalOnSortingChange ?? setInternalSorting
-
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: handleSortingChange,
-    getSortedRowModel: getSortedRowModel(),
-    state: {
-      sorting,
-    },
     manualPagination: true, // Używamy własnej paginacji
   })
 
@@ -92,34 +72,11 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  const canSort = header.column.getCanSort()
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className={`${canSort ? "cursor-pointer select-none hover:bg-muted/50" : ""} px-2`}
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      <div className="flex items-center gap-2">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {canSort && (
-                          <span className="ml-1">
-                            {header.column.getIsSorted() === "desc" ? (
-                              <ArrowDown className="h-4 w-4" />
-                            ) : header.column.getIsSorted() === "asc" ? (
-                              <ArrowUp className="h-4 w-4" />
-                            ) : (
-                              <ArrowUpDown className="h-4 w-4 opacity-50" />
-                            )}
-                          </span>
-                        )}
-                      </div>
-                    </TableHead>
-                  )
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} className="px-2">
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>

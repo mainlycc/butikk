@@ -36,6 +36,7 @@ interface DatabaseContentProps {
 export default function DatabaseContent({ initialCandidates, userEmail }: DatabaseContentProps) {
   const router = useRouter()
   const [searchTerms, setSearchTerms] = useState("")
+  const [appliedSearchTerms, setAppliedSearchTerms] = useState("")
   const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set())
   const [showContactDialog, setShowContactDialog] = useState(false)
   const [contactCandidates, setContactCandidates] = useState<Candidate[]>([])
@@ -97,9 +98,9 @@ export default function DatabaseContent({ initialCandidates, userEmail }: Databa
   }, [initialCandidates])
 
   const filteredCandidates = useMemo(() => {
-    if (!searchTerms.trim()) return candidates
+    if (!appliedSearchTerms.trim()) return candidates
 
-    const terms = searchTerms
+    const terms = appliedSearchTerms
       .toLowerCase()
       .split(",")
       .map((t) => t.trim())
@@ -122,19 +123,49 @@ export default function DatabaseContent({ initialCandidates, userEmail }: Databa
 
       return terms.every((term) => searchableText.includes(term))
     })
-  }, [candidates, searchTerms])
+  }, [candidates, appliedSearchTerms])
 
   // Resetuj stronę gdy zmienia się filtrowanie lub sortowanie
   useEffect(() => {
     setCurrentPage(1)
-  }, [searchTerms, candidates, sorting])
+  }, [appliedSearchTerms, candidates, sorting])
 
   const handleFilter = () => {
-    toast.info(`Znaleziono ${filteredCandidates.length} kandydatów`)
+    const nextApplied = searchTerms
+    setAppliedSearchTerms(nextApplied)
+
+    const terms = nextApplied
+      .toLowerCase()
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t)
+
+    const nextCount = !nextApplied.trim()
+      ? candidates.length
+      : candidates.filter((candidate) => {
+          const searchableText = [
+            candidate.first_name,
+            candidate.last_name,
+            candidate.role,
+            candidate.seniority,
+            candidate.rate,
+            candidate.technologies,
+            candidate.location,
+            candidate.languages,
+          ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase()
+
+          return terms.every((term) => searchableText.includes(term))
+        }).length
+
+    toast.info(`Znaleziono ${nextCount} kandydatów`)
   }
 
   const handleResetFilter = () => {
     setSearchTerms("")
+    setAppliedSearchTerms("")
     toast.info("Wyświetlane są wszyscy kandydaci")
   }
 

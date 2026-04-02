@@ -9,15 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Activity,
   ArrowLeft,
-  Calendar,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock,
   Eye,
-  FileText,
   Mail,
-  MapPin,
   User,
 } from "lucide-react"
 import { useState } from "react"

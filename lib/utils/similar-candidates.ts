@@ -1,9 +1,11 @@
+import { isNumericTechnologyJunkLabel } from "@/lib/utils/tech-label"
+
 export function normalizeTechnologies(input: string | null | undefined): string[] {
   if (!input) return []
   const items = input
     .split(",")
     .map((t) => t.trim().toLowerCase())
-    .filter(Boolean)
+    .filter((t) => Boolean(t) && !isNumericTechnologyJunkLabel(t))
 
   // uniq preserving order
   const seen = new Set<string>()

@@ -5,9 +5,11 @@ import type {
   PaginatedCandidates,
 } from "@/lib/types/candidate"
 import { slugify } from "@/lib/utils/slug"
+import { isNumericTechnologyJunkLabel } from "@/lib/utils/tech-label"
 import { normalizeTechnologies, techOverlapScore } from "@/lib/utils/similar-candidates"
 
 const PAGE_SIZE = 20
+const PUBLIC_CANDIDATES_VIEW = "public_candidates_normalized"
 
 /**
  * Pobiera publicznych kandydatów z opcjonalnymi filtrami i paginacją.
@@ -19,16 +21,19 @@ export async function getPublicCandidates(
   const supabase = await createClient()
   const offset = (page - 1) * PAGE_SIZE
 
-  let query = supabase.from("public_candidates").select("*", { count: "exact" })
+  let query = supabase.from(PUBLIC_CANDIDATES_VIEW).select("*", { count: "exact" })
 
   if (filters.role) {
-    query = query.ilike("role", `%${filters.role}%`)
+    const pattern = `%${filters.role.replaceAll("-", "%")}%`
+    query = query.ilike("role", pattern)
   }
   if (filters.technology) {
-    query = query.ilike("technologies", `%${filters.technology}%`)
+    const pattern = `%${filters.technology.replaceAll("-", "%")}%`
+    query = query.ilike("technologies", pattern)
   }
   if (filters.location) {
-    query = query.ilike("location", `%${filters.location}%`)
+    const pattern = `%${filters.location.replaceAll("-", "%")}%`
+    query = query.ilike("location", pattern)
   }
 
   const { data, count, error } = await query
@@ -59,16 +64,19 @@ export async function getAllPublicCandidates(
 ): Promise<PublicCandidate[]> {
   const supabase = await createClient()
 
-  let query = supabase.from("public_candidates").select("*")
+  let query = supabase.from(PUBLIC_CANDIDATES_VIEW).select("*")
 
   if (filters.role) {
-    query = query.ilike("role", `%${filters.role}%`)
+    const pattern = `%${filters.role.replaceAll("-", "%")}%`
+    query = query.ilike("role", pattern)
   }
   if (filters.technology) {
-    query = query.ilike("technologies", `%${filters.technology}%`)
+    const pattern = `%${filters.technology.replaceAll("-", "%")}%`
+    query = query.ilike("technologies", pattern)
   }
   if (filters.location) {
-    query = query.ilike("location", `%${filters.location}%`)
+    const pattern = `%${filters.location.replaceAll("-", "%")}%`
+    query = query.ilike("location", pattern)
   }
 
   const { data, error } = await query.order("seniority", { ascending: true })
@@ -90,17 +98,20 @@ export async function getPublicCandidatesCount(
   const supabase = await createClient()
 
   let query = supabase
-    .from("public_candidates")
+    .from(PUBLIC_CANDIDATES_VIEW)
     .select("*", { count: "exact", head: true })
 
   if (filters.role) {
-    query = query.ilike("role", `%${filters.role}%`)
+    const pattern = `%${filters.role.replaceAll("-", "%")}%`
+    query = query.ilike("role", pattern)
   }
   if (filters.technology) {
-    query = query.ilike("technologies", `%${filters.technology}%`)
+    const pattern = `%${filters.technology.replaceAll("-", "%")}%`
+    query = query.ilike("technologies", pattern)
   }
   if (filters.location) {
-    query = query.ilike("location", `%${filters.location}%`)
+    const pattern = `%${filters.location.replaceAll("-", "%")}%`
+    query = query.ilike("location", pattern)
   }
 
   const { count, error } = await query
@@ -120,7 +131,7 @@ export async function getAvailableRoles(): Promise<string[]> {
   const supabase = await createClient()
 
   const { data, error } = await supabase
-    .from("public_candidates")
+    .from(PUBLIC_CANDIDATES_VIEW)
     .select("role")
     .not("role", "is", null)
 
@@ -137,7 +148,7 @@ export async function getAvailableTechnologies(role?: string): Promise<string[]>
   const supabase = await createClient()
 
   let query = supabase
-    .from("public_candidates")
+    .from(PUBLIC_CANDIDATES_VIEW)
     .select("technologies")
     .not("technologies", "is", null)
 
@@ -154,7 +165,7 @@ export async function getAvailableTechnologies(role?: string): Promise<string[]>
     const techs = (row.technologies as string)?.split(",") ?? []
     for (const t of techs) {
       const trimmed = t.trim()
-      if (trimmed) techSet.add(trimmed)
+      if (trimmed && !isNumericTechnologyJunkLabel(trimmed)) techSet.add(trimmed)
     }
   }
 
@@ -171,15 +182,15 @@ export async function getAvailableLocations(
   const supabase = await createClient()
 
   let query = supabase
-    .from("public_candidates")
+    .from(PUBLIC_CANDIDATES_VIEW)
     .select("location")
     .not("location", "is", null)
 
   if (role) {
-    query = query.ilike("role", `%${role}%`)
+    query = query.ilike("role", `%${role.replaceAll("-", "%")}%`)
   }
   if (technology) {
-    query = query.ilike("technologies", `%${technology}%`)
+    query = query.ilike("technologies", `%${technology.replaceAll("-", "%")}%`)
   }
 
   const { data, error } = await query
@@ -199,7 +210,7 @@ export async function getCandidateBySlug(
   const supabase = await createClient()
 
   const { data, error } = await supabase
-    .from("public_candidates")
+    .from(PUBLIC_CANDIDATES_VIEW)
     .select("*")
     .eq("slug", slug)
     .single()
@@ -221,7 +232,7 @@ export async function getSimilarPublicCandidates(
   const supabase = await createClient()
 
   const { data: current, error: currentError } = await supabase
-    .from("public_candidates")
+    .from(PUBLIC_CANDIDATES_VIEW)
     .select("id, slug, technologies")
     .eq("slug", slug)
     .single()
@@ -232,7 +243,7 @@ export async function getSimilarPublicCandidates(
   if (currentTech.length === 0) return []
 
   const { data: all, error } = await supabase
-    .from("public_candidates")
+    .from(PUBLIC_CANDIDATES_VIEW)
     .select("id, slug, role, seniority, technologies, location, experience_years, summary, availability, languages, skills")
     .neq("slug", slug)
 
@@ -253,6 +264,7 @@ export async function getSimilarPublicCandidates(
       return String(a.id).localeCompare(String(b.id))
     })
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return scored.slice(0, limit).map(({ _score, ...c }) => c)
 }
 
@@ -263,7 +275,7 @@ export async function getAllPublicSlugs(): Promise<string[]> {
   const supabase = await createClient()
 
   const { data, error } = await supabase
-    .from("public_candidates")
+    .from(PUBLIC_CANDIDATES_VIEW)
     .select("slug")
 
   if (error || !data) return []
@@ -282,7 +294,7 @@ export async function getIndexableListingPaths(minCount = 5): Promise<{
   const supabase = await createClient()
 
   const { data, error } = await supabase
-    .from("public_candidates")
+    .from(PUBLIC_CANDIDATES_VIEW)
     .select("role, technologies, location")
 
   if (error || !data) {
@@ -307,6 +319,7 @@ export async function getIndexableListingPaths(minCount = 5): Promise<{
     roleCounts.set(roleSlug, (roleCounts.get(roleSlug) ?? 0) + 1)
 
     for (const tech of techs) {
+      if (isNumericTechnologyJunkLabel(tech)) continue
       const techSlug = slugify(tech)
       const rtKey = `${roleSlug}|${techSlug}`
       roleTechCounts.set(rtKey, (roleTechCounts.get(rtKey) ?? 0) + 1)

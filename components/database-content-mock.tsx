@@ -482,7 +482,7 @@ const mockCandidates: Candidate[] = [
 ]
 
 export default function DatabaseContentMock() {
-  const [searchTerms, setSearchTerms] = useState("")
+  const [searchTerms] = useState("")
   const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set())
   const [candidates] = useState<Candidate[]>(mockCandidates)
   const [currentPage, setCurrentPage] = useState(1)

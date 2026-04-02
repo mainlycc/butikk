@@ -55,7 +55,7 @@ export async function approveCandidateRegistration(
     }
 
     // Znajdź największy sheet_row_number i dodaj 1
-    const { data: maxRow, error: maxRowError } = await adminClient
+    const { data: maxRow } = await adminClient
       .from("candidates")
       .select("sheet_row_number")
       .order("sheet_row_number", { ascending: false })

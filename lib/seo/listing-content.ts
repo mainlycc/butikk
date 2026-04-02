@@ -8,7 +8,6 @@ interface ListingContentParams {
   role?: string
   technology?: string
   location?: string
-  count: number
   page?: number
 }
 
@@ -21,6 +20,9 @@ export function getListingH1(params: ListingContentParams): string {
   if (role && technology) {
     return `${capitalize(technology)} ${capitalize(role)} — dostępni kandydaci`
   }
+  if (technology) {
+    return `${capitalize(technology)} — dostępni kandydaci`
+  }
   if (role) {
     return `${capitalize(role)} — dostępni kandydaci`
   }
@@ -28,18 +30,21 @@ export function getListingH1(params: ListingContentParams): string {
 }
 
 export function getListingDescription(params: ListingContentParams): string {
-  const { role, technology, location, count } = params
+  const { role, technology, location } = params
 
   if (role && technology && location) {
-    return `Lista dostępnych kandydatów ${capitalize(role)} z doświadczeniem w ${capitalize(technology)} w lokalizacji ${capitalize(location)}. Aktualnie ${count} specjalistów w bazie.`
+    return `Lista dostępnych kandydatów ${capitalize(role)} z doświadczeniem w ${capitalize(technology)} w lokalizacji ${capitalize(location)}.`
   }
   if (role && technology) {
-    return `Lista dostępnych kandydatów ${capitalize(role)} z doświadczeniem w ${capitalize(technology)}. Aktualnie ${count} specjalistów w bazie.`
+    return `Lista dostępnych kandydatów ${capitalize(role)} z doświadczeniem w ${capitalize(technology)}.`
+  }
+  if (technology) {
+    return `Lista dostępnych kandydatów z doświadczeniem w ${capitalize(technology)}.`
   }
   if (role) {
-    return `Lista dostępnych kandydatów na stanowisko ${capitalize(role)}. Sprawdź profile zweryfikowanych specjalistów IT. Aktualnie ${count} kandydatów w bazie.`
+    return `Lista dostępnych kandydatów na stanowisko ${capitalize(role)}. Sprawdź profile zweryfikowanych specjalistów IT.`
   }
-  return `Baza zweryfikowanych specjalistów IT. Przeglądaj profile kandydatów według roli, technologii i lokalizacji. Aktualnie ${count} kandydatów w bazie.`
+  return `Baza zweryfikowanych specjalistów IT. Przeglądaj profile kandydatów według roli, technologii i lokalizacji.`
 }
 
 export function getListingMetaTitle(params: ListingContentParams): string {
@@ -52,6 +57,9 @@ export function getListingMetaTitle(params: ListingContentParams): string {
   if (role && technology) {
     return `${capitalize(technology)} ${capitalize(role)} — kandydaci IT${pageSuffix} | QualiBase`
   }
+  if (technology) {
+    return `${capitalize(technology)} — kandydaci IT${pageSuffix} | QualiBase`
+  }
   if (role) {
     return `${capitalize(role)} — dostępni kandydaci IT${pageSuffix} | QualiBase`
   }
@@ -59,19 +67,22 @@ export function getListingMetaTitle(params: ListingContentParams): string {
 }
 
 export function getListingMetaDescription(params: ListingContentParams): string {
-  const { role, technology, location, count, page } = params
+  const { role, technology, location, page } = params
   const pageInfo = page && page > 1 ? ` Strona ${page} wyników.` : ""
 
   if (role && technology && location) {
-    return `Znajdź ${capitalize(technology)} ${capitalize(role)} w ${capitalize(location)}. ${count} zweryfikowanych specjalistów IT dostępnych od zaraz.${pageInfo} QualiBase — platforma rekrutacyjna.`
+    return `Znajdź ${capitalize(technology)} ${capitalize(role)} w ${capitalize(location)}. Zweryfikowani specjaliści IT dostępni od zaraz.${pageInfo} QualiBase — platforma rekrutacyjna.`
   }
   if (role && technology) {
-    return `${count} kandydatów ${capitalize(role)} z doświadczeniem w ${capitalize(technology)}. Zweryfikowani specjaliści IT dostępni do współpracy.${pageInfo} QualiBase.`
+    return `Kandydaci ${capitalize(role)} z doświadczeniem w ${capitalize(technology)}. Zweryfikowani specjaliści IT dostępni do współpracy.${pageInfo} QualiBase.`
+  }
+  if (technology) {
+    return `Kandydaci z doświadczeniem w ${capitalize(technology)}. Zweryfikowani specjaliści IT dostępni do współpracy.${pageInfo} QualiBase.`
   }
   if (role) {
-    return `${count} kandydatów na stanowisko ${capitalize(role)}. Przeglądaj profile zweryfikowanych specjalistów IT.${pageInfo} QualiBase — platforma rekrutacyjna.`
+    return `Kandydaci na stanowisko ${capitalize(role)}. Przeglądaj profile zweryfikowanych specjalistów IT.${pageInfo} QualiBase — platforma rekrutacyjna.`
   }
-  return `Baza ${count} zweryfikowanych specjalistów IT. Przeglądaj profile kandydatów według roli, technologii i lokalizacji.${pageInfo} QualiBase.`
+  return `Baza zweryfikowanych specjalistów IT. Przeglądaj profile kandydatów według roli, technologii i lokalizacji.${pageInfo} QualiBase.`
 }
 
 export function getListingCanonicalUrl(params: {

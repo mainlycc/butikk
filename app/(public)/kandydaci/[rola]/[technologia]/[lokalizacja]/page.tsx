@@ -1,6 +1,4 @@
 import type { Metadata } from "next"
-import { Suspense } from "react"
-import { Skeleton } from "@/components/ui/skeleton"
 import {
   getPublicCandidates,
   getPublicCandidatesCount,
@@ -14,7 +12,7 @@ import {
   getListingBreadcrumbs,
 } from "@/lib/seo/listing-content"
 import { getBreadcrumbSchema } from "@/lib/seo/structured-data"
-import PublicDatabaseContent from "@/components/public-database-content"
+import PublicCandidatesListing from "@/components/public-candidates-listing"
 
 interface PageProps {
   params: Promise<{ rola: string; technologia: string; lokalizacja: string }>
@@ -30,8 +28,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const currentPage = Number(page) > 1 ? Number(page) : 1
   const count = await getPublicCandidatesCount({ role, technology, location })
 
-  const title = getListingMetaTitle({ role, technology, location, count, page: currentPage })
-  const description = getListingMetaDescription({ role, technology, location, count, page: currentPage })
+  const title = getListingMetaTitle({ role, technology, location, page: currentPage })
+  const description = getListingMetaDescription({ role, technology, location, page: currentPage })
   const canonical = getListingCanonicalUrl({
     role: rola,
     technology: technologia,
@@ -61,8 +59,8 @@ export default async function LokalizacjaPage({ params, searchParams }: PageProp
     currentPage
   )
 
-  const h1 = getListingH1({ role, technology, location, count: total, page: currentPage })
-  const description = getListingDescription({ role, technology, location, count: total, page: currentPage })
+  const h1 = getListingH1({ role, technology, location, page: currentPage })
+  const description = getListingDescription({ role, technology, location, page: currentPage })
   const breadcrumbs = getListingBreadcrumbs({
     role: rola,
     technology: technologia,
@@ -81,28 +79,12 @@ export default async function LokalizacjaPage({ params, searchParams }: PageProp
       <h1 className="text-3xl font-bold tracking-tight mb-3">{h1}</h1>
       <p className="text-muted-foreground mb-8 max-w-2xl">{description}</p>
 
-      <Suspense fallback={<TableSkeleton />}>
-        <PublicDatabaseContent
-          candidates={candidates}
-          page={currentPage}
-          totalPages={totalPages}
-          basePath={`/kandydaci/${rola}/${technologia}/${lokalizacja}`}
-        />
-      </Suspense>
+      <PublicCandidatesListing
+        candidates={candidates}
+        page={currentPage}
+        totalPages={totalPages}
+        basePath={`/kandydaci/${rola}/${technologia}/${lokalizacja}`}
+      />
     </section>
-  )
-}
-
-function TableSkeleton() {
-  return (
-    <div className="space-y-6">
-      <Skeleton className="h-16 w-full" />
-      <Skeleton className="h-12 w-full" />
-      <div className="space-y-2">
-        {[...Array(8)].map((_, i) => (
-          <Skeleton key={i} className="h-12 w-full" />
-        ))}
-      </div>
-    </div>
   )
 }

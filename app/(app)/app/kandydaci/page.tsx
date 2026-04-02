@@ -18,10 +18,6 @@ export default async function DatabasePage() {
     redirect("/app/login")
   }
 
-  const { data: userData } = await supabase.from("users").select("role").eq("id", user.id).single()
-
-  const isAdmin = userData?.role === "admin"
-
   const needsSync = await shouldSync(5)
   if (needsSync) {
     syncGoogleSheetsToSupabase(true).catch((error) => {

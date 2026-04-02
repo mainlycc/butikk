@@ -1,7 +1,5 @@
 import type { Metadata } from "next"
-import { Suspense } from "react"
-import { Skeleton } from "@/components/ui/skeleton"
-import ExpandableTags from "@/components/expandable-tags"
+import PublicFilterTags from "@/components/public-filter-tags"
 import {
   getPublicCandidates,
   getPublicCandidatesCount,
@@ -18,7 +16,7 @@ import {
   getListingBreadcrumbs,
 } from "@/lib/seo/listing-content"
 import { getBreadcrumbSchema } from "@/lib/seo/structured-data"
-import PublicDatabaseContent from "@/components/public-database-content"
+import PublicCandidatesListing from "@/components/public-candidates-listing"
 
 interface PageProps {
   searchParams: Promise<{ page?: string }>
@@ -29,8 +27,8 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const currentPage = Number(page) > 1 ? Number(page) : 1
   const count = await getPublicCandidatesCount()
 
-  const title = getListingMetaTitle({ count, page: currentPage })
-  const description = getListingMetaDescription({ count, page: currentPage })
+  const title = getListingMetaTitle({ page: currentPage })
+  const description = getListingMetaDescription({ page: currentPage })
   const canonical = getListingCanonicalUrl({ page: currentPage })
 
   return {
@@ -52,8 +50,8 @@ export default async function KandydaciPage({ searchParams }: PageProps) {
     getAvailableRoles(),
   ])
 
-  const h1 = getListingH1({ count: total, page: currentPage })
-  const description = getListingDescription({ count: total, page: currentPage })
+  const h1 = getListingH1({ page: currentPage })
+  const description = getListingDescription({ page: currentPage })
   const breadcrumbs = getListingBreadcrumbs({})
 
   return (
@@ -69,40 +67,28 @@ export default async function KandydaciPage({ searchParams }: PageProps) {
       <p className="text-muted-foreground mb-8 max-w-2xl">{description}</p>
 
       <div className="space-y-4 mb-8">
-        <ExpandableTags
+        <PublicFilterTags
           label="Według roli"
           variant="outline"
+          collapsedVisible={roles.length}
           tags={roles.map((role) => ({ text: role, href: `/kandydaci/${slugify(role)}` }))}
         />
-        <ExpandableTags
+        <PublicFilterTags
           label="Według technologii"
           variant="secondary"
-          tags={technologies.map((tech) => ({ text: tech, href: `/kandydaci/${slugify(tech)}` }))}
+          tags={technologies.map((tech) => ({
+            text: tech,
+            href: `/kandydaci/technologia/${slugify(tech)}`,
+          }))}
         />
       </div>
 
-      <Suspense fallback={<TableSkeleton />}>
-        <PublicDatabaseContent
-          candidates={candidates}
-          page={currentPage}
-          totalPages={totalPages}
-          basePath="/kandydaci"
-        />
-      </Suspense>
+      <PublicCandidatesListing
+        candidates={candidates}
+        page={currentPage}
+        totalPages={totalPages}
+        basePath="/kandydaci"
+      />
     </section>
-  )
-}
-
-function TableSkeleton() {
-  return (
-    <div className="space-y-6">
-      <Skeleton className="h-16 w-full" />
-      <Skeleton className="h-12 w-full" />
-      <div className="space-y-2">
-        {[...Array(8)].map((_, i) => (
-          <Skeleton key={i} className="h-12 w-full" />
-        ))}
-      </div>
-    </div>
   )
 }

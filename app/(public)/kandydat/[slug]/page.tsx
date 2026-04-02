@@ -14,7 +14,7 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://qualibase.pl"
 
 interface PageProps {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ selected?: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -51,7 +51,7 @@ function getPersonSchema(candidate: NonNullable<Awaited<ReturnType<typeof getCan
 
 export default async function PublicCandidateProfilePage({ params, searchParams }: PageProps) {
   const { slug } = await params
-  const { selected } = await searchParams
+  await searchParams
 
   const [candidate, similarCandidates] = await Promise.all([
     getCandidateBySlug(slug),
@@ -60,17 +60,6 @@ export default async function PublicCandidateProfilePage({ params, searchParams 
   if (!candidate) notFound()
 
   const autoDescription = getCandidateAutoDescription(candidate)
-
-  const selectedSlugs = selected ? selected.split(",").filter(Boolean) : []
-
-  const currentIndex = selectedSlugs.length > 0
-    ? selectedSlugs.indexOf(slug)
-    : -1
-
-  const previousSlug = currentIndex > 0 ? selectedSlugs[currentIndex - 1] : null
-  const nextSlug = currentIndex >= 0 && currentIndex < selectedSlugs.length - 1
-    ? selectedSlugs[currentIndex + 1]
-    : null
 
   const roleSlug = candidate.role ? slugify(candidate.role) : null
 
@@ -101,11 +90,10 @@ export default async function PublicCandidateProfilePage({ params, searchParams 
         candidate={candidate}
         autoDescription={autoDescription}
         similarCandidates={similarCandidates}
-        previousSlug={previousSlug}
-        nextSlug={nextSlug}
-        currentIndex={currentIndex >= 0 ? currentIndex : 0}
-        totalCount={selectedSlugs.length > 0 ? selectedSlugs.length : 1}
-        selectedSlugs={selectedSlugs}
+        previousSlug={null}
+        nextSlug={null}
+        currentIndex={0}
+        totalCount={1}
       />
     </section>
   )

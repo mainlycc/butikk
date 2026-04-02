@@ -7,11 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-  MapPin,
-  Briefcase,
   Clock,
-  Globe,
-  Code2,
   Lock,
   ChevronLeft,
   ChevronRight,
@@ -19,7 +15,6 @@ import {
   User,
   FileText,
   Mail,
-  DollarSign,
   Bookmark,
   Eye,
   CheckCircle2,
@@ -37,7 +32,6 @@ interface PublicCandidateViewProps {
   nextSlug: string | null
   currentIndex: number
   totalCount: number
-  selectedSlugs: string[]
 }
 
 export default function PublicCandidateView({
@@ -48,7 +42,6 @@ export default function PublicCandidateView({
   nextSlug,
   currentIndex,
   totalCount,
-  selectedSlugs,
 }: PublicCandidateViewProps) {
   const router = useRouter()
   const [showAllTechnologies, setShowAllTechnologies] = useState(false)
@@ -58,12 +51,8 @@ export default function PublicCandidateView({
     .map((t) => t.trim())
     .filter(Boolean)
 
-  const selectedParam = selectedSlugs.length > 0
-    ? `?selected=${selectedSlugs.join(",")}`
-    : ""
-
   const navigateTo = (slug: string) => {
-    router.push(`/kandydat/${slug}${selectedParam}`)
+    router.push(`/kandydat/${slug}`)
   }
 
   const locked = "select-none blur-sm opacity-70"
@@ -408,7 +397,7 @@ export default function PublicCandidateView({
         description="Na podstawie wspólnych technologii"
         items={similarCandidates.map((c) => ({
           key: c.slug,
-          href: `/kandydat/${c.slug}${selectedParam}`,
+          href: `/kandydat/${c.slug}`,
           heading: c.role || "Profil kandydata",
           seniority: c.seniority || undefined,
           location: c.location || null,

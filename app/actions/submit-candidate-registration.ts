@@ -52,7 +52,7 @@ async function uploadCVFile(file: File): Promise<string | null> {
     const arrayBuffer = await file.arrayBuffer()
 
     // Upload pliku
-    const { error: uploadError, data } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from(BUCKET_NAME)
       .upload(fileName, arrayBuffer, {
         contentType: file.type,

@@ -87,7 +87,14 @@ export default async function CandidatePage(props: PageProps) {
             return (a.sheet_row_number ?? 0) - (b.sheet_row_number ?? 0)
           })
           .slice(0, 3)
-          .map(({ _score, ...c }) => c)
+          .map((c) => ({
+            id: c.id,
+            role: c.role,
+            seniority: c.seniority,
+            technologies: c.technologies,
+            location: c.location,
+            sheet_row_number: c.sheet_row_number,
+          }))
 
   return (
     <div className="w-full space-y-6">
