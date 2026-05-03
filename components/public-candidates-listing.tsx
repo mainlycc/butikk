@@ -1,3 +1,7 @@
+"use client"
+
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Users } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -33,8 +37,13 @@ function profileHref(slug: string) {
 }
 
 function profileAnchorText(c: PublicCandidate) {
-  const parts = [c.role, c.seniority, c.location].filter(Boolean)
+  const parts = [c.first_name, c.role, c.seniority, c.location].filter(Boolean)
   return parts.length > 0 ? parts.join(" · ") : "Profil kandydata"
+}
+
+function displayFirstName(c: PublicCandidate) {
+  const n = c.first_name?.trim()
+  return n || "—"
 }
 
 function buildPaginationPages(totalPages: number, currentPage: number): (number | "ellipsis")[] {
@@ -60,6 +69,8 @@ export default function PublicCandidatesListing({
   totalPages,
   basePath,
 }: PublicCandidatesListingProps) {
+  const router = useRouter()
+
   if (candidates.length === 0) {
     return (
       <Card className="border-2">
@@ -79,15 +90,14 @@ export default function PublicCandidatesListing({
           <ul className="space-y-3 list-none p-0 m-0">
             {candidates.map((c) => (
               <li key={c.id}>
-                <article className="border rounded-lg p-3 space-y-2 bg-card">
-                  <div className="flex flex-wrap gap-2">
-                    <a
-                      href={profileHref(c.slug)}
-                      className="inline-flex no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full"
-                      title={profileAnchorText(c)}
-                    >
-                      <Badge variant="secondary">{c.role || "Profil kandydata"}</Badge>
-                    </a>
+                <Link
+                  href={profileHref(c.slug)}
+                  title={profileAnchorText(c)}
+                  className="block rounded-lg border bg-card p-3 space-y-2 no-underline text-inherit outline-offset-2 hover:bg-accent/40 hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-medium text-foreground">{displayFirstName(c)}</span>
+                    <Badge variant="secondary">{c.role || "Profil kandydata"}</Badge>
                     <Badge>{c.seniority || "—"}</Badge>
                   </div>
                   <p className="text-sm max-w-full truncate" title={c.technologies ?? undefined}>
@@ -95,7 +105,7 @@ export default function PublicCandidatesListing({
                   </p>
                   <p className="text-sm text-muted-foreground">{c.location || "—"}</p>
                   <p className="text-sm">{c.availability || "—"}</p>
-                </article>
+                </Link>
               </li>
             ))}
           </ul>
@@ -108,6 +118,7 @@ export default function PublicCandidatesListing({
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Imię</TableHead>
                   <TableHead>Rola</TableHead>
                   <TableHead>Seniority</TableHead>
                   <TableHead>Technologie</TableHead>
@@ -116,29 +127,40 @@ export default function PublicCandidatesListing({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {candidates.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell>
-                      <a
-                        href={profileHref(c.slug)}
-                        className="inline-flex no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full"
-                        title={profileAnchorText(c)}
-                      >
+                {candidates.map((c) => {
+                  const href = profileHref(c.slug)
+                  const label = profileAnchorText(c)
+                  return (
+                    <TableRow
+                      key={c.id}
+                      tabIndex={0}
+                      aria-label={`Profil: ${label}`}
+                      className="cursor-pointer hover:bg-muted/70"
+                      onClick={() => router.push(href)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault()
+                          router.push(href)
+                        }
+                      }}
+                    >
+                      <TableCell className="font-medium">{displayFirstName(c)}</TableCell>
+                      <TableCell>
                         <Badge variant="secondary">{c.role || "Profil kandydata"}</Badge>
-                      </a>
-                    </TableCell>
-                    <TableCell>
-                      <Badge>{c.seniority || "—"}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-sm max-w-xs truncate" title={c.technologies ?? undefined}>
-                        {c.technologies || "—"}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{c.location || "—"}</TableCell>
-                    <TableCell className="text-sm">{c.availability || "—"}</TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell>
+                        <Badge>{c.seniority || "—"}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm max-w-xs truncate" title={c.technologies ?? undefined}>
+                          {c.technologies || "—"}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">{c.location || "—"}</TableCell>
+                      <TableCell className="text-sm">{c.availability || "—"}</TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </div>

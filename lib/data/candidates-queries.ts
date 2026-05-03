@@ -244,7 +244,9 @@ export async function getSimilarPublicCandidates(
 
   const { data: all, error } = await supabase
     .from(PUBLIC_CANDIDATES_VIEW)
-    .select("id, slug, role, seniority, technologies, location, experience_years, summary, availability, languages, skills")
+    .select(
+      "id, slug, first_name, role, seniority, technologies, location, experience_years, summary, availability, languages, skills"
+    )
     .neq("slug", slug)
 
   if (error || !all) return []

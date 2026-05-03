@@ -2,18 +2,15 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Network } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Menu } from 'lucide-react'
+import { BrandMark } from '@/components/layout/brand-mark'
 
 export function TopNav() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b w-full">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-10 py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 text-foreground">
-          <Network className="text-primary text-3xl" />
-          <h2 className="text-foreground text-xl font-bold tracking-tight">Qualibase</h2>
-        </Link>
+        <BrandMark imgClassName="h-8 sm:h-9" />
         <div className="hidden md:flex items-center gap-8">
           <Link 
             href="/#o-nas" 
@@ -69,6 +66,7 @@ export function TopNav() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs">
               <SheetHeader>
+                <BrandMark href={null} className="mb-2" imgClassName="h-7" />
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
               <nav className="mt-6 space-y-4">

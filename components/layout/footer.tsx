@@ -1,15 +1,13 @@
 import Link from 'next/link'
-import { Globe, Mail, Share2, Network } from 'lucide-react'
+import { Globe, Mail, Share2 } from 'lucide-react'
+import { BrandMark } from '@/components/layout/brand-mark'
 
 export function Footer() {
   return (
     <footer className="bg-white border-t pt-16 pb-8 px-4 sm:px-10">
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
         <div className="col-span-1 md:col-span-1 flex flex-col gap-4">
-          <div className="flex items-center gap-2 text-foreground">
-            <Network className="text-primary w-6 h-6" />
-            <h3 className="text-lg font-bold">Qualibase</h3>
-          </div>
+          <BrandMark imgClassName="h-9 max-w-[min(240px,100%)]" />
           <p className="text-sm text-muted-foreground">
             Nowoczesna platforma rekrutacyjna dla branży IT.
           </p>

@@ -2,6 +2,7 @@
  * Wspólne pola publiczne kandydata (bez danych osobowych).
  */
 interface CandidatePublicFields {
+  first_name: string | null
   role: string | null
   seniority: string | null
   technologies: string | null
@@ -32,7 +33,6 @@ export interface PrivateCandidate extends CandidatePublicFields {
   sheet_row_number: number
   nr: string | null
   slug: string | null
-  first_name: string | null
   last_name: string | null
   candidate_email: string | null
   guardian: string | null

@@ -2,6 +2,7 @@
 
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { AppSidebar } from './sidebar'
+import { BrandMark } from '@/components/layout/brand-mark'
 import { usePathname } from 'next/navigation'
 
 type UserProfile = {
@@ -49,8 +50,9 @@ export default function AppShell({
       <AppSidebar user={user} />
       <SidebarInset className="min-h-screen overflow-x-hidden">
         <div className="min-h-screen w-full max-w-full px-3 py-4 sm:px-6 sm:py-6 overflow-x-hidden">
-          <div className="mb-4 flex items-center justify-between md:hidden">
-            <SidebarTrigger />
+          <div className="mb-4 flex items-center justify-between gap-3 md:hidden">
+            <BrandMark imgClassName="h-7 max-w-[min(180px,55vw)]" />
+            <SidebarTrigger className="shrink-0" />
           </div>
           {children}
         </div>

@@ -1,3 +1,5 @@
+import { BRAND_LOGO_PATH } from '@/lib/brand'
+
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://qualibase.pl'
 
 export function getOrganizationSchema() {
@@ -6,7 +8,7 @@ export function getOrganizationSchema() {
     '@type': 'Organization',
     name: 'QualiBase',
     url: baseUrl,
-    logo: `${baseUrl}/icon.svg`,
+    logo: `${baseUrl}${BRAND_LOGO_PATH}`,
     description: 'Platforma rekrutacyjna dla branży IT. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT.',
     sameAs: [
       // Tutaj można dodać linki do social media, gdy będą dostępne

@@ -9,7 +9,6 @@ import {
   Mail,
   LogOut,
   User,
-  Network,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -29,6 +28,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { BrandMark } from '@/components/layout/brand-mark'
 
 interface SidebarProps {
   user: {
@@ -92,10 +92,7 @@ export function AppSidebar({ user }: SidebarProps) {
   return (
     <Sidebar variant="inset">
       <SidebarHeader className="p-4">
-        <Link href="/" className="flex items-center gap-2 text-foreground">
-          <Network className="text-primary text-3xl" />
-          <h2 className="text-foreground text-xl font-bold tracking-tight">Qualibase</h2>
-        </Link>
+        <BrandMark imgClassName="h-7 max-w-[min(200px,100%)]" />
       </SidebarHeader>
 
       <SidebarContent>
