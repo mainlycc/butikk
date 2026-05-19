@@ -275,7 +275,7 @@ export default function CandidateView({
                 {/* CV */}
                 <div className="mt-4">
                   <PDFViewer
-                    pdfUrl={candidate.cv_pdf_url || "/default-cv.pdf"}
+                    pdfUrl={candidate.cv_pdf_url || undefined}
                     candidateName={`${candidate.first_name || ""} ${candidate.last_name || ""}`.trim() || "CV kandydata"}
                     fallbackText={candidate.cv}
                   />

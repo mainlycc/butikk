@@ -259,14 +259,14 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
             cvPdfUrl = uploadedUrl
             console.log(`Successfully uploaded PDF for candidate ${firstName} ${lastName || ""}`)
           } else {
-            console.warn(`Failed to upload PDF for candidate ${firstName} ${lastName || ""}, keeping original link as fallback`)
-            // Jako fallback zapisz oryginalny link
-            cvPdfUrl = cvPdfLink
+            console.warn(`Failed to upload PDF for candidate ${firstName} ${lastName || ""}`)
+            // Nie zapisujemy linku z Drive jako cv_pdf_url, bo react-pdf często go nie wczyta (CORS/redirect).
+            // W UI zadziała wtedy fallback do tekstowego CV.
+            cvPdfUrl = null
           }
         } catch (error) {
           console.error(`Error processing PDF for candidate ${firstName} ${lastName || ""}:`, error)
-          // Jako fallback zapisz oryginalny link
-          cvPdfUrl = cvPdfLink
+          cvPdfUrl = null
         }
       } else {
         // Jeśli w Google Sheets nie ma linku, sprawdź czy w bazie jest istniejący URL

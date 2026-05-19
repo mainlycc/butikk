@@ -12,7 +12,8 @@ import {
   Code2,
   Database,
 } from 'lucide-react'
-import DatabaseContentMock from '@/components/database-content-mock'
+import HomepageCandidatesPreview from '@/components/homepage-candidates-preview'
+import { getAllPublicCandidates } from '@/lib/data/candidates-queries'
 import { DualPerspectiveSection } from '@/components/dual-perspective'
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://qualibase.pl'
@@ -45,7 +46,9 @@ export const metadata: Metadata = {
   },
 }
 
-export default function MainPage() {
+export default async function MainPage() {
+  const candidates = await getAllPublicCandidates()
+
   return (
     <>
       {/* Hero Section */}
@@ -78,7 +81,7 @@ export default function MainPage() {
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-100 rounded-full blur-3xl opacity-60"></div>
             
             <div className="relative">
-              <DatabaseContentMock />
+              <HomepageCandidatesPreview candidates={candidates} />
             </div>
           </div>
         </div>

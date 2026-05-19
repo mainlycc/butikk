@@ -72,6 +72,7 @@ async function downloadPDF(url: string): Promise<ArrayBuffer | null> {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
       },
+      redirect: "follow",
     })
 
     if (!response.ok) {
@@ -85,7 +86,38 @@ async function downloadPDF(url: string): Promise<ArrayBuffer | null> {
       // Kontynuujemy mimo to, bo niektóre serwery mogą zwracać nieprawidłowy content-type
     }
 
-    return await response.arrayBuffer()
+    const data = await response.arrayBuffer()
+    const buf = Buffer.from(data)
+    const magic5 = buf.subarray(0, 5).toString("utf8")
+    if (magic5 === "%PDF-") {
+      return data
+    }
+
+    // Google Drive: czasem zamiast pliku zwraca HTML (ekran logowania / potwierdzenia / limit).
+    // Spróbuj wyłuskać „prawdziwy” link do pobrania z HTML i pobrać ponownie.
+    const isHtml = buf.subarray(0, 15).toString("utf8").toLowerCase().includes("<!doctype html")
+    if (isHtml && url.includes("drive.google.com")) {
+      const html = buf.toString("utf8")
+
+      // 1) Najczęstszy przypadek: w HTML jest link do /uc?export=download...&confirm=...
+      const ucHrefMatch = html.match(/href=\"(\/uc\?export=download[^\"]+)\"/i)
+      if (ucHrefMatch?.[1]) {
+        const nextUrl = `https://drive.google.com${ucHrefMatch[1].replace(/&amp;/g, "&")}`
+        return await downloadPDF(nextUrl)
+      }
+
+      // 2) Alternatywnie: link do drive.usercontent.google.com/download?... (bezpośredni download endpoint)
+      const userContentMatch = html.match(/https:\/\/drive\.usercontent\.google\.com\/download\?[^\"]+/i)
+      if (userContentMatch?.[0]) {
+        const nextUrl = userContentMatch[0].replace(/&amp;/g, "&")
+        return await downloadPDF(nextUrl)
+      }
+    }
+
+    console.warn(
+      `Downloaded file is not a valid PDF (magic=${JSON.stringify(magic5)}) for ${url}`
+    )
+    return null
   } catch (error) {
     console.error(`Error downloading PDF from ${url}:`, error)
     return null

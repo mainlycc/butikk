@@ -28,6 +28,7 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
   const [error, setError] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
   const [pdfUrl, setPdfUrl] = useState<string | null>(initialPdfUrl || null)
+  const [showTextFallback, setShowTextFallback] = useState(false)
   const previousBlobUrlRef = useRef<string | null>(null)
   
   // Upewnij się, że komponent renderuje się tylko po stronie klienta
@@ -53,6 +54,7 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
       setPdfUrl(initialPdfUrl)
       setLoading(true)
       setError(null)
+      setShowTextFallback(false)
     }
   }, [initialPdfUrl])
 
@@ -93,6 +95,16 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
 
   function onDocumentLoadError(error: Error) {
     console.error("PDF load error:", error)
+    const hasFallback = fallbackText && String(fallbackText).trim().length > 0
+    if (hasFallback) {
+      // Jeśli PDF jest uszkodzony / nieprawidłowy (np. HTML w Storage), pokaż od razu tekstowe CV.
+      setPdfUrl(null)
+      setError(null)
+      setLoading(false)
+      setShowTextFallback(true)
+      return
+    }
+
     setError("Nie udało się załadować pliku PDF")
     setLoading(false)
   }
@@ -220,6 +232,19 @@ export default function PDFViewer({ pdfUrl: initialPdfUrl, candidateName, fallba
               {error && pdfUrl && (
                 <div className="flex flex-col items-center justify-center py-8">
                   <p className="text-sm text-destructive mb-2">{error}</p>
+                  {fallbackText && showTextFallback && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setPdfUrl(null)
+                        setError(null)
+                        setLoading(false)
+                      }}
+                    >
+                      Pokaż tekstowe CV
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
