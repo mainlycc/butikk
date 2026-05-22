@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "sonner"
 import "./globals.css"
 import { getOrganizationSchema, getWebSiteSchema } from "@/lib/seo/structured-data"
+import { GoogleTagManagerBody, GoogleTagManagerHead } from "@/components/google-tag-manager"
 
 const geist = Geist({ subsets: ["latin"] })
 
@@ -89,6 +90,7 @@ export default async function RootLayout({
   return (
     <html lang="pl" className="h-full overflow-auto">
       <head>
+        <GoogleTagManagerHead />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -99,6 +101,7 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${geist.className} antialiased h-full overflow-auto`}>
+        <GoogleTagManagerBody />
         {children}
         <Toaster />
         <Analytics />
