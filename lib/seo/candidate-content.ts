@@ -134,10 +134,10 @@ export function getCandidateMetaTitle(candidate: PublicCandidate): string {
   const exp = years != null ? `${years} ${pluralYears(years)}` : null
   const mode = isRemoteLocation(candidate.location) ? "zdalnie" : candidate.location ? clean(candidate.location) : null
 
-  // format: "Senior Backend Engineer, 8 lat — zdalnie | QualiBase"
+  // format: "Senior Backend Engineer, 8 lat — zdalnie | Qualibase"
   const left = [parts.join(" "), exp ? `${exp}` : null].filter(Boolean).join(", ") || "Kandydat IT"
   const mid = mode ? `— ${mode}` : ""
-  return clean(`${left} ${mid} | QualiBase`)
+  return clean(`${left} ${mid} | Qualibase`)
 }
 
 export function getCandidateMetaDescription(candidate: PublicCandidate): string {

@@ -11,7 +11,7 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.qualibase.pl'
 
 export const metadata: Metadata = {
   title: "Logowanie",
-  description: "Zaloguj się do QualiBase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych dla rekruterów i firm technologicznych.",
+  description: "Zaloguj się do Qualibase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych dla rekruterów i firm technologicznych.",
   alternates: {
     canonical: `${baseUrl}/app/login`,
   },
@@ -20,8 +20,8 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: "Logowanie | QualiBase",
-    description: "Zaloguj się do QualiBase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych.",
+    title: "Logowanie | Qualibase",
+    description: "Zaloguj się do Qualibase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych.",
     url: `${baseUrl}/app/login`,
     type: "website",
     images: [
@@ -29,14 +29,14 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Logowanie - QualiBase",
+        alt: "Logowanie - Qualibase",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Logowanie | QualiBase",
-    description: "Zaloguj się do QualiBase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych.",
+    title: "Logowanie | Qualibase",
+    description: "Zaloguj się do Qualibase. Dostęp do bazy kandydatów IT i narzędzi rekrutacyjnych.",
     images: ["/og-image.jpg"],
   },
 }

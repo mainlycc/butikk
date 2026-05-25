@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const candidate = await getCandidateBySlug(slug)
 
   if (!candidate) {
-    return { title: "Kandydat nie znaleziony | QualiBase" }
+    return { title: "Kandydat nie znaleziony | Qualibase" }
   }
 
   const title = getCandidateMetaTitle(candidate)

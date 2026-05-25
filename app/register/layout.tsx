@@ -4,7 +4,7 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.qualibase.pl'
 
 export const metadata: Metadata = {
   title: "Rejestracja",
-  description: "Utwórz konto w QualiBase. Rejestracja poprzez zaproszenie. Dołącz do platformy rekrutacyjnej dla branży IT.",
+  description: "Utwórz konto w Qualibase. Rejestracja poprzez zaproszenie. Dołącz do platformy rekrutacyjnej dla branży IT.",
   alternates: {
     canonical: `${baseUrl}/register`,
   },
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: "Rejestracja | QualiBase",
-    description: "Utwórz konto w QualiBase. Rejestracja poprzez zaproszenie. Dołącz do platformy rekrutacyjnej dla branży IT.",
+    title: "Rejestracja | Qualibase",
+    description: "Utwórz konto w Qualibase. Rejestracja poprzez zaproszenie. Dołącz do platformy rekrutacyjnej dla branży IT.",
     url: `${baseUrl}/register`,
     type: "website",
     images: [
@@ -22,14 +22,14 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Rejestracja - QualiBase",
+        alt: "Rejestracja - Qualibase",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rejestracja | QualiBase",
-    description: "Utwórz konto w QualiBase. Rejestracja poprzez zaproszenie.",
+    title: "Rejestracja | Qualibase",
+    description: "Utwórz konto w Qualibase. Rejestracja poprzez zaproszenie.",
     images: ["/og-image.jpg"],
   },
 }

@@ -5,7 +5,7 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.qualibase.pl'
 export const metadata: Metadata = {
   title: 'Polityka prywatności',
   description:
-    'Polityka prywatności platformy QualiBase – informacje o przetwarzaniu danych osobowych kandydatów i rekruterów.',
+    'Polityka prywatności platformy Qualibase – informacje o przetwarzaniu danych osobowych kandydatów i rekruterów.',
   alternates: {
     canonical: `${baseUrl}/polityka-prywatnosci`,
   },

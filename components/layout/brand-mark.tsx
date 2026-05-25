@@ -13,7 +13,7 @@ export function BrandMark({ className, imgClassName, href = "/" }: BrandMarkProp
   const img = (
     <img
       src={BRAND_LOGO_PATH}
-      alt="QualiBase"
+      alt="Qualibase"
       width={2537}
       height={615}
       className={cn(

@@ -1,4 +1,4 @@
-# Instrukcje dla AI - QualiBase
+# Instrukcje dla AI - Qualibase
 
 ## 1. Komponenty UI - shadcn/ui
 

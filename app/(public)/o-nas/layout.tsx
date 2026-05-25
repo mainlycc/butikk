@@ -4,13 +4,13 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.qualibase.pl'
 
 export const metadata: Metadata = {
   title: "O nas",
-  description: "Poznaj QualiBase - platformę rekrutacyjną dla branży IT. Ułatwiamy procesy rekrutacyjne i wspieramy rozwój zawodowy specjalistów IT oraz rekruterów.",
+  description: "Poznaj Qualibase - platformę rekrutacyjną dla branży IT. Ułatwiamy procesy rekrutacyjne i wspieramy rozwój zawodowy specjalistów IT oraz rekruterów.",
   alternates: {
     canonical: `${baseUrl}/o-nas`,
   },
   openGraph: {
-    title: "O nas | QualiBase",
-    description: "Poznaj QualiBase - platformę rekrutacyjną dla branży IT. Ułatwiamy procesy rekrutacyjne i wspieramy rozwój zawodowy specjalistów IT oraz rekruterów.",
+    title: "O nas | Qualibase",
+    description: "Poznaj Qualibase - platformę rekrutacyjną dla branży IT. Ułatwiamy procesy rekrutacyjne i wspieramy rozwój zawodowy specjalistów IT oraz rekruterów.",
     url: `${baseUrl}/o-nas`,
     type: "website",
     images: [
@@ -18,14 +18,14 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "O nas - QualiBase",
+        alt: "O nas - Qualibase",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "O nas | QualiBase",
-    description: "Poznaj QualiBase - platformę rekrutacyjną dla branży IT. Ułatwiamy procesy rekrutacyjne i wspieramy rozwój zawodowy.",
+    title: "O nas | Qualibase",
+    description: "Poznaj Qualibase - platformę rekrutacyjną dla branży IT. Ułatwiamy procesy rekrutacyjne i wspieramy rozwój zawodowy.",
     images: ["/og-image.jpg"],
   },
 }

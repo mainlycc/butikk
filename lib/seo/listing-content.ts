@@ -52,18 +52,18 @@ export function getListingMetaTitle(params: ListingContentParams): string {
   const pageSuffix = page && page > 1 ? ` — strona ${page}` : ""
 
   if (role && technology && location) {
-    return `${capitalize(technology)} ${capitalize(role)} ${capitalize(location)}${pageSuffix} | QualiBase`
+    return `${capitalize(technology)} ${capitalize(role)} ${capitalize(location)}${pageSuffix} | Qualibase`
   }
   if (role && technology) {
-    return `${capitalize(technology)} ${capitalize(role)} — kandydaci IT${pageSuffix} | QualiBase`
+    return `${capitalize(technology)} ${capitalize(role)} — kandydaci IT${pageSuffix} | Qualibase`
   }
   if (technology) {
-    return `${capitalize(technology)} — kandydaci IT${pageSuffix} | QualiBase`
+    return `${capitalize(technology)} — kandydaci IT${pageSuffix} | Qualibase`
   }
   if (role) {
-    return `${capitalize(role)} — dostępni kandydaci IT${pageSuffix} | QualiBase`
+    return `${capitalize(role)} — dostępni kandydaci IT${pageSuffix} | Qualibase`
   }
-  return `Kandydaci IT — baza specjalistów${pageSuffix} | QualiBase`
+  return `Kandydaci IT — baza specjalistów${pageSuffix} | Qualibase`
 }
 
 export function getListingMetaDescription(params: ListingContentParams): string {
@@ -71,18 +71,18 @@ export function getListingMetaDescription(params: ListingContentParams): string 
   const pageInfo = page && page > 1 ? ` Strona ${page} wyników.` : ""
 
   if (role && technology && location) {
-    return `Znajdź ${capitalize(technology)} ${capitalize(role)} w ${capitalize(location)}. Zweryfikowani specjaliści IT dostępni od zaraz.${pageInfo} QualiBase — platforma rekrutacyjna.`
+    return `Znajdź ${capitalize(technology)} ${capitalize(role)} w ${capitalize(location)}. Zweryfikowani specjaliści IT dostępni od zaraz.${pageInfo} Qualibase — platforma rekrutacyjna.`
   }
   if (role && technology) {
-    return `Kandydaci ${capitalize(role)} z doświadczeniem w ${capitalize(technology)}. Zweryfikowani specjaliści IT dostępni do współpracy.${pageInfo} QualiBase.`
+    return `Kandydaci ${capitalize(role)} z doświadczeniem w ${capitalize(technology)}. Zweryfikowani specjaliści IT dostępni do współpracy.${pageInfo} Qualibase.`
   }
   if (technology) {
-    return `Kandydaci z doświadczeniem w ${capitalize(technology)}. Zweryfikowani specjaliści IT dostępni do współpracy.${pageInfo} QualiBase.`
+    return `Kandydaci z doświadczeniem w ${capitalize(technology)}. Zweryfikowani specjaliści IT dostępni do współpracy.${pageInfo} Qualibase.`
   }
   if (role) {
-    return `Kandydaci na stanowisko ${capitalize(role)}. Przeglądaj profile zweryfikowanych specjalistów IT.${pageInfo} QualiBase — platforma rekrutacyjna.`
+    return `Kandydaci na stanowisko ${capitalize(role)}. Przeglądaj profile zweryfikowanych specjalistów IT.${pageInfo} Qualibase — platforma rekrutacyjna.`
   }
-  return `Baza zweryfikowanych specjalistów IT. Przeglądaj profile kandydatów według roli, technologii i lokalizacji.${pageInfo} QualiBase.`
+  return `Baza zweryfikowanych specjalistów IT. Przeglądaj profile kandydatów według roli, technologii i lokalizacji.${pageInfo} Qualibase.`
 }
 
 export function getListingCanonicalUrl(params: {

@@ -6,7 +6,7 @@ export function getOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'QualiBase',
+    name: 'Qualibase',
     url: baseUrl,
     logo: `${baseUrl}${BRAND_LOGO_PATH}`,
     description: 'Platforma rekrutacyjna dla branży IT. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT.',
@@ -25,7 +25,7 @@ export function getWebSiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'QualiBase',
+    name: 'Qualibase',
     url: baseUrl,
     description: 'Platforma rekrutacyjna dla branży IT. Znajdź topowe talenty IT szybciej niż kiedykolwiek.',
     potentialAction: {

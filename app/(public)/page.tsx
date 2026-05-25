@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     canonical: baseUrl,
   },
   openGraph: {
-    title: "Znajdź topowe talenty IT szybciej niż kiedykolwiek | QualiBase",
+    title: "Znajdź topowe talenty IT szybciej niż kiedykolwiek | Qualibase",
     description: "Odblokuj potencjał swojej firmy z Qualibase. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT bezpośrednio.",
     url: baseUrl,
     type: "website",
@@ -34,13 +34,13 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "QualiBase - Platforma Rekrutacyjna IT",
+        alt: "Qualibase - Platforma Rekrutacyjna IT",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Znajdź topowe talenty IT szybciej niż kiedykolwiek | QualiBase",
+    title: "Znajdź topowe talenty IT szybciej niż kiedykolwiek | Qualibase",
     description: "Odblokuj potencjał swojej firmy z Qualibase. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT bezpośrednio.",
     images: ["/og-image.jpg"],
   },
@@ -111,7 +111,7 @@ export default async function MainPage() {
           <div className="flex flex-col gap-6 order-2 lg:order-1">
             <h2 className="text-3xl font-bold text-foreground">O nas</h2>
             <p className="text-muted-foreground text-lg">
-              QualiBase to platforma dla rekruterów i kandydatów z branży IT. Niektóre funkcjonalności są dostępne wyłącznie dla zalogowanych użytkowników. Zachęcamy do rejestracji, aby w pełni korzystać z możliwości platformy.
+              Qualibase to platforma dla rekruterów i kandydatów z branży IT. Niektóre funkcjonalności są dostępne wyłącznie dla zalogowanych użytkowników. Zachęcamy do rejestracji, aby w pełni korzystać z możliwości platformy.
             </p>
             <ul className="flex flex-col gap-4 mt-2">
               <li className="flex items-start gap-3">
@@ -207,7 +207,7 @@ export default async function MainPage() {
               Porozmawiajmy o współpracy
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground">
-              Masz pytania dotyczące QualiBase, rekrutacji lub danych? Odezwij się do nas – chętnie doradzimy,
+              Masz pytania dotyczące Qualibase, rekrutacji lub danych? Odezwij się do nas – chętnie doradzimy,
               jak najlepiej wykorzystać platformę w Twojej organizacji.
             </p>
           </div>
@@ -252,7 +252,7 @@ export default async function MainPage() {
                       asChild
                       className="w-full sm:w-auto"
                     >
-                      <Link href="mailto:dominik.nowicki@qualibase.pl?subject=Zapytanie%20dotyczące%20QualiBase">
+                      <Link href="mailto:dominik.nowicki@qualibase.pl?subject=Zapytanie%20dotyczące%20Qualibase">
                         Napisz do nas
                       </Link>
                     </Button>

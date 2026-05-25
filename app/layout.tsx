@@ -14,10 +14,10 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.qualibase.pl'
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "QualiBase - Platforma Rekrutacyjna IT",
-    template: "%s | QualiBase"
+    default: "Qualibase - Platforma Rekrutacyjna IT",
+    template: "%s | Qualibase"
   },
-  description: "Znajdź topowe talenty IT szybciej niż kiedykolwiek. QualiBase łączy najlepsze firmy ze zweryfikowanymi specjalistami IT. Platforma rekrutacyjna dla branży IT.",
+  description: "Znajdź topowe talenty IT szybciej niż kiedykolwiek. Qualibase łączy najlepsze firmy ze zweryfikowanymi specjalistami IT. Platforma rekrutacyjna dla branży IT.",
   keywords: [
     "rekrutacja IT",
     "baza kandydatów IT",
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
     "praca IT",
     "rekruter IT"
   ],
-  authors: [{ name: "QualiBase" }],
-  creator: "QualiBase",
-  publisher: "QualiBase",
+  authors: [{ name: "Qualibase" }],
+  creator: "Qualibase",
+  publisher: "Qualibase",
   formatDetection: {
     email: false,
     address: false,
@@ -42,21 +42,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pl_PL",
     url: baseUrl,
-    siteName: "QualiBase",
-    title: "QualiBase - Platforma Rekrutacyjna IT",
+    siteName: "Qualibase",
+    title: "Qualibase - Platforma Rekrutacyjna IT",
     description: "Znajdź topowe talenty IT szybciej niż kiedykolwiek. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT bezpośrednio.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "QualiBase - Platforma Rekrutacyjna IT",
+        alt: "Qualibase - Platforma Rekrutacyjna IT",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "QualiBase - Platforma Rekrutacyjna IT",
+    title: "Qualibase - Platforma Rekrutacyjna IT",
     description: "Znajdź topowe talenty IT szybciej niż kiedykolwiek. Łączymy najlepsze firmy ze zweryfikowanymi specjalistami IT.",
     images: ["/og-image.jpg"],
     creator: "@qualibase",
