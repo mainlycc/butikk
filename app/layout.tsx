@@ -9,7 +9,7 @@ import { GoogleTagManagerBody, GoogleTagManagerHead } from "@/components/google-
 
 const geist = Geist({ subsets: ["latin"] })
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://qualibase.pl'
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.qualibase.pl'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),

@@ -10,7 +10,7 @@ import {
 import { slugify } from "@/lib/utils/slug"
 import PublicCandidateView from "@/components/public-candidate-view"
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://qualibase.pl"
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.qualibase.pl"
 
 interface PageProps {
   params: Promise<{ slug: string }>

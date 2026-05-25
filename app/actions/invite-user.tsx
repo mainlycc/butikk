@@ -1,5 +1,7 @@
 "use server"
 
+import { BRAND_NAME } from "@/lib/branding"
+import { APP_URL, FROM_EMAIL } from "@/lib/email/client"
 import { getSupabaseServerClient } from "@/lib/server"
 import { Resend } from "resend"
 
@@ -46,7 +48,7 @@ export async function inviteUser(email: string, role: "user" | "admin") {
   }
 
   // Send invitation email
-  const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/accept-invite?token=${token}`
+  const inviteUrl = `${APP_URL}/accept-invite?token=${token}`
 
   // Jeśli nie ma klucza API, zwróć informację o trybie demo
   if (!process.env.RESEND_API_KEY || !resend) {
@@ -64,12 +66,12 @@ export async function inviteUser(email: string, role: "user" | "admin") {
 
   try {
     await resend.emails.send({
-      from: "Butik Kandydatów <onboarding@resend.dev>",
+      from: FROM_EMAIL,
       to: email,
-      subject: "Zaproszenie do Butik Kandydatów",
+      subject: `Zaproszenie do ${BRAND_NAME}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">Witaj w Butik Kandydatów!</h2>
+          <h2 style="color: #2563eb;">Witaj w ${BRAND_NAME}!</h2>
           <p>Zostałeś zaproszony jako <strong>${role === "admin" ? "Administrator" : "Użytkownik"}</strong>.</p>
           <p>Kliknij poniższy przycisk, aby zaakceptować zaproszenie i utworzyć konto:</p>
           <a href="${inviteUrl}" style="display: inline-block; background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0;">

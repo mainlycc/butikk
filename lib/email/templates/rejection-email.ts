@@ -1,3 +1,5 @@
+import { BRAND_NAME, DEFAULT_APP_URL } from '@/lib/branding'
+
 export function generateRejectionEmail(
   fullName: string,
   reason?: string
@@ -8,7 +10,7 @@ export function generateRejectionEmail(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Odpowiedź na zgłoszenie - Butik Kandydatów</title>
+  <title>Odpowiedź na zgłoszenie - ${BRAND_NAME}</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; background-color: #f6f9fc;">
   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f6f9fc;">
@@ -18,7 +20,7 @@ export function generateRejectionEmail(
           <!-- Header -->
           <tr>
             <td style="background-color: #1e293b; padding: 32px 24px; text-align: center;">
-              <h1 style="color: #ffffff; font-size: 24px; font-weight: bold; margin: 0;">Butik Kandydatów</h1>
+              <h1 style="color: #ffffff; font-size: 24px; font-weight: bold; margin: 0;">${BRAND_NAME}</h1>
             </td>
           </tr>
           
@@ -30,7 +32,7 @@ export function generateRejectionEmail(
               </p>
               
               <p style="color: #334155; font-size: 16px; line-height: 26px; margin: 0 0 16px;">
-                Dziękujemy za przesłanie zgłoszenia do Butik Kandydatów. Po dokładnym przeanalizowaniu Twojego zgłoszenia, niestety nie jesteśmy w stanie przyjąć go w tym momencie.
+                Dziękujemy za przesłanie zgłoszenia do ${BRAND_NAME}. Po dokładnym przeanalizowaniu Twojego zgłoszenia, niestety nie jesteśmy w stanie przyjąć go w tym momencie.
               </p>
               
               ${reason ? `
@@ -54,7 +56,11 @@ export function generateRejectionEmail(
               
               <p style="color: #64748b; font-size: 14px; line-height: 20px; margin: 16px 0 0;">
                 Z poważaniem,<br>
-                <strong>Zespół Butik Kandydatów</strong>
+                <strong>Zespół ${BRAND_NAME}</strong>
+              </p>
+              
+              <p style="color: #94a3b8; font-size: 12px; line-height: 18px; margin: 24px 0 0; text-align: center;">
+                <a href="${DEFAULT_APP_URL}" style="color: #3b82f6; text-decoration: none;">${DEFAULT_APP_URL}</a>
               </p>
             </td>
           </tr>

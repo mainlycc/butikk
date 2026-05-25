@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://qualibase.pl'
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.qualibase.pl'
 
 export const metadata: Metadata = {
   title: 'Kontakt',

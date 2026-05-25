@@ -24,7 +24,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 - **Globalne ustawienia SEO**
   - Globalne `metadata` są zdefiniowane w `app/layout.tsx` (tytuł, opis, Open Graph, Twitter, domyślne `robots: { index: true, follow: true }`).
-  - `metadataBase` jest ustawione na `NEXT_PUBLIC_APP_URL` (fallback `https://qualibase.pl`), co zapewnia poprawne generowanie absolutnych URL-i.
+  - `metadataBase` jest ustawione na `NEXT_PUBLIC_APP_URL` (fallback `https://www.qualibase.pl`), co zapewnia poprawne generowanie absolutnych URL-i.
 
 - **Meta robots (index/noindex)**
   - Strony publiczne (np. `/`, `/kandydaci`, profile kandydatów) domyślnie dziedziczą `index,follow`.

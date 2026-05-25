@@ -12,7 +12,7 @@ import {
 import { getBreadcrumbSchema } from "@/lib/seo/structured-data"
 import PublicCandidatesListing from "@/components/public-candidates-listing"
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://qualibase.pl"
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.qualibase.pl"
 
 interface PageProps {
   params: Promise<{ technologia: string }>

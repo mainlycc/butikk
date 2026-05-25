@@ -1,4 +1,4 @@
-# Instrukcje dla AI - CLI Butik
+# Instrukcje dla AI - QualiBase
 
 ## 1. Komponenty UI - shadcn/ui
 

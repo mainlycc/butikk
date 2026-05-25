@@ -1,5 +1,7 @@
 "use server"
 
+import { BRAND_NAME, DEFAULT_APP_URL } from "@/lib/branding"
+import { FROM_EMAIL } from "@/lib/email/client"
 import { Resend } from "resend"
 import type { PrivateCandidate } from "@/lib/types/candidate"
 
@@ -71,7 +73,7 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
 
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">Zapytanie od rekrutera</h2>
+          <h2 style="color: #2563eb;">${BRAND_NAME} — zapytanie od rekrutera</h2>
           <p>Cześć,</p>
           <p>kontaktuje się z Tobą rekruter <strong>${recruiterEmail}</strong> z propozycją współpracy.</p>
           <p><strong>Opis projektu:</strong></p>
@@ -79,14 +81,17 @@ export async function sendContactEmail(candidates: Candidate[], projectDescripti
           <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;" />
           <h3 style="color: #1f2937;">Twoje dane w kontekście propozycji:</h3>
           <pre style="background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb;">${candidatesInfo}</pre>
+          <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">
+            <a href="${DEFAULT_APP_URL}" style="color: #2563eb; text-decoration: none;">${DEFAULT_APP_URL}</a>
+          </p>
         </div>
       `
 
       try {
         await resend!.emails.send({
-          from: "Butik Kandydatów <noreply@mail.mainly.pl>",
+          from: FROM_EMAIL,
           to: candidateEmail,
-          subject: `Nowe zapytanie od rekrutera`,
+          subject: `Nowe zapytanie od rekrutera — ${BRAND_NAME}`,
           html,
         })
         return { success: true, email: candidateEmail }

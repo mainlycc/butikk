@@ -4,7 +4,7 @@ import {
   getIndexableListingPaths,
 } from "@/lib/data/candidates-queries"
 
-const rawBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://qualibase.pl"
+const rawBaseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.qualibase.pl"
 const baseUrl = rawBaseUrl.replace(/\/+$/, "")
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

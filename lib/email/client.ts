@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { BRAND_NAME, DEFAULT_APP_URL } from '@/lib/branding'
 
 // Leniwa inicjalizacja - sprawdzamy zmienną tylko w runtime, nie podczas builda
 let resendInstance: Resend | null = null
@@ -20,6 +21,6 @@ export const resend = {
 }
 
 // Resend wymaga formatu: "email@example.com" lub "Name <email@example.com>"
-export const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Butik Kandydatów <noreply@example.com>'
-export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+export const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || `${BRAND_NAME} <noreply@qualibase.pl>`
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || DEFAULT_APP_URL
 

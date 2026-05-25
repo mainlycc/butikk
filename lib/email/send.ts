@@ -1,3 +1,4 @@
+import { BRAND_NAME } from '@/lib/branding'
 import { resend, FROM_EMAIL } from './client'
 import { generateInvitationEmail } from './templates/invitation-email'
 import { generateResetPasswordEmail } from './templates/reset-password-email'
@@ -43,7 +44,7 @@ export async function sendInvitationEmail({
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: [to],
-      subject: 'Zaproszenie do Butik Kandydatów - Aktywuj swoje konto',
+      subject: `Zaproszenie do ${BRAND_NAME} - Aktywuj swoje konto`,
       html,
     })
 
@@ -76,7 +77,7 @@ export async function sendPasswordResetEmail({
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: [to],
-      subject: 'Resetowanie hasła - Butik Kandydatów',
+      subject: `Resetowanie hasła - ${BRAND_NAME}`,
       html,
     })
 
@@ -109,7 +110,7 @@ export async function sendRejectionEmail({
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: [to],
-      subject: 'Odpowiedź na zgłoszenie - Butik Kandydatów',
+      subject: `Odpowiedź na zgłoszenie - ${BRAND_NAME}`,
       html,
     })
 

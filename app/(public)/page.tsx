@@ -16,7 +16,7 @@ import HomepageCandidatesPreview from '@/components/homepage-candidates-preview'
 import { getAllPublicCandidates } from '@/lib/data/candidates-queries'
 import { DualPerspectiveSection } from '@/components/dual-perspective'
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://qualibase.pl'
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.qualibase.pl'
 
 export const metadata: Metadata = {
   title: "Znajdź topowe talenty IT szybciej niż kiedykolwiek",

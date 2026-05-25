@@ -1,3 +1,5 @@
+import { BRAND_NAME, DEFAULT_APP_URL } from '@/lib/branding'
+
 export function generateResetPasswordEmail(
   resetLink: string,
   expiryHours: number = 1
@@ -8,7 +10,7 @@ export function generateResetPasswordEmail(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resetowanie hasła - Butik Kandydatów</title>
+  <title>Resetowanie hasła - ${BRAND_NAME}</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; background-color: #f6f9fc;">
   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f6f9fc;">
@@ -18,7 +20,7 @@ export function generateResetPasswordEmail(
           <!-- Header -->
           <tr>
             <td style="background-color: #1e293b; padding: 32px 24px; text-align: center;">
-              <h1 style="color: #ffffff; font-size: 24px; font-weight: bold; margin: 0;">Butik Kandydatów</h1>
+              <h1 style="color: #ffffff; font-size: 24px; font-weight: bold; margin: 0;">${BRAND_NAME}</h1>
             </td>
           </tr>
           
@@ -63,6 +65,10 @@ export function generateResetPasswordEmail(
               
               <p style="color: #64748b; font-size: 14px; line-height: 20px; margin: 0;">
                 Ze względów bezpieczeństwa nie udostępniaj tego linku osobom trzecim.
+              </p>
+              
+              <p style="color: #94a3b8; font-size: 12px; line-height: 18px; margin: 24px 0 0; text-align: center;">
+                <a href="${DEFAULT_APP_URL}" style="color: #3b82f6; text-decoration: none;">${DEFAULT_APP_URL}</a>
               </p>
             </td>
           </tr>

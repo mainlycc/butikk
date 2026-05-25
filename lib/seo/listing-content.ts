@@ -1,4 +1,4 @@
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://qualibase.pl"
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.qualibase.pl"
 
 function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1)
