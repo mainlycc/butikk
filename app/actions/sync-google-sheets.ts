@@ -1,6 +1,7 @@
 "use server"
 
 import { getSupabaseServerClient } from "@/lib/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { downloadAndUploadPDF, generatePDFFileName } from "@/lib/storage"
 import { generateCandidateSlug, deduplicateSlug } from "@/lib/utils/slug"
 
@@ -99,12 +100,93 @@ function findColumnIndex(header: string[], columnName: string): number {
   return -1
 }
 
+type ColumnIndices = {
+  nrIndex: number
+  imieIndex: number
+  rolaIndex: number
+  seniorityIndex: number
+  stawkaIndex: number
+  technologieIndex: number
+  cvIndex: number
+  cvPdfIndex: number
+  opiekunIndex: number
+  lokalizacjaIndex: number
+  emailKandydataIndex: number
+  dostepnoscIndex: number
+  guardianEmailIndex: number
+  languagesIndex: number
+}
+
+type ExistingCandidate = {
+  cv_pdf_url: string | null
+  slug: string | null
+}
+
+type ParsedSheetRow = {
+  row: string[]
+  rowIndex: number
+  sheetRowNumber: number
+  isNew: boolean
+}
+
+function resolveSheetRowNumber(
+  row: string[],
+  rowIndex: number,
+  nrIndex: number,
+  imieIndex: number
+): number | null {
+  const getValue = (index: number): string => {
+    if (index < 0 || index >= row.length) return ""
+    const value = row[index]
+    if (value === null || value === undefined) return ""
+    return String(value).trim()
+  }
+
+  if (!getValue(imieIndex)) return null
+
+  if (nrIndex >= 0 && getValue(nrIndex)) {
+    const parsed = parseInt(getValue(nrIndex), 10)
+    if (!isNaN(parsed)) return parsed
+  }
+
+  return rowIndex + 2
+}
+
+function buildSyncOrder(
+  candidates: string[][],
+  indices: ColumnIndices,
+  existingByRow: Map<number, ExistingCandidate>
+): ParsedSheetRow[] {
+  const parsed: ParsedSheetRow[] = []
+
+  for (let i = 0; i < candidates.length; i++) {
+    const row = candidates[i]
+    if (!row || row.length === 0) continue
+
+    const sheetRowNumber = resolveSheetRowNumber(row, i, indices.nrIndex, indices.imieIndex)
+    if (sheetRowNumber === null) continue
+
+    parsed.push({
+      row,
+      rowIndex: i,
+      sheetRowNumber,
+      isNew: !existingByRow.has(sheetRowNumber),
+    })
+  }
+
+  return parsed.sort((a, b) => {
+    if (a.isNew !== b.isNew) return a.isNew ? -1 : 1
+    return b.sheetRowNumber - a.sheetRowNumber
+  })
+}
+
 /**
  * Synchronizuje dane z Google Sheets do Supabase
  * @param skipAuthCheck - Jeśli true, pomija sprawdzanie autoryzacji (dla cron jobs)
  */
 export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false) {
   const supabase = await getSupabaseServerClient()
+  const adminSupabase = createAdminClient()
 
   if (!skipAuthCheck) {
     const {
@@ -194,65 +276,69 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
       console.log("Długość wiersza:", candidates[0].length)
     }
 
-    // Pobierz istniejące slugi z bazy, żeby uniknąć duplikatów
-    const { data: existingSlugRows } = await supabase
+    const indices: ColumnIndices = {
+      nrIndex,
+      imieIndex,
+      rolaIndex,
+      seniorityIndex,
+      stawkaIndex,
+      technologieIndex,
+      cvIndex,
+      cvPdfIndex,
+      opiekunIndex,
+      lokalizacjaIndex,
+      emailKandydataIndex,
+      dostepnoscIndex,
+      guardianEmailIndex,
+      languagesIndex,
+    }
+
+    const { data: existingRows } = await adminSupabase
       .from("candidates")
-      .select("slug")
-      .not("slug", "is", null)
-    const usedSlugs = new Set<string>(
-      (existingSlugRows || []).map((r: { slug: string }) => r.slug)
+      .select("sheet_row_number, cv_pdf_url, slug")
+
+    const existingByRow = new Map<number, ExistingCandidate>()
+    const usedSlugs = new Set<string>()
+    for (const row of existingRows || []) {
+      existingByRow.set(row.sheet_row_number, {
+        cv_pdf_url: row.cv_pdf_url,
+        slug: row.slug,
+      })
+      if (row.slug) usedSlugs.add(row.slug)
+    }
+
+    const syncOrder = buildSyncOrder(candidates, indices, existingByRow)
+    const newCount = syncOrder.filter((item) => item.isNew).length
+    const existingCount = syncOrder.length - newCount
+    console.log(
+      `Kolejność synchronizacji: ${newCount} nowych (najpierw), potem ${existingCount} istniejących`
     )
 
     let successCount = 0
     let errorCount = 0
+    let processedNew = 0
 
-    for (let i = 0; i < candidates.length; i++) {
-      const row = candidates[i]
-      
-      // Pomiń puste wiersze
-      if (!row || row.length === 0) {
-        continue
-      }
-
-      // Pomiń wiersze gdzie kolumna z imieniem jest pusta
-      const imieValue = row[imieIndex]?.trim() || ""
-      if (!imieValue) {
-        continue
-      }
-
-      // Bezpieczne pobieranie wartości z obsługą undefined/null
+    for (const { row, rowIndex, sheetRowNumber, isNew } of syncOrder) {
       const getValue = (index: number): string => {
         if (index < 0 || index >= row.length) return ""
         const value = row[index]
-        // Jeśli wartość to undefined, null, lub pusty string po trim, zwróć pusty string
         if (value === null || value === undefined) return ""
-        const trimmed = String(value).trim()
-        return trimmed
+        return String(value).trim()
       }
 
-      // Numer wiersza w arkuszu (zaczynamy od 2, bo 1 to nagłówek)
-      const sheetRowNumber = nrIndex >= 0 && getValue(nrIndex) 
-        ? parseInt(getValue(nrIndex), 10) 
-        : i + 2
-
-      // Rozdziel "Imię i Nazwisko" na first_name i last_name
       const fullName = getValue(imieIndex)
       const nameParts = fullName.split(/\s+/)
       const firstName = nameParts[0] || ""
       const lastName = nameParts.slice(1).join(" ") || null
 
-      // Obsługa kolumny "Cv pdf"
-      let cvPdfUrl: string | null = null
+      const existing = existingByRow.get(sheetRowNumber)
       const cvPdfLink = cvPdfIndex >= 0 ? getValue(cvPdfIndex) : ""
-      
-      if (cvPdfLink) {
-        // Pobierz PDF i uploaduj do Storage
-        const fileName = generatePDFFileName(
-          isNaN(sheetRowNumber) ? i + 2 : sheetRowNumber,
-          firstName,
-          lastName
-        )
-        
+      let cvPdfUrl: string | null = existing?.cv_pdf_url ?? null
+
+      // PDF pobieramy tylko dla nowych kandydatów lub gdy brak pliku w bazie
+      if (cvPdfLink && (isNew || !cvPdfUrl)) {
+        const fileName = generatePDFFileName(sheetRowNumber, firstName, lastName)
+
         try {
           const uploadedUrl = await downloadAndUploadPDF(cvPdfLink, fileName)
           if (uploadedUrl) {
@@ -260,25 +346,11 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
             console.log(`Successfully uploaded PDF for candidate ${firstName} ${lastName || ""}`)
           } else {
             console.warn(`Failed to upload PDF for candidate ${firstName} ${lastName || ""}`)
-            // Nie zapisujemy linku z Drive jako cv_pdf_url, bo react-pdf często go nie wczyta (CORS/redirect).
-            // W UI zadziała wtedy fallback do tekstowego CV.
             cvPdfUrl = null
           }
         } catch (error) {
           console.error(`Error processing PDF for candidate ${firstName} ${lastName || ""}:`, error)
           cvPdfUrl = null
-        }
-      } else {
-        // Jeśli w Google Sheets nie ma linku, sprawdź czy w bazie jest istniejący URL
-        // (zachowaj istniejący PDF jeśli link został usunięty z Google Sheets)
-        const existingCandidate = await supabase
-          .from("candidates")
-          .select("cv_pdf_url")
-          .eq("sheet_row_number", isNaN(sheetRowNumber) ? i + 2 : sheetRowNumber)
-          .single()
-        
-        if (existingCandidate.data?.cv_pdf_url) {
-          cvPdfUrl = existingCandidate.data.cv_pdf_url
         }
       }
 
@@ -287,12 +359,15 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
       const technologies = technologieIndex >= 0 ? getValue(technologieIndex) || null : null
       const location = lokalizacjaIndex >= 0 ? getValue(lokalizacjaIndex) || null : null
 
-      const baseSlug = generateCandidateSlug({ seniority, role, technologies, location })
-      const slug = deduplicateSlug(baseSlug, usedSlugs)
-      usedSlugs.add(slug)
+      let slug = existing?.slug ?? null
+      if (!slug) {
+        const baseSlug = generateCandidateSlug({ seniority, role, technologies, location })
+        slug = deduplicateSlug(baseSlug, usedSlugs)
+        usedSlugs.add(slug)
+      }
 
       const candidate = {
-        sheet_row_number: isNaN(sheetRowNumber) ? i + 2 : sheetRowNumber,
+        sheet_row_number: sheetRowNumber,
         nr: nrIndex >= 0 ? getValue(nrIndex) || null : null,
         first_name: firstName || null,
         last_name: lastName,
@@ -312,47 +387,45 @@ export async function syncGoogleSheetsToSupabase(skipAuthCheck: boolean = false)
         last_synced_at: new Date().toISOString(),
       }
 
-      // Loguj pierwsze 3 kandydatów dla debugowania
-      if (i < 3) {
-        console.log(`Kandydat ${i + 1} (${candidate.first_name}):`, {
-          fullName: fullName,
-          firstName: candidate.first_name,
-          lastName: candidate.last_name,
-          rate: candidate.rate,
+      if (isNew && processedNew < 3) {
+        console.log(`Nowy kandydat Nr ${sheetRowNumber} (${candidate.first_name}):`, {
+          role: candidate.role,
+          seniority: candidate.seniority,
           technologies: candidate.technologies,
-          availability: candidate.availability,
-          rawRowValues: {
-            imie: row[imieIndex],
-            stawka: row[stawkaIndex],
-            technologie: row[technologieIndex],
-            dostepnosc: row[dostepnoscIndex],
-          }
         })
+        processedNew++
       }
 
-      const { error } = await supabase.from("candidates").upsert(candidate, { 
-        onConflict: "sheet_row_number" 
+      const { error } = await adminSupabase.from("candidates").upsert(candidate, {
+        onConflict: "sheet_row_number",
       })
-      
+
       if (error) {
         console.error(`Error upserting candidate row ${candidate.sheet_row_number}:`, error)
         errorCount++
       } else {
         successCount++
+        existingByRow.set(sheetRowNumber, { cv_pdf_url: cvPdfUrl, slug })
       }
     }
+
+    const newSynced = syncOrder.filter((item) => item.isNew).length
+    const baseMessage =
+      newSynced > 0
+        ? `Zsynchronizowano ${successCount} kandydatów (w tym ${newSynced} nowych)`
+        : `Zsynchronizowano ${successCount} kandydatów`
 
     if (errorCount > 0) {
       return {
         success: true,
-        message: `Zsynchronizowano ${successCount} kandydatów, ${errorCount} błędów`,
+        message: `${baseMessage}, ${errorCount} błędów`,
         warning: true,
       }
     }
 
     return {
       success: true,
-      message: `Zsynchronizowano ${successCount} kandydatów`,
+      message: baseMessage,
     }
   } catch (error) {
     console.error("Sync error:", error)
