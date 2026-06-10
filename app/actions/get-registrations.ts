@@ -6,6 +6,7 @@ export type CandidateRegistration = {
   id: string
   full_name: string
   email: string
+  phone: string | null
   specialization: string | null
   experience: number | null
   linkedin_url: string | null

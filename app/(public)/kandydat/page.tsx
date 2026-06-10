@@ -8,7 +8,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { toast } from 'sonner'
+import { CheckCircle2 } from 'lucide-react'
 import { submitCandidateRegistration } from '@/app/actions/submit-candidate-registration'
 
 const sourceOptions = [
@@ -47,6 +49,7 @@ const initialState: CandidateForm = {
 export default function CandidatePage() {
   const [form, setForm] = useState<CandidateForm>(initialState)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handleChange = (field: keyof CandidateForm) => (value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -101,7 +104,7 @@ export default function CandidatePage() {
       const result = await submitCandidateRegistration(formData)
 
       if (result.success) {
-        toast.success('Zgłoszenie zostało wysłane! Nasz zespół skontaktuje się z Tobą wkrótce.')
+        setIsSubmitted(true)
         setForm(initialState)
         const fileInput = document.getElementById('cvFile') as HTMLInputElement
         if (fileInput) fileInput.value = ''
@@ -142,6 +145,26 @@ export default function CandidatePage() {
             <CardTitle>Formularz kontaktowy</CardTitle>
           </CardHeader>
           <CardContent>
+            {isSubmitted ? (
+              <div className="space-y-6 py-4">
+                <Alert className="border-green-200 bg-green-50 text-green-900 dark:border-green-900 dark:bg-green-950 dark:text-green-100">
+                  <CheckCircle2 className="text-green-600 dark:text-green-400" />
+                  <AlertTitle>Zgłoszenie zostało wysłane</AlertTitle>
+                  <AlertDescription>
+                    Dziękujemy za rejestrację. Twoje zgłoszenie trafiło do naszego zespołu — skontaktujemy się z Tobą wkrótce.
+                  </AlertDescription>
+                </Alert>
+                <div className="flex justify-end">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsSubmitted(false)}
+                  >
+                    Wyślij kolejne zgłoszenie
+                  </Button>
+                </div>
+              </div>
+            ) : (
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -254,6 +277,7 @@ export default function CandidatePage() {
                 </Button>
               </div>
             </form>
+            )}
           </CardContent>
         </Card>
       </div>

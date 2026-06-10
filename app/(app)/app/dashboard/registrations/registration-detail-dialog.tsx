@@ -114,6 +114,10 @@ export function RegistrationDetailDialog({
                 <p className="text-base">{data.email}</p>
               </div>
               <div>
+                <p className="text-sm font-medium text-muted-foreground">Telefon</p>
+                <p className="text-base">{data.phone || '-'}</p>
+              </div>
+              <div>
                 <p className="text-sm font-medium text-muted-foreground">Specjalizacja</p>
                 <p className="text-base">{data.specialization || '-'}</p>
               </div>
