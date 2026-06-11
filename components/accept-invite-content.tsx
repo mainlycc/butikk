@@ -85,7 +85,7 @@ export function AcceptInviteContent() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -97,7 +97,7 @@ export function AcceptInviteContent() {
           <CardContent className="pt-6">
             <div className="flex flex-col items-center gap-4 text-center">
               <CheckCircle className="h-12 w-12 text-green-500" />
-              <h2 className="text-2xl font-bold text-white">Konto utworzone!</h2>
+              <h2 className="text-2xl text-white">Konto utworzone!</h2>
               <p className="text-slate-400">Przekierowywanie do aplikacji...</p>
             </div>
           </CardContent>
@@ -113,7 +113,7 @@ export function AcceptInviteContent() {
           <CardContent className="pt-6">
             <div className="flex flex-col items-center gap-4 text-center">
               <AlertCircle className="h-12 w-12 text-red-500" />
-              <h2 className="text-2xl font-bold text-white">Błąd</h2>
+              <h2 className="text-2xl text-white">Błąd</h2>
               <p className="text-slate-400">{error}</p>
               <Button onClick={() => router.push("/")} className="mt-4">
                 Wróć do strony głównej
@@ -132,7 +132,7 @@ export function AcceptInviteContent() {
           <CardTitle className="text-2xl text-white">Zaproszenie do Qualibase</CardTitle>
           <CardDescription className="text-slate-400">
             Zostałeś zaproszony jako{" "}
-            <strong className="text-blue-400">{invitation?.role === "admin" ? "Administrator" : "Użytkownik"}</strong>
+            <strong className="text-primary">{invitation?.role === "admin" ? "Administrator" : "Użytkownik"}</strong>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -187,7 +187,7 @@ export function AcceptInviteContent() {
               </div>
             )}
 
-            <Button type="submit" disabled={submitting} className="w-full bg-blue-600 hover:bg-blue-700">
+            <Button type="submit" disabled={submitting} className="w-full">
               {submitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

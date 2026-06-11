@@ -130,7 +130,7 @@ export default function CandidatePage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm text-muted-foreground uppercase tracking-wide">Dla kandydatów</p>
-            <h1 className="text-3xl font-bold">Rejestracja kandydata</h1>
+            <h1 className="text-3xl">Rejestracja kandydata</h1>
             <p className="text-muted-foreground mt-2">
               Dołącz do naszej bazy talentów. Podaj podstawowe informacje, a odezwiemy się z dopasowanymi ofertami.
             </p>

@@ -100,7 +100,7 @@ export function AdminPanel() {
             </div>
           )}
 
-          <Button onClick={handleInvite} disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700">
+          <Button onClick={handleInvite} disabled={loading} className="w-full">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

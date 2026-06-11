@@ -75,7 +75,7 @@ export default function SimilarCandidates({
                       {techs.map((t) => (
                         <Badge
                           key={t}
-                          className="text-[11px] px-2 py-0.5 bg-blue-600/15 text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20"
+                          className="text-[11px] px-2 py-0.5 bg-primary/15 text-primary ring-1 ring-inset ring-primary/20"
                         >
                           {t}
                         </Badge>

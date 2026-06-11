@@ -62,7 +62,7 @@ export default async function TechnologiaPage({ params, searchParams }: PageProp
         }}
       />
 
-      <h1 className="text-3xl font-bold tracking-tight mb-3">{h1}</h1>
+      <h1 className="text-3xl tracking-tight mb-3">{h1}</h1>
       <p className="text-muted-foreground mb-8 max-w-2xl">{description}</p>
 
       <PublicCandidatesListing

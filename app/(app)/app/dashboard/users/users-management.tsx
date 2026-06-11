@@ -101,7 +101,7 @@ export function UsersManagement({ users: initialUsers }: UsersManagementProps) {
     <div className="space-y-4">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
+          <h1 className="text-3xl flex items-center gap-2">
             <Users className="h-7 w-7" />
             Użytkownicy
           </h1>

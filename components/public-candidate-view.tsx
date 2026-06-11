@@ -116,7 +116,7 @@ export default function PublicCandidateView({
         <div className="lg:col-span-8 space-y-6">
           {/* Tytuł + badże */}
           <div className="space-y-3">
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-4xl tracking-tight leading-tight">
               {candidate.role || "Profil kandydata"}
             </h1>
             <div className="flex items-center gap-2 flex-wrap">
@@ -312,7 +312,7 @@ export default function PublicCandidateView({
                         {visibleTechnologies.map((t) => (
                           <Badge
                             key={t}
-                            className="text-[11px] px-2 py-0.5 bg-blue-600/15 text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20"
+                            className="text-[11px] px-2 py-0.5 bg-primary/15 text-primary ring-1 ring-inset ring-primary/20"
                           >
                             {t}
                           </Badge>

@@ -121,7 +121,7 @@ export default function UpdatePasswordForm() {
           <CardContent className="pt-6">
             <div className="flex flex-col items-center gap-4 text-center">
               <CheckCircle className="h-12 w-12 text-green-500" />
-              <h2 className="text-2xl font-bold">Hasło zostało zaktualizowane!</h2>
+              <h2 className="text-2xl">Hasło zostało zaktualizowane!</h2>
               <p className="text-muted-foreground">Przekierowywanie do logowania...</p>
             </div>
           </CardContent>
@@ -205,7 +205,7 @@ export default function UpdatePasswordForm() {
               </div>
             )}
 
-            <Button type="submit" className="w-full h-12 text-lg font-semibold" disabled={isSubmitting}>
+            <Button type="submit" className="w-full h-12 text-lg" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

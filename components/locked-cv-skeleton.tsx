@@ -32,13 +32,13 @@ export default function LockedCvSkeleton({ className, blurred = true }: LockedCv
                   Full‑stack Developer • 6+ lat • React / Node.js
                 </div>
                 <div className="mt-2 flex flex-wrap gap-1.5">
-                  <span className="rounded-full bg-blue-600/15 px-2 py-0.5 text-[10px] font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20">
+                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary ring-1 ring-inset ring-primary/20">
                     TypeScript
                   </span>
-                  <span className="rounded-full bg-blue-600/15 px-2 py-0.5 text-[10px] font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20">
+                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary ring-1 ring-inset ring-primary/20">
                     Next.js
                   </span>
-                  <span className="rounded-full bg-blue-600/15 px-2 py-0.5 text-[10px] font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20">
+                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary ring-1 ring-inset ring-primary/20">
                     Supabase
                   </span>
                 </div>
@@ -130,22 +130,22 @@ export default function LockedCvSkeleton({ className, blurred = true }: LockedCv
             <section className="space-y-2">
               <div className="text-[11px] font-semibold tracking-wide text-primary">STACK</div>
               <div className="flex flex-wrap gap-1.5">
-                <span className="rounded-full bg-blue-600/15 px-2 py-1 text-[10px] font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20">
+                <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-medium text-primary ring-1 ring-inset ring-primary/20">
                   React
                 </span>
-                <span className="rounded-full bg-blue-600/15 px-2 py-1 text-[10px] font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20">
+                <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-medium text-primary ring-1 ring-inset ring-primary/20">
                   Next.js
                 </span>
-                <span className="rounded-full bg-blue-600/15 px-2 py-1 text-[10px] font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20">
+                <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-medium text-primary ring-1 ring-inset ring-primary/20">
                   TS
                 </span>
-                <span className="rounded-full bg-blue-600/15 px-2 py-1 text-[10px] font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20">
+                <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-medium text-primary ring-1 ring-inset ring-primary/20">
                   Node.js
                 </span>
-                <span className="rounded-full bg-blue-600/15 px-2 py-1 text-[10px] font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20">
+                <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-medium text-primary ring-1 ring-inset ring-primary/20">
                   Postgres
                 </span>
-                <span className="rounded-full bg-blue-600/15 px-2 py-1 text-[10px] font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-600/20">
+                <span className="rounded-full bg-primary/15 px-2 py-1 text-[10px] font-medium text-primary ring-1 ring-inset ring-primary/20">
                   CI/CD
                 </span>
               </div>

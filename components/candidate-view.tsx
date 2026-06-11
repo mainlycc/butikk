@@ -150,7 +150,7 @@ export default function CandidateView({
           <div className="lg:col-span-8 space-y-6">
             {/* Tytuł + badże */}
             <div className="space-y-3">
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-4xl tracking-tight leading-tight">
                 {candidate.role || "Profil kandydata"}
               </h1>
               <div className="flex items-center gap-2 flex-wrap">

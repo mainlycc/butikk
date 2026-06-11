@@ -94,7 +94,7 @@ export default function CVSlideshow({ candidates, onClose, onOpenContact }: CVSl
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <h2 className="text-2xl font-bold">Podgląd CV</h2>
+                <h2 className="text-2xl">Podgląd CV</h2>
                 <Badge variant="secondary" className="text-base px-4 py-1">
                   {currentIndex + 1} / {candidates.length}
                 </Badge>

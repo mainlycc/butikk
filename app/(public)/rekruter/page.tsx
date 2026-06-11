@@ -82,7 +82,7 @@ export default function RecruiterPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm text-muted-foreground uppercase tracking-wide">Dla firm</p>
-            <h1 className="text-3xl font-bold">Rejestracja rekrutera</h1>
+            <h1 className="text-3xl">Rejestracja rekrutera</h1>
             <p className="text-muted-foreground mt-2">
               Wypełnij formularz, a nasz zespół skontaktuje się z Tobą, aby omówić potrzeby rekrutacyjne.
             </p>

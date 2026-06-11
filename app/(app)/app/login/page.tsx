@@ -62,7 +62,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   const infoData = {
     title: "",
-    description: "Nowoczesna platforma rekrutacyjna dla efektywnego zarządzania bazą kandydatów",
+    description: "",
     instructions: [],
   }
 

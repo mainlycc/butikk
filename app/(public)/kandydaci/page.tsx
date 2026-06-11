@@ -63,7 +63,7 @@ export default async function KandydaciPage({ searchParams }: PageProps) {
         }}
       />
 
-      <h1 className="text-3xl font-bold tracking-tight mb-3">{h1}</h1>
+      <h1 className="text-3xl tracking-tight mb-3">{h1}</h1>
       <p className="text-muted-foreground mb-8 max-w-2xl">{description}</p>
 
       <div className="space-y-4 mb-8">

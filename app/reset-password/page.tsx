@@ -88,7 +88,7 @@ export default function ResetPasswordPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-12 text-lg font-semibold" disabled={isLoading}>
+              <Button type="submit" className="w-full h-12 text-lg" disabled={isLoading}>
                 {isLoading ? "Wysyłanie..." : "Wyślij link resetowania"}
               </Button>
 

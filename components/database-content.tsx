@@ -385,7 +385,7 @@ export default function DatabaseContent({ initialCandidates, userEmail }: Databa
                 {isAutoSyncing && (
                   <div className="flex items-center gap-3 text-sm">
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <span className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></span>
+                      <span className="h-2 w-2 bg-primary rounded-full animate-pulse"></span>
                       Synchronizacja...
                     </span>
                   </div>

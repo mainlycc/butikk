@@ -1,13 +1,13 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist } from "next/font/google"
+import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "sonner"
 import "./globals.css"
 import { getOrganizationSchema, getWebSiteSchema } from "@/lib/seo/structured-data"
 import { GoogleTagManagerBody, GoogleTagManagerHead } from "@/components/google-tag-manager"
 
-const geist = Geist({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" })
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.qualibase.pl'
 
@@ -88,7 +88,7 @@ export default async function RootLayout({
   const websiteSchema = getWebSiteSchema()
 
   return (
-    <html lang="pl" className="h-full overflow-auto">
+    <html lang="pl" className={`${inter.variable} h-full overflow-auto`}>
       <head>
         <GoogleTagManagerHead />
         <script
@@ -100,7 +100,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
-      <body className={`${geist.className} antialiased h-full overflow-auto`}>
+      <body className={`${inter.className} antialiased h-full overflow-auto`}>
         <GoogleTagManagerBody />
         {children}
         <Toaster />

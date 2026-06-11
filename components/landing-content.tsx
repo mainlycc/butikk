@@ -10,7 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getSupabaseBrowserClient } from "@/lib/client"
 import { updateLastLogin } from "@/lib/actions/users"
-import { Users, Mail, Search, FileText, AlertCircle } from "lucide-react"
+import { Users, Mail, Search, FileText, AlertCircle, Check } from "lucide-react"
+
+const LOGIN_FEATURES = [
+  "Precyzyjnie dopasowani kandydaci",
+  "Selekcja wspierana przez algorytmy AI",
+  "Uporządkowany proces rekrutacyjny",
+] as const
 
 interface LandingContentProps {
   infoData: {
@@ -78,16 +84,18 @@ export default function LandingContent({ infoData, hideGuide = false, redirectUr
                   <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                     <Users className="w-6 h-6 text-primary-foreground" />
                   </div>
-                  <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tight text-balance">
+                  <h1 className="text-3xl sm:text-4xl lg:text-6xl tracking-tight text-balance">
                     {infoData.title}
                   </h1>
                 </div>
               </div>
             ) : null}
 
-            <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto text-balance leading-relaxed">
-              {infoData.description}
-            </p>
+            {infoData.description.trim() ? (
+              <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto text-balance leading-relaxed">
+                {infoData.description}
+              </p>
+            ) : null}
 
             <Card className="max-w-md mx-auto shadow-xl border-2">
               <CardHeader>
@@ -126,9 +134,19 @@ export default function LandingContent({ infoData, hideGuide = false, redirectUr
                     </div>
                   )}
 
-                  <Button type="submit" className="w-full h-12 text-lg font-semibold" disabled={isLoading}>
+                  <Button type="submit" className="w-full h-12 text-lg" disabled={isLoading}>
                     {isLoading ? "Logowanie..." : "Zaloguj się"}
                   </Button>
+
+                  <div className="text-center space-y-1 pt-2 text-sm text-muted-foreground">
+                    <p>Jesteś kandydatem bądź rekruterem?</p>
+                    <p>
+                      Nie masz konta w Qualibase?{" "}
+                      <Link href="/kandydat" className="text-primary hover:underline font-medium">
+                        Zarejestruj się
+                      </Link>
+                    </p>
+                  </div>
 
                   <div className="text-center pt-2">
                     <Link
@@ -141,6 +159,22 @@ export default function LandingContent({ infoData, hideGuide = false, redirectUr
                 </form>
               </CardContent>
             </Card>
+
+            {hideGuide ? (
+              <div className="max-w-3xl mx-auto space-y-6 pt-4">
+                <p className="text-lg sm:text-xl text-muted-foreground text-balance leading-relaxed">
+                  Nowoczesna platforma rekrutacyjna dla branży IT.
+                </p>
+                <ul className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-10 gap-y-3">
+                  {LOGIN_FEATURES.map((feature) => (
+                    <li key={feature} className="flex items-center gap-2 text-sm sm:text-base text-muted-foreground">
+                      <Check className="h-4 w-4 shrink-0 text-primary" strokeWidth={2.5} aria-hidden />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -148,7 +182,7 @@ export default function LandingContent({ infoData, hideGuide = false, redirectUr
       {!hideGuide && (
         <div className="max-w-7xl mx-auto px-6 py-24">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-balance">Jak korzystać z systemu</h2>
+            <h2 className="text-3xl lg:text-4xl mb-4 text-balance">Jak korzystać z systemu</h2>
             <p className="text-lg text-muted-foreground text-balance">
               Prosty i intuicyjny proces wyszukiwania kandydatów
             </p>

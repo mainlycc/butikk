@@ -89,7 +89,7 @@ export default async function RegistrationsPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold">Zgłoszenia rejestracyjne</h1>
+        <h1 className="text-2xl">Zgłoszenia rejestracyjne</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Przeglądaj i zarządzaj zgłoszeniami kandydatów i rekruterów
         </p>

@@ -63,7 +63,7 @@ export default function HomepageCandidatesPreview({
   const footer = hasMoreCandidates ? (
     <TableFooterSection>
       <p className="text-sm text-muted-foreground mb-3">Zobacz więcej kandydatów</p>
-      <Button onClick={handleExpand} size="default" className="h-10 px-6 text-sm font-semibold">
+      <Button onClick={handleExpand} size="default" className="h-10 px-6 text-sm">
         Rozwiń
       </Button>
     </TableFooterSection>
@@ -72,7 +72,7 @@ export default function HomepageCandidatesPreview({
       <p className="text-sm text-muted-foreground mb-3">
         Chcesz zobaczyć więcej? Dołącz jako rekruter
       </p>
-      <Button asChild size="default" className="h-10 px-6 text-sm font-semibold">
+      <Button asChild size="default" className="h-10 px-6 text-sm">
         <Link href="/rekruter">Korzystaj jako rekruter</Link>
       </Button>
     </TableFooterSection>

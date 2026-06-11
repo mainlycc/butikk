@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6">
+      <h1 className="text-3xl sm:text-4xl tracking-tight mb-6">
         Polityka prywatności
       </h1>
 
@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
 
       <div className="space-y-8 text-sm sm:text-base leading-relaxed text-muted-foreground">
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             1. Informacje ogólne
           </h2>
           <p>
@@ -39,7 +39,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             2. Administrator danych
           </h2>
           <p>Administratorem danych osobowych jest:</p>
@@ -53,7 +53,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             3. Zakres przetwarzanych danych
           </h2>
           <p>
@@ -91,7 +91,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             4. Cele przetwarzania danych
           </h2>
           <p>Dane osobowe przetwarzane są w celu:</p>
@@ -106,7 +106,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             5. Podstawa prawna przetwarzania
           </h2>
           <p>Dane osobowe przetwarzane są na podstawie:</p>
@@ -121,7 +121,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             6. Odbiorcy danych
           </h2>
           <p>Dane osobowe mogą być przekazywane:</p>
@@ -137,7 +137,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             7. Przekazywanie danych poza UE
           </h2>
           <p>
@@ -148,7 +148,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             8. Prawa osób, których dane dotyczą
           </h2>
           <p>Każda osoba, której dane są przetwarzane, ma prawo do:</p>
@@ -165,7 +165,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             9. Pliki cookies
           </h2>
           <p>Serwis wykorzystuje pliki cookies w celu:</p>
@@ -181,7 +181,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             10. Zabezpieczenia danych
           </h2>
           <p>
@@ -196,7 +196,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-xl font-semibold text-foreground">
+          <h2 className="text-xl text-foreground">
             11. Zmiany polityki prywatności
           </h2>
           <p>

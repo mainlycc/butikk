@@ -96,7 +96,7 @@ export default function ContactDialog({ candidates, recruiterEmail, onClose }: C
 
           {/* Selected Candidates */}
           <div className="space-y-2">
-            <h3 className="font-semibold text-base">Wybrani kandydaci:</h3>
+            <h3 className="text-base">Wybrani kandydaci:</h3>
             <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
               {candidatesWithEmail.length === 0 ? (
                 <Card className="border border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
